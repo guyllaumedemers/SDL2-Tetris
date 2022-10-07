@@ -92,7 +92,7 @@ endif()
 
 # add subdirectories
 
-add_subdirectory(doc)
-add_subdirectory(extern)
-add_subdirectory(src bin)
-add_subdirectory(test)
+add_subdirectory("doc")
+add_subdirectory("extern")
+add_subdirectory("src" "bin")
+add_subdirectory("test")
