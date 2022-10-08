@@ -5,7 +5,7 @@
 
 # add subdirectories
 
-add_subdirectory("doc")
-add_subdirectory("extern")
-add_subdirectory("src" "bin")
-add_subdirectory("test")
+add_subdirectory("${CMAKE_SOURCE_DIR}/doc" "${CMAKE_BINARY_DIR}/doc")
+add_subdirectory("${CMAKE_SOURCE_DIR}/extern" "${CMAKE_BINARY_DIR}/extern")
+add_subdirectory("${CMAKE_SOURCE_DIR}/src" "${CMAKE_BINARY_DIR}/bin")
+add_subdirectory("${CMAKE_SOURCE_DIR}/test" "${CMAKE_BINARY_DIR}/test")
