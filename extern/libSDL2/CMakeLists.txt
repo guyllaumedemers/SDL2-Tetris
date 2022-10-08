@@ -6,7 +6,7 @@
 
 add_library(
 	${PROJECT_NAME}
-	""	
+	libSDL2.cpp	
 )
 
 add_library(
@@ -18,5 +18,5 @@ add_library(
 target_include_directories(
 	${PROJECT_NAME}
 	PUBLIC
-	"${PROJECT_SOURCE_DIR}/include"
+	"${PROJECT_SOURCE_DIR}/pkg/include"
 )

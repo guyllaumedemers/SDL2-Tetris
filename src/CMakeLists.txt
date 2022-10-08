@@ -2,5 +2,5 @@
 
 add_subdirectory(
 	"appTetris"
-	"${PROJECT_BINARY_DIR}/bin/SDL2-Tetris" # can it use the project name if its only defined in the subdirectory? prob. not...
+	"${PROJECT_BINARY_DIR}/bin"
 )

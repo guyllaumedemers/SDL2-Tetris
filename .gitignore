@@ -55,9 +55,5 @@ _deps
 # End of https://www.toptal.com/developers/gitignore/api/cmake,c++
 
 ### wildcard removing trash files created by vim, notepad++
-.CMakeLists.txt~
-.CMakeLists.txt.un~
-CMakeLists.txt.bak
-..gitignore.un~
-.gitignore~
-.gitignore.bak
+*.bak
+*.un~

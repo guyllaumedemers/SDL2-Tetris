@@ -6,7 +6,7 @@
 
 add_library(
 	${PROJECT_NAME}
-	""
+	libImGUI.cpp
 )
 
 add_library(
@@ -18,6 +18,6 @@ add_library(
 target_include_directories(
 	${PROJECT_NAME}
 	PUBLIC
-	"${PROJECT_SOURCE_DIR}/include" #might change depending on git module architecture fetch
+	"${PROJECT_SOURCE_DIR}/pkg/backends"
 )
 
