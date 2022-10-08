@@ -6,7 +6,7 @@
 
 add_library(
 	${PROJECT_NAME}
-	STATIC
+	OBJECT
 	libImGUI.cpp
 )
 

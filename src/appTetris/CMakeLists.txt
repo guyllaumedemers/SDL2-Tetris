@@ -15,16 +15,7 @@ add_executable(
 	Main.cpp
 )
 
-target_include_directories(
-	${PROJECT_NAME}
-	BEFORE
-	PUBLIC
-	"${CMAKE_SOURCE_DIR}/extern/libSDL2"
-	"${CMAKE_SOURCE_DIR}/extern/libImGUI"
-)
-
-
-target_link_libraries(
+target_link_libraries( #tell cmake where to find the compiled translation unit, while include statement point to headers
 	${PROJECT_NAME}
 	PUBLIC
 	lib::imgui
