@@ -1,0 +1,6 @@
+[submodule "extern/libImGUI/pkg"]
+	path = extern/libImGUI/pkg
+	url = https://github.com/ocornut/imgui.git
+[submodule "extern/libSDL2/pkg"]
+	path = extern/libSDL2/pkg
+	url = https://github.com/libsdl-org/SDL.git
