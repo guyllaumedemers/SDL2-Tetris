@@ -15,6 +15,12 @@ add_executable(
 	Main.cpp
 )
 
+add_dependencies(
+	${PROJECT_NAME}
+	lib::imgui
+	lib::sdl2
+)
+
 target_link_libraries( #tell cmake where to find the compiled translation unit, while include statement point to headers
 	${PROJECT_NAME}
 	PUBLIC
