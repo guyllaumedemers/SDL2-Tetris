@@ -2,5 +2,5 @@
 
 add_subdirectory(
 	"appTetris"
-	"${PROJECT_BINARY_DIR}/bin"
+	"${CMAKE_BINARY_DIR}/bin"
 )
