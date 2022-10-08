@@ -4,7 +4,7 @@
 )
 
 project(
-		Tetris-App
+	Demo
     	VERSION 0.0.0.0
     	DESCRIPTION "Demo"
     	LANGUAGES ${MYLANGUAGES}
@@ -15,8 +15,18 @@ add_executable(
 	Main.cpp
 )
 
+target_include_directories(
+	${PROJECT_NAME}
+	BEFORE
+	PUBLIC
+	"${CMAKE_SOURCE_DIR}/extern/libSDL2"
+	"${CMAKE_SOURCE_DIR}/extern/libImGUI"
+)
+
+
 target_link_libraries(
 	${PROJECT_NAME}
+	PUBLIC
 	lib::imgui
 	lib::sdl2
 )
@@ -104,20 +114,15 @@ set(
 )
 
 set(
-	APP_TETRIS_SOURCE_DIR
-	"${CMAKE_SOURCE_DIR}/src/appTetris"
-)
-
-set(
 	TARGET_TRY_RUN
-	"${APP_TETRIS_SOURCE_DIR}/Main.cpp"
+	"${PROJECT_SOURCE_DIR}/Main.cpp"
 )
 
 try_run(
 	MAIN_CPP_RUN_RESULT
 	MAIN_CPP_COMPILE_RESULT
 	"${APP_TETRIS_BINARY_DIR}/test_output"
-	"${TARGET_COMPILATION}"
+	"${TARGET_TRY_RUN}"
 	OUTPUT_VARIABLE
 	TRY_RUN_LOG_OUTPUT
 )

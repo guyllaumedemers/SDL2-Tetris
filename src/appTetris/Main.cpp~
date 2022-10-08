@@ -1,3 +1,6 @@
+#include "libImGUI.cpp"
+#include "libSDL2.cpp"
+
 void libImGUITest();
 void libSDL2Test();
 

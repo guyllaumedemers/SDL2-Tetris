@@ -1,5 +1,5 @@
 ﻿project(
-	SDL2-App
+	SDL2-TetrisApp
 )
 
 # add subdirectories

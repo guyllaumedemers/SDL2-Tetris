@@ -6,6 +6,7 @@
 
 add_library(
 	${PROJECT_NAME}
+	STATIC
 	libSDL2.cpp	
 )
 

@@ -4,7 +4,7 @@
 )
 
 project(
-	TetrisProject
+	Root
 	VERSION 0.0.0.0
 	DESCRIPTION "Root"
 )
