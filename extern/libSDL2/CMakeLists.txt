@@ -7,7 +7,7 @@
 add_library(
 	${PROJECT_NAME}
 	OBJECT
-	libSDL2.cpp	
+	"${PROJECT_SOURCE_DIR}/libSDL2.cpp"	
 )
 
 add_library(

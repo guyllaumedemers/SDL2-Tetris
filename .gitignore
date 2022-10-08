@@ -58,6 +58,7 @@ _deps
 *.bak
 *.un~
 *.txt~
+*~
 
 ### remove build dir
 out/*

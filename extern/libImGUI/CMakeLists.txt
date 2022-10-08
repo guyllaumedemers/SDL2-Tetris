@@ -7,7 +7,7 @@
 add_library(
 	${PROJECT_NAME}
 	OBJECT
-	libImGUI.cpp
+	"${PROJECT_SOURCE_DIR}/libImGUI.cpp"
 )
 
 add_library(

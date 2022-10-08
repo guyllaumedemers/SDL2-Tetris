@@ -106,8 +106,8 @@ endif()
 # run try catch on dependencies
 
 set(
-	APP_TETRIS_BINARY_DIR
-	"${CMAKE_BINARY_DIR}/bin"
+	APP_TETRIS_TEST_BINARY_DIR
+	"${PROJECT_BINARY_DIR}/test"
 )
 
 set(
@@ -118,7 +118,7 @@ set(
 try_run(
 	MAIN_CPP_RUN_RESULT
 	MAIN_CPP_COMPILE_RESULT
-	"${APP_TETRIS_BINARY_DIR}/test_output"
+	"${APP_TETRIS_TEST_BINARY_DIR}"
 	"${TARGET_TRY_RUN}"
 	OUTPUT_VARIABLE
 	TRY_RUN_LOG_OUTPUT
