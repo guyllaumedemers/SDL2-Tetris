@@ -58,3 +58,6 @@ _deps
 .CMakeLists.txt~
 .CMakeLists.txt.un~
 CMakeLists.txt.bak
+..gitignore.un~
+.gitignore~
+.gitignore.bak

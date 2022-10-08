@@ -1,9 +1,0 @@
-﻿# add subdirectories
-
-add_subdirectory(
-	"libImGUI"	
-)
-
-add_subdirectory(
-	"libSDL2"	
-)
