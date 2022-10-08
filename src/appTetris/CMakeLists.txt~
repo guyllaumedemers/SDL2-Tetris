@@ -5,9 +5,9 @@
 
 project(
 	SDL2-Tetris-APP
-    	VERSION 0.0.0.0
-    	DESCRIPTION "Demo"
-    	LANGUAGES ${MYLANGUAGES}
+    VERSION 0.0.0.0
+    DESCRIPTION "Demo"
+    LANGUAGES ${MYLANGUAGES}
 )
 
 add_executable(
