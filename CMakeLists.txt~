@@ -3,12 +3,6 @@
     3.20.0
 )
 
-project(
-	TetrisProject
-	VERSION 0.0.0.0
-	DESCRIPTION "Root"
-)
-
 # add subdirectories
 
 add_subdirectory("doc")

@@ -57,3 +57,6 @@ _deps
 ### wildcard removing trash files created by vim, notepad++
 *.bak
 *.un~
+
+### remove build dir
+out/*

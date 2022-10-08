@@ -4,7 +4,7 @@
 )
 
 project(
-	SDL2-Tetris-APP
+		Tetris-App
     	VERSION 0.0.0.0
     	DESCRIPTION "Demo"
     	LANGUAGES ${MYLANGUAGES}

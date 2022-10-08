@@ -12,7 +12,7 @@ add_library(
 add_library(
 	lib::sdl2
 	ALIAS
-	${PROJECT_NAME}	
+	${PROJECT_NAME}
 )
 
 target_include_directories(
