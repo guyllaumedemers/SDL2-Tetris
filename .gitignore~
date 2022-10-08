@@ -57,4 +57,3 @@ _deps
 ### wildcard removing trash files created by vim, notepad++
 .CMakeLists.txt~
 .CMakeLists.txt.un~
-CMakeLists.txt.bak
