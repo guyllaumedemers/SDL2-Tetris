@@ -28,4 +28,4 @@ LINK : fatal error LNK1104: cannot open file 'tryRunlibImGUI.lib'
 [D:\VisualStudio\SDL2\SDL2-GameDevCMake\SDL2-Tetris\out\build\bin\SDL2-TetrisApp\test\CMakeFiles\CMakeTmp\cmTC_4786f.vcxproj]
 ```
 
-💬 References for patterns and physical desing are given from : [Design Patterns: Elements of Reusable Object‑Oriented Software](https://www.amazon.ca/-/fr/Gamma-Erich-ebook/dp/B000SEIBB8), [Large-Scale-Software-Design-John-Lakos](https://www.amazon.ca/Large-Scale-Software-Design-John-Lakos/dp/0201633620)
+💬 References on CMake are given under : [Modern CMake for C++](https://www.amazon.ca/Modern-CMake-Discover-approach-packaging/dp/1801070059), [Mastering CMake](https://www.amazon.ca/Mastering-CMake-Ken-Martin/dp/1930934319)
