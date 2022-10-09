@@ -21,7 +21,7 @@ add_dependencies(
 	lib::sdl2
 )
 
-target_link_libraries( #tell cmake where to find the compiled translation unit, while include statement point to headers
+target_link_libraries(
 	${PROJECT_NAME}
 	PUBLIC
 	lib::imgui
@@ -118,7 +118,7 @@ set(
 )
 
 # try_run cannot use ALIAS for some reason. target_link_libraries however allow such setup
-# try_run doesn't allow OBJECTlib which means I can only create another lib that capture the TARGET_OBJECTS
+# try_run doesn't allow OBJECTlib which means I can only create another lib that capture the TARGET_OBJECTS thru transitive property
 
 try_run(
 	MAIN_CPP_RUN_RESULT
@@ -128,12 +128,14 @@ try_run(
 	LINK_LIBRARIES
 	tryRunlibImGUI
 	tryRunlibSDL2
-	OUTPUT_VARIABLE
+	COMPILE_OUTPUT_VARIABLE
+	TRY_COMPILE_LOG_OUTPUT
+	RUN_OUTPUT_VARIABLE
 	TRY_RUN_LOG_OUTPUT
 )
 
 if(NOT ${MAIN_CPP_COMPILE_RESULT})
-	message(SEND_ERROR "SEND_ERROR! TARGET TRY COMPILATION FAILED : ${TARGET_TRY_RUN}, ${TRY_RUN_LOG_OUTPUT}")
+	message(SEND_ERROR "SEND_ERROR! TARGET TRY COMPILATION FAILED : ${TARGET_TRY_RUN}, COMPILE OUTPUT : ${TRY_COMPILE_LOG_OUTPUT}, RUN OUTPUT : ${TRY_RUN_LOG_OUTPUT}")
 elseif(NOT ${MAIN_CPP_RUN_RESULT})
-	message(SEND_ERROR "SEND_ERROR! TARGET TRY RUN FAILED : ${TARGET_TRY_RUN}, ${TRY_RUN_LOG_OUTPUT}")
+	message(SEND_ERROR "SEND_ERROR! TARGET TRY RUN FAILED : ${TARGET_TRY_RUN}, COMPILE OUTPUT : ${TRY_COMPILE_LOG_OUTPUT}, RUN OUTPUT : ${TRY_RUN_LOG_OUTPUT}")
 endif()
