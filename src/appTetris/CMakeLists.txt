@@ -45,6 +45,8 @@ set_property(
 
 if(NOT ${CMAKE_CXX_STANDARD} EQUAL ${MYCXX_VERSION_STANDARD})
 	message(WARNING "WARNING! CXX_STANDARD SHOULD BE CXX_${MYCXX_VERSION_STANDARD}, CURRENTLY : ${CMAKE_CXX_STANDARD}")
+else()
+	message(WARNING "WARNING! CXX_STANDARD IS CXX_${CMAKE_CXX_STANDARD}")	# why this doesnt print?
 endif()
 
 set(
@@ -115,14 +117,17 @@ set(
 	"${PROJECT_SOURCE_DIR}/Main.cpp"
 )
 
+# try_run cannot use ALIAS for some reason. target_link_libraries however allow such setup
+# try_run doesn't allow OBJECTlib which means I can only create another lib that capture the TARGET_OBJECTS
+
 try_run(
 	MAIN_CPP_RUN_RESULT
 	MAIN_CPP_COMPILE_RESULT
 	"${APP_TETRIS_TEST_BINARY_DIR}"
 	"${TARGET_TRY_RUN}"
 	LINK_LIBRARIES
-	lib::sdl2
-	lib::imgui
+	tryRunlibImGUI
+	tryRunlibSDL2
 	OUTPUT_VARIABLE
 	TRY_RUN_LOG_OUTPUT
 )

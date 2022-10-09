@@ -21,3 +21,11 @@ target_include_directories(
 	PUBLIC
 	"${PROJECT_SOURCE_DIR}/pkg/include"
 )
+
+# temp solution for try_run in appTetris CMakeLists.txt
+
+add_library(
+	tryRunlibSDL2
+	STATIC
+	$<TARGET_OBJECTS:${PROJECT_NAME}>
+)

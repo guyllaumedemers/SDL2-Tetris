@@ -22,3 +22,10 @@ target_include_directories(
 	"${PROJECT_SOURCE_DIR}/pkg/backends"
 )
 
+# temp solution for try_run in appTetris CMakeLists.txt
+
+add_library(
+	tryRunlibImGUI
+	STATIC
+	$<TARGET_OBJECTS:${PROJECT_NAME}>
+)
