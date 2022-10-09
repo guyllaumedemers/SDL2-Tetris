@@ -7,13 +7,25 @@ Learning sdl2 and CMake, Out-of-Source Build
 
 ## Issues
 ```
-Main.obj : error LNK2019: unresolved external symbol "void __cdecl
-libImGUITest(void)" (?libImGUITest@@YAXXZ) referenced in function main
-[D:\VisualStudio\SDL2\SDL2-GameDevCMake\SDL2-Tetris\out\build\bin\SDL2-TetrisApp\test\CMakeFiles\CMakeTmp\cmTC_e57e8.vcxproj]
+CMake Error at src/appTetris/CMakeLists.txt:138 (message):
+SEND_ERROR! TARGET TRY COMPILATION FAILED :
+D:/VisualStudio/SDL2/SDL2-GameDevCMake/SDL2-Tetris/src/appTetris/Main.cpp,
+COMPILE OUTPUT : Change Dir:
+D:/VisualStudio/SDL2/SDL2-GameDevCMake/SDL2-Tetris/out/build/bin/SDL2-TetrisApp/test/CMakeFiles/CMakeTmp
 
-Main.obj : error LNK2019: unresolved external symbol "void __cdecl
-libSDL2Test(void)" (?libSDL2Test@@YAXXZ) referenced in function main
-[D:\VisualStudio\SDL2\SDL2-GameDevCMake\SDL2-Tetris\out\build\bin\SDL2-TetrisApp\test\CMakeFiles\CMakeTmp\cmTC_e57e8.vcxproj]
+Run Build Command(s):C:/Program Files/Microsoft Visual
+Studio/2022/Enterprise/MSBuild/Current/Bin/amd64/MSBuild.exe
+cmTC_4786f.vcxproj /p:Configuration=Debug /p:Platform=x64
+/p:VisualStudioVersion=17.0 /v:m && MSBuild version 17.3.1+2badb37d1 for
+.NET Framework
+
+Microsoft (R) C/C++ Optimizing Compiler Version 19.33.31629 for x64
+Main.cpp
+Copyright (C) Microsoft Corporation.  All rights reserved.
+cl /c /Zi /W1 /WX- /diagnostics:column /Od /Ob0 /D _MBCS /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_4786f.dir\Debug\\" /Fd"cmTC_4786f.dir\Debug\vc143.pdb" /external:W1 /Gd /TP /errorReport:queue "D:\VisualStudio\SDL2\SDL2-GameDevCMake\SDL2-Tetris\src\appTetris\Main.cpp"
+
+LINK : fatal error LNK1104: cannot open file 'tryRunlibImGUI.lib'
+[D:\VisualStudio\SDL2\SDL2-GameDevCMake\SDL2-Tetris\out\build\bin\SDL2-TetrisApp\test\CMakeFiles\CMakeTmp\cmTC_4786f.vcxproj]
 ```
 
 💬 References for patterns and physical desing are given from : [Design Patterns: Elements of Reusable Object‑Oriented Software](https://www.amazon.ca/-/fr/Gamma-Erich-ebook/dp/B000SEIBB8), [Large-Scale-Software-Design-John-Lakos](https://www.amazon.ca/Large-Scale-Software-Design-John-Lakos/dp/0201633620)
