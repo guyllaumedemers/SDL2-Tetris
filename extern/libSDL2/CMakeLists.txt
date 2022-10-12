@@ -6,7 +6,7 @@
 
 add_library(
 	${PROJECT_NAME}
-	OBJECT
+	STATIC
 	"${PROJECT_SOURCE_DIR}/libSDL2.cpp"	
 )
 
@@ -16,16 +16,16 @@ add_library(
 	${PROJECT_NAME}
 )
 
-target_include_directories(
-	${PROJECT_NAME}
-	PUBLIC
-	"${PROJECT_SOURCE_DIR}/pkg/include"
-)
+#target_include_directories(
+#	${PROJECT_NAME}
+#	INTERFACE
+#	"${PROJECT_SOURCE_DIR}/pkg/include"
+#)
 
 # temp solution for try_run in appTetris CMakeLists.txt
 
-add_library(
-	tryRunlibSDL2
-	STATIC
-	$<TARGET_OBJECTS:${PROJECT_NAME}>
-)
+#add_library(
+#	tryRunlibSDL2
+#	STATIC
+#	$<TARGET_OBJECTS:${PROJECT_NAME}>
+#)

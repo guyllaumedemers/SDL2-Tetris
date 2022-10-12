@@ -1,4 +1,4 @@
 // test script
-#include <cstdio>
+#include <iostream>
 
-void libImGUITest(){ std::printf("libImGUI, Hello World!");}
+void libImGUITest(){ std::cout << "libImGUI, Hello World!" << std::endl;}

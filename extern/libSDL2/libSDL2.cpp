@@ -1,4 +1,4 @@
 // test script
-#include <cstdio>
+#include <iostream>
 
-void libSDL2Test(){ std::printf("libSDL2, Hello World!");}
+void libSDL2Test(){ std::cout << "libSDL2, Hello World!" << std::endl;}
