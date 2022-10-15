@@ -10,9 +10,48 @@ project(
     LANGUAGES ${MYLANGUAGES}
 )
 
+# project includes, sources
+
+#file(
+#	GLOB_RECURSE
+#	headers
+#	"${CMAKE_CURRENT_SOURCE_DIR}/include"
+#	*.h
+#
+
+file(
+	GLOB_RECURSE
+	MYPROJECT_SOURCES
+	"${CMAKE_CURRENT_SOURCE_DIR}/src"
+	*.cpp
+)
+
+# shouldnt be an interface during development cycle
+
+#add_library(
+#	lib${PROJECT_NAME}
+#	STATIC
+#	${MYPROJECT_SOURCES}
+#)
+#
+#target_include_directories(
+#	lib${PROJECT_NAME}
+#	PUBLIC
+#	"${CMAKE_CURRENT_SOURCE_DIR}/include"
+#)
+#
+#target_link_libraries(
+#	lib${PROJECT_NAME}
+#	PRIVATE
+#	${MYPROJECT_SOURCES}
+#)
+
+# project executable
+
 add_executable(
 	${PROJECT_NAME}
 	Main.cpp
+	${MYPROJECT_SOURCES}
 )
 
 add_dependencies(
@@ -46,10 +85,7 @@ set(
 	20
 )
 
-set_property(
-	TARGET
-	${PROJECT_NAME}
-	PROPERTY
+set(
 	CMAKE_CXX_STANDARD
 	${MYCXX_VERSION_STANDARD}
 )
@@ -57,7 +93,7 @@ set_property(
 if(NOT ${CMAKE_CXX_STANDARD} EQUAL ${MYCXX_VERSION_STANDARD})
 	message(WARNING "WARNING! CXX_STANDARD SHOULD BE CXX_${MYCXX_VERSION_STANDARD}, CURRENTLY : ${CMAKE_CXX_STANDARD}")
 else()
-	message(WARNING "WARNING! CXX_STANDARD IS CXX_${CMAKE_CXX_STANDARD}")	# why this doesnt print?
+	message(WARNING "WARNING! CXX_STANDARD IS CXX_${CMAKE_CXX_STANDARD}")
 endif()
 
 set(
