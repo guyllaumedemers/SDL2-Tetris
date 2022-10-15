@@ -62,3 +62,6 @@ _deps
 
 ### remove build dir
 out/*
+
+### remove visual studio chached dir
+.vs

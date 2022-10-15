@@ -2,10 +2,10 @@
 
 add_subdirectory(
 	"libImGUI"
-	"${CMAKE_BINARY_DIR}/libs/libImGUI"	
+	"${CMAKE_BINARY_DIR}/extern/libImGUI"	
 )
 
 add_subdirectory(
 	"libSDL2"
-	"${CMAKE_BINARY_DIR}/libs/libSDL2"
+	"${CMAKE_BINARY_DIR}/extern/libSDL2"
 )

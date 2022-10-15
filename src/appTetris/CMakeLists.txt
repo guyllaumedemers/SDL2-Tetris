@@ -5,9 +5,9 @@
 
 project(
 	Demo
-    	VERSION 0.0.0.0
-    	DESCRIPTION "Demo"
-    	LANGUAGES ${MYLANGUAGES}
+    VERSION 0.0.0.0
+    DESCRIPTION "Demo"
+    LANGUAGES ${MYLANGUAGES}
 )
 
 add_executable(
@@ -21,11 +21,22 @@ add_dependencies(
 	lib::sdl2
 )
 
-target_link_libraries(	# check access specifier later - should be INTERFACE when proper setup is done.
+target_link_libraries(
 	${PROJECT_NAME}
-	PUBLIC
+	PRIVATE
 	lib::imgui
 	lib::sdl2
+)
+
+get_target_property(
+	libSDL2_A
+	lib::sdl2
+	ALIASED_TARGET
+)
+
+add_custom_command ( TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
 # set project specifics
@@ -104,38 +115,3 @@ if(${PRINT_UNSUPPORTED_COMPILE_FEATURES})
 		endif()
 	endforeach()
 endif()
-
-# run try catch on dependencies
-
-set(
-	APP_TETRIS_TEST_BINARY_DIR
-	"${PROJECT_BINARY_DIR}/test"
-)
-
-set(
-	TARGET_TRY_RUN
-	"${PROJECT_SOURCE_DIR}/Main.cpp"
-)
-
-# try_run cannot use ALIAS for some reason. target_link_libraries however allow such setup
-# try_run doesn't allow OBJECTlib which means I can only create another lib that capture the TARGET_OBJECTS thru transitive property
-
-#try_run(
-#	MAIN_CPP_RUN_RESULT
-#	MAIN_CPP_COMPILE_RESULT
-#	"${APP_TETRIS_TEST_BINARY_DIR}"
-#	"${TARGET_TRY_RUN}"
-#	LINK_LIBRARIES
-#	libSDL2
-#	libImGUI
-#	COMPILE_OUTPUT_VARIABLE
-#	TRY_COMPILE_LOG_OUTPUT
-#	RUN_OUTPUT_VARIABLE
-#	TRY_RUN_LOG_OUTPUT
-#)
-#
-#if(NOT ${MAIN_CPP_COMPILE_RESULT})
-#	message(SEND_ERROR "SEND_ERROR! TARGET TRY COMPILATION FAILED : ${TARGET_TRY_RUN}, COMPILE OUTPUT : ${TRY_COMPILE_LOG_OUTPUT}, RUN OUTPUT : ${TRY_RUN_LOG_OUTPUT}")
-#elseif(NOT ${MAIN_CPP_RUN_RESULT})
-#	message(SEND_ERROR "SEND_ERROR! TARGET TRY RUN FAILED : ${TARGET_TRY_RUN}, COMPILE OUTPUT : ${TRY_COMPILE_LOG_OUTPUT}, RUN OUTPUT : ${TRY_RUN_LOG_OUTPUT}")
-#endif()
