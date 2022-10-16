@@ -1,5 +1,4 @@
 #include "../include/InputManager.h"
-#include <cstdlib>
 
 int InputManager::WaitPollEvent(SDL_Event& Event) const
 {

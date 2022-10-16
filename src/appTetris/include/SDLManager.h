@@ -24,5 +24,6 @@ public:
 	int Init();
 	void Update(void(*GameRenderingFncPtr)(class GameInstance* const), class GameInstance* const GameInstancePtr);
 	void Clear();
+	void SetWindowContextSize(uint16_t Width, uint16_t Height);
 };
 #endif

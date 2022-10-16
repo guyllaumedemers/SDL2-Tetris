@@ -16,7 +16,7 @@ class InputManager final
 	typedef std::function<void(bool)> DelQuitGame;
 	DelQuitGame QuitGameEvent;
 
-	typedef std::function<void(int, int)> DelDirectionalKeyPressed;
+	typedef std::function<void(int8_t, int8_t)> DelDirectionalKeyPressed;
 	DelDirectionalKeyPressed DirectionalKeyPressedEvent;
 
 	friend class GameManager;

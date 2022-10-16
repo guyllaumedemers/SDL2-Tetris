@@ -1,8 +1,5 @@
 #include "../include/SDLManager.h"
 
-#define WINDOW_WIDTH 300
-#define WINDOW_HEIGHT 600
-
 int SDLManager::Init()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0 /*0 is Success here*/)
@@ -13,7 +10,7 @@ int SDLManager::Init()
 
 	Window = std::unique_ptr<SDL_Window, FreeSDLWindow>(SDL_CreateWindow("TETRIS",
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		WINDOW_WIDTH, WINDOW_HEIGHT,
+		NULL, NULL,
 		NULL
 	));
 
@@ -59,4 +56,13 @@ void SDLManager::Update(void(*GameRenderingFncPtr)(class GameInstance* const), c
 void SDLManager::Clear()
 {
 	SDL_Quit();
+}
+
+void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height)
+{
+	if (!Window)
+	{
+		return;
+	}
+	SDL_SetWindowSize(Window.get(), Width, Height);
 }

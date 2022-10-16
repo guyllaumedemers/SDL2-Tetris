@@ -20,7 +20,8 @@ int GameManager::Init()
 		return EXIT_FAILURE;
 	}
 	InputManagerPtr->QuitGameEvent = [&](bool bHasQuitGame) { bIsQuittingGame = bHasQuitGame; };
-	InputManagerPtr->DirectionalKeyPressedEvent = [&](int DirX, int DirY) { GameInstancePtr->PollKeyEvent(DirX, DirY); };
+	InputManagerPtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY) { GameInstancePtr->PollKeyEvent(DirX, DirY); };
+	GameInstancePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height) { SDLManagerPtr->SetWindowContextSize(Width, Height); };
 	return SDLManagerPtr->Init();
 }
 
@@ -31,6 +32,7 @@ void GameManager::Update()
 		return;
 	}
 
+	GameInstancePtr->Play();
 	bIsQuittingGame = false;
 	while (!bIsQuittingGame)
 	{

@@ -1,6 +1,11 @@
 #ifndef INCLUDED_TETROMINOE
 #define INCLUDED_TETROMINOE
 
+#ifndef INCLUDED_CSTD_INT
+#define INCLUDED_CSTD_INT
+#include <cstdint>
+#endif
+
 #ifndef INCLUDED_TETROMINOE_ENUM
 #define INCLUDED_TETROMINOE_ENUM
 enum TetrominoeEnum
@@ -16,13 +21,14 @@ enum TetrominoeEnum
 
 class Tetrominoe
 {
-	static constexpr uint8_t Size = 25;
-	TetrominoeEnum TetrominoeEnumVal;
+	TetrominoeEnum TetrominoeEnumVal = TetrominoeEnum::None;
 	int* TetrominoeShapeIndices = nullptr;
+	static constexpr uint8_t Size = 25;
+
+	friend class TileMap;
 
 public:
-	Tetrominoe(TetrominoeEnum TetrominoeEnum);
-	virtual ~Tetrominoe() = 0 {}
-
+	Tetrominoe(TetrominoeEnum TetrominoeEnum = TetrominoeEnum::None);
+	~Tetrominoe() = default;
 };
 #endif

@@ -1,23 +1,45 @@
 #include "../include/TileMap.h"
 #include "../include/Tetrominoe.h"
 
-void TileMap::Init()
-{
-}
+/// <summary>
+/// Static Fields
+/// </summary>
+/// <param name="Rows"></param>
+/// <param name="Cols"></param>
+uint8_t TileMap::Rows = 0;
+uint8_t TileMap::Cols = 0;
+//@end()
 
-void TileMap::Update(int DirX, int DirY)
+void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint16_t)> SetWindowCallback)
 {
+	Tilemap = std::vector<std::unique_ptr<Tetrominoe>>();
+	this->Rows = Rows;
+	this->Cols = Cols;
+
+	for(auto it = 0; it != (Rows*Cols); ++it)
+	{
+		Tilemap.push_back(std::make_unique<Tetrominoe>());
+	}
+
 	for(auto& it : Tilemap)
 	{
+		/*Create Background Tiles*/
+		/*Create Border Tiles*/
+	}
+
+	static constexpr uint8_t TetrominoeSize = Tetrominoe::Size;
+	SetWindowCallback(Cols * TetrominoeSize, Rows * TetrominoeSize);
+}
+
+void TileMap::Update(int8_t DirX, int8_t DirY)
+{
+	for (auto& it : Tilemap)
+	{
 		Tetrominoe* Tetrominoe = it.get();
-		if(!Tetrominoe)
+		if (!Tetrominoe)
 		{
 			continue;
 		}
-
-		static constexpr uint8_t TetrominoeSize = Tetrominoe->Size;
-		static constexpr uint8_t Rows = Height / TetrominoeSize;
-		static constexpr uint8_t Cols = Width / TetrominoeSize;
 
 		/*Find Current Tetrominoe position*/
 		/*Increase its position Index by using Args DirX & DirY*/

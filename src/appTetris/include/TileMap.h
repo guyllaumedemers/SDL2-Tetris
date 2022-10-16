@@ -1,9 +1,19 @@
 #ifndef INCLUDED_TILEMAP
 #define INCLUDED_TILEMAP
 
+#ifndef INCLUDED_CSTD_INT
+#define INCLUDED_CSTD_INT
+#include <cstdint>
+#endif
+
 #ifndef INCLUDED_COLLECTION_ARRAY
 #define INCLUDED_COLLECTION_ARRAY
-#include <array>
+#include <vector>
+#endif
+
+#ifndef INCLUDED_FUNCTIONAL
+#define INCLUDED_FUNCTIONAL
+#include <functional>
 #endif
 
 #ifndef INCLUDED_MEMORY
@@ -11,19 +21,19 @@
 #include <memory>
 #endif
 
+#include "Tetrominoe.h"
+
 class TileMap final
 {
-	static uint16_t Width = 200;
-	static uint16_t Height = 300;
-	std::array<std::unique_ptr<class Tetrominoe>, NULL> Tilemap = std::array<std::unique_ptr<class Tetrominoe>, NULL>();
-
-	friend class Tetrominoe;
+	static uint8_t Rows;
+	static uint8_t Cols;
+	std::vector<std::unique_ptr<Tetrominoe>> Tilemap = std::vector<std::unique_ptr<Tetrominoe>>();
 
 public:
 	TileMap() = default;
 	~TileMap() = default;
-	void Init();
-	void Update(int DirX, int DirY);
+	void Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint16_t)> SetWindowCallback);
+	void Update(int8_t DirX, int8_t DirY);
 	void Clear();
 };
 #endif
