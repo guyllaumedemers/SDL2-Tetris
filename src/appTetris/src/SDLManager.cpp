@@ -47,7 +47,7 @@ void SDLManager::Update(void(*GameRenderingFncPtr)(class GameInstance* const), c
 	}
 
 	SDL_Renderer* Ren = Renderer.get();
-	static constexpr Uint8 Alpha = 255;
+	static constexpr uint8_t Alpha = 255;
 
 	SDL_SetRenderDrawColor(Ren, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(Ren);

@@ -1,13 +1,20 @@
 #include "../include/GameInstance.h"
 
-#include <string> //Temp, will remove
-
 void GameInstance::Play()
 {
 }
 
 void GameInstance::Update()
 {
+	if(!GridTileMap)
+	{
+		static_assert(GridTileMap);
+		return;
+	}
+	/*Should handle Game Loop Refresh Rate so Tile Movement */
+	static constexpr uint8_t OneDown = -1;
+	static constexpr uint8_t Idle = 0;
+	GridTileMap->Update(Idle, OneDown);
 }
 
 void GameInstance::Pause()
@@ -20,5 +27,10 @@ void GameInstance::Quit()
 
 void GameInstance::PollKeyEvent(int DirX, int DirY)
 {
-	std::sprintf("{0} {1}", std::to_string(DirX).c_str(), std::to_string(DirY).c_str()); /*Invoke game logic for Tetrominos movement*/
+	if (!GridTileMap)
+	{
+		static_assert(GridTileMap);
+		return;
+	}
+	GridTileMap->Update(DirX, DirY);
 }
