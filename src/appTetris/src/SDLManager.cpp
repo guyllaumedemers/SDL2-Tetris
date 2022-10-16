@@ -40,13 +40,20 @@ int SDLManager::Init()
 
 void SDLManager::Update()
 {
-	if(!Renderer)
+	if (!Renderer)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2 RENDERER UPDATE FAILED!");
 		return;
 	}
 
+	SDL_Renderer* Ren = Renderer.get();
 
+	Uint8 Alpha = 255;
+
+	SDL_SetRenderDrawColor(Ren, NULL, NULL, NULL, Alpha);
+	SDL_RenderClear(Ren);
+	/*Render Game Logic before Render Buffer Swap*/
+	SDL_RenderPresent(Ren);
 }
 
 void SDLManager::Clear()
