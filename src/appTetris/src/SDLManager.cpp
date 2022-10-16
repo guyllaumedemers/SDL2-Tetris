@@ -35,7 +35,7 @@ int SDLManager::Init()
 	return EXIT_SUCCESS;
 }
 
-void SDLManager::Update(void(*GameRenderingFncPtr)(class GameInstance* const), class GameInstance* const GameInstancePtr)
+void SDLManager::Update(std::function<void()> GameInstanceFuncPtr)
 {
 	if (!Renderer)
 	{
@@ -49,7 +49,7 @@ void SDLManager::Update(void(*GameRenderingFncPtr)(class GameInstance* const), c
 	SDL_SetRenderDrawColor(Ren, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(Ren);
 	/*Render Game Logic before Render Buffer Swap*/
-	GameRenderingFncPtr(GameInstancePtr);
+	GameInstanceFuncPtr();
 	SDL_RenderPresent(Ren);
 }
 

@@ -19,7 +19,7 @@ enum TetrominoeEnum
 };
 #endif
 
-class Tetrominoe
+class Tetrominoe final
 {
 	TetrominoeEnum TetrominoeEnumVal = TetrominoeEnum::None;
 	int* TetrominoeShapeIndices = nullptr;

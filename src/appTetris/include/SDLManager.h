@@ -11,6 +11,11 @@
 #include <memory>
 #endif
 
+#ifndef INCLUDED_FUNCTIONAL
+#define INCLUDED_FUNCTIONAL
+#include <functional>
+#endif
+
 #include "SDLWrapper.h"
 
 class SDLManager final
@@ -22,7 +27,7 @@ public:
 	SDLManager() = default;
 	~SDLManager() = default;
 	int Init();
-	void Update(void(*GameRenderingFncPtr)(class GameInstance* const), class GameInstance* const GameInstancePtr);
+	void Update(std::function<void()> GameInstanceFuncPtr);
 	void Clear();
 	void SetWindowContextSize(uint16_t Width, uint16_t Height);
 };

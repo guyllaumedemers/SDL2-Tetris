@@ -9,7 +9,7 @@ void GameInstance::Play()
 	/*Should retrieved values from Preset Difficulty*/
 	const uint8_t Rows = 20;
 	const uint8_t Cols = 30;
-	GridTileMap->Init(Rows, Cols, [&](uint8_t Rows, uint8_t Cols) {SetWindowEvent(Rows, Cols); });
+	GridTileMap->Init(Rows, Cols, [&](uint8_t Rows, uint8_t Cols) { SetWindowEvent(Rows, Cols); });
 }
 
 void GameInstance::Update()

@@ -42,7 +42,7 @@ void GameManager::Update()
 			InputManagerPtr->WaitPollEvent(Event);
 		}
 		/*Workaround capture clause problem when used in conjunction with void(*)*/
-		SDLManagerPtr->Update([](GameInstance* const GameInstanceArgPtr) { GameInstanceArgPtr->Update(); }, GameInstancePtr.get());
+		SDLManagerPtr->Update([&]() { GameInstancePtr->Update(); });
 	}
 }
 
