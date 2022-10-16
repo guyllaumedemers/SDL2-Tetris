@@ -1,9 +1,9 @@
-#include "../include/SDLHandle.h"
+#include "../include/SDLManager.h"
 
 #define WINDOW_WIDTH 300
 #define WINDOW_HEIGHT 600
 
-int SDLHandle::Init()
+int SDLManager::Init()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0 /*0 is Success here*/)
 	{
@@ -38,7 +38,7 @@ int SDLHandle::Init()
 	return EXIT_SUCCESS;
 }
 
-void SDLHandle::Update()
+void SDLManager::Update()
 {
 	if(!Renderer)
 	{
@@ -49,7 +49,7 @@ void SDLHandle::Update()
 
 }
 
-void SDLHandle::Clear()
+void SDLManager::Clear()
 {
 	SDL_Quit();
 }

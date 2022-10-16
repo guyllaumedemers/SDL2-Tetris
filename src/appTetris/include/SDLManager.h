@@ -1,5 +1,5 @@
-#ifndef INCLUDED_SDL_HANDLE
-#define INCLUDED_SDL_HANDLE
+#ifndef INCLUDED_SDL_MANAGER
+#define INCLUDED_SDL_MANAGER
 
 #ifndef INCLUDED_SDL_LIB
 #define INCLUDED_SDL_LIB
@@ -13,20 +13,16 @@
 
 #include "SDLWrapper.h"
 
-class SDLHandle final
+class SDLManager final
 {
 	std::unique_ptr<SDL_Window, FreeSDLWindow> Window = nullptr;
 	std::unique_ptr<SDL_Renderer, FreeSDLRenderer> Renderer = nullptr;
 
 public:
-
-	SDLHandle() = default;
-	~SDLHandle() = default;
-
+	SDLManager() = default;
+	~SDLManager() = default;
 	int Init();
 	void Update();
 	void Clear();
-
-private:
 };
 #endif

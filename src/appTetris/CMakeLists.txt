@@ -12,39 +12,12 @@ project(
 
 # project includes, sources
 
-#file(
-#	GLOB_RECURSE
-#	headers
-#	"${CMAKE_CURRENT_SOURCE_DIR}/include"
-#	*.h
-#
-
 file(
 	GLOB_RECURSE
 	MYPROJECT_SOURCES
 	"${CMAKE_CURRENT_SOURCE_DIR}/src"
 	*.cpp
 )
-
-# shouldnt be an interface during development cycle
-
-#add_library(
-#	lib${PROJECT_NAME}
-#	STATIC
-#	${MYPROJECT_SOURCES}
-#)
-#
-#target_include_directories(
-#	lib${PROJECT_NAME}
-#	PUBLIC
-#	"${CMAKE_CURRENT_SOURCE_DIR}/include"
-#)
-#
-#target_link_libraries(
-#	lib${PROJECT_NAME}
-#	PRIVATE
-#	${MYPROJECT_SOURCES}
-#)
 
 # project executable
 

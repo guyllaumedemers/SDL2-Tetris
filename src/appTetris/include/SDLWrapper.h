@@ -6,7 +6,7 @@
 #include <SDL.h>
 #endif
 
-struct FreeSDLWindow
+struct FreeSDLWindow final
 {
 	inline void operator()(SDL_Window* Window) const
 	{
