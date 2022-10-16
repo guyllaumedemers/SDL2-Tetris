@@ -11,5 +11,6 @@ public:
 	void Update();
 	void Pause();
 	void Quit();
+	void PollKeyEvent(int DirX, int DirY);
 };
 #endif

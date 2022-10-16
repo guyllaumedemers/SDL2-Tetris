@@ -2,8 +2,6 @@
 #include "../include/SDLManager.h"
 #include "../include/InputManager.h"
 
-#include <string>
-
 int GameManager::Run()
 {
 	if (Init() != EXIT_SUCCESS)
@@ -17,12 +15,12 @@ int GameManager::Run()
 
 int GameManager::Init()
 {
-	if (!SDLManagerPtr || !InputManagerPtr)
+	if (!SDLManagerPtr || !InputManagerPtr || !GameInstancePtr)
 	{
 		return EXIT_FAILURE;
 	}
 	InputManagerPtr->QuitGameEvent = [&](bool bHasQuitGame) { bIsQuittingGame = bHasQuitGame; };
-	InputManagerPtr->DirectionalKeyPressedEvent = [&](int DirX, int DirY) { std::sprintf("{0} {1}", std::to_string(DirX).c_str(), std::to_string(DirY).c_str()); /*Invoke game logic for Tetrominos movement*/ };
+	InputManagerPtr->DirectionalKeyPressedEvent = [&](int DirX, int DirY) { GameInstancePtr->PollKeyEvent(DirX, DirY); };
 	return SDLManagerPtr->Init();
 }
 
