@@ -38,7 +38,7 @@ int SDLManager::Init()
 	return EXIT_SUCCESS;
 }
 
-void SDLManager::Update()
+void SDLManager::Update(void(*GameRenderingFncPtr)(class GameInstance* const), class GameInstance* const GameInstancePtr)
 {
 	if (!Renderer)
 	{
@@ -47,12 +47,12 @@ void SDLManager::Update()
 	}
 
 	SDL_Renderer* Ren = Renderer.get();
-
-	Uint8 Alpha = 255;
+	static constexpr Uint8 Alpha = 255;
 
 	SDL_SetRenderDrawColor(Ren, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(Ren);
 	/*Render Game Logic before Render Buffer Swap*/
+	GameRenderingFncPtr(GameInstancePtr);
 	SDL_RenderPresent(Ren);
 }
 

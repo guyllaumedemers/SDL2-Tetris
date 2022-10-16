@@ -28,7 +28,7 @@ int GameManager::Init()
 
 void GameManager::Update()
 {
-	if (!SDLManagerPtr || !InputManagerPtr)
+	if (!SDLManagerPtr || !InputManagerPtr || !GameInstancePtr)
 	{
 		return;
 	}
@@ -41,7 +41,8 @@ void GameManager::Update()
 		{
 			InputManagerPtr->WaitPollEvent(Event);
 		}
-		SDLManagerPtr->Update();
+		/*Workaround capture clause problem when used in conjunction with void(*)*/
+		SDLManagerPtr->Update([](GameInstance* const GameInstanceArgPtr) { GameInstanceArgPtr->Update(); }, GameInstancePtr.get());
 	}
 }
 

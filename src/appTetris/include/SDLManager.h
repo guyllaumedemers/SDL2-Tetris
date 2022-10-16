@@ -22,7 +22,7 @@ public:
 	SDLManager() = default;
 	~SDLManager() = default;
 	int Init();
-	void Update();
+	void Update(void(*GameRenderingFncPtr)(class GameInstance* const), class GameInstance* const GameInstancePtr);
 	void Clear();
 };
 #endif

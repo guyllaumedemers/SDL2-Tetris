@@ -24,6 +24,6 @@ class InputManager final
 public:
 	InputManager() = default;
 	~InputManager() = default;
-	int WaitPollEvent(SDL_Event& Event);
+	int WaitPollEvent(SDL_Event& Event) const;
 };
 #endif
