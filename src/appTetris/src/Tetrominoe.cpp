@@ -1,8 +1,10 @@
 #include "../include/Tetrominoe.h"
 
-//constexpr uint8_t Tetrominoe::Size = 25;
-
-Tetrominoe::Tetrominoe(TetrominoeEnum TetrominoeEnum)
+Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 {
-	TetrominoeEnumVal = TetrominoeEnum;
+	if(!TetrominoeEnum /*ShapeEnum::None == 0*/)
+	{
+		return;
+	}
+	TetrominoeShape = Shape(TetrominoeEnum);
 }
