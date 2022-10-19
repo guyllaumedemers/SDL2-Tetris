@@ -64,6 +64,5 @@ void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height)
 	{
 		return;
 	}
-	std::printf(" %i %i ", Width, Height);
 	SDL_SetWindowSize(Window.get(), Width, Height);
 }
