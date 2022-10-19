@@ -32,7 +32,10 @@ void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint
 	}
 
 	static constexpr uint8_t TetrominoeSize = Tile::Size;
-	SetWindowCallback(Cols * TetrominoeSize, Rows * TetrominoeSize);
+	uint16_t Width = Cols * TetrominoeSize;
+	uint16_t Height = Rows * TetrominoeSize;
+	std::printf("%i %i ", Width, Height);
+	SetWindowCallback(Width, Height);
 }
 
 void TileMap::Update(int8_t DirX, int8_t DirY)

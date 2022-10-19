@@ -23,7 +23,7 @@ enum TileEnum
 
 #ifndef INCLUDED_POD_TILE
 #define INCLUDED_POD_TILE
-struct Tile /*Plain Old Data*/
+struct Tile final
 {
 	static constexpr uint8_t Size = 25;
 	uint8_t IndexPosition = 0;
@@ -58,7 +58,7 @@ enum ShapeEnum
 
 #ifndef INCLUDED_SHAPE
 #define INCLUDED_SHAPE
-struct Shape
+struct Shape final
 {
 	static constexpr size_t MaxEntriesPerShape = 4;
 	ShapeEnum Pattern = ShapeEnum::None;

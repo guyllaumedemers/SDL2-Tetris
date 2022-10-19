@@ -13,7 +13,7 @@
 
 #include "Tetrominoe.h"
 
-class TetrominoeManager /*Will handle Tetrominoe update and keep handle on last Active for mouvement update*/
+class TetrominoeManager final
 {
 	std::vector<std::unique_ptr<Tetrominoe>> TetrominoePool = std::vector<std::unique_ptr<Tetrominoe>>();
 

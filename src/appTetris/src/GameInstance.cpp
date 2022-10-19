@@ -7,8 +7,8 @@ void GameInstance::Play()
 		return;
 	}
 	/*Should retrieved values from Preset Difficulty*/
-	const uint8_t Rows = 20;
-	const uint8_t Cols = 30;
+	const uint8_t Rows = 50;
+	const uint8_t Cols = 20;
 	GridTileMap->Init(Rows, Cols, [&](uint8_t Rows, uint8_t Cols) { SetWindowEvent(Rows, Cols); });
 }
 
@@ -19,8 +19,8 @@ void GameInstance::Update()
 		return;
 	}
 	/*Should handle Game Loop Refresh Rate so Tile Movement dont fly offscreen*/
-	static constexpr uint8_t OneDown = -1;
-	static constexpr uint8_t Idle = 0;
+	static constexpr int8_t OneDown = -1;
+	static constexpr int8_t Idle = 0;
 	GridTileMap->Update(Idle, OneDown);
 }
 
