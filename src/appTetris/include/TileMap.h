@@ -11,17 +11,13 @@
 #include <vector>
 #endif
 
-#ifndef INCLUDED_MEMORY
-#define INCLUDED_MEMORY
-#include <memory>
-#endif
-
 #ifndef INCLUDED_FUNCTIONAL
 #define INCLUDED_FUNCTIONAL
 #include <functional>
 #endif
 
 #include "Tetrominoe.h"
+#include "Tile.h"
 
 class TileMap final
 {
@@ -33,7 +29,7 @@ public:
 	TileMap() = default;
 	~TileMap() = default;
 	void Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint16_t)> SetWindowCallback);
-	void Update(int8_t DirX, int8_t DirY);
+	void Update(class TetrominoeManager* const TetrominoeManagerPtr, int8_t DirX, int8_t DirY);
 	void Clear();
 };
 #endif

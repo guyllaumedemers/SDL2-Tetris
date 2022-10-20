@@ -21,7 +21,7 @@ void GameInstance::Update()
 	/*Should handle Game Loop Refresh Rate so Tile Movement dont fly offscreen*/
 	static constexpr int8_t OneDown = -1;
 	static constexpr int8_t Idle = 0;
-	GridTileMap->Update(Idle, OneDown);
+	GridTileMap->Update(TetrominoeManagerPtr.get(), Idle, OneDown);
 }
 
 void GameInstance::Pause()
@@ -43,5 +43,5 @@ void GameInstance::PollKeyEvent(int8_t DirX, int8_t DirY)
 	{
 		return;
 	}
-	GridTileMap->Update(DirX, DirY);
+	GridTileMap->Update(TetrominoeManagerPtr.get(), DirX, DirY);
 }

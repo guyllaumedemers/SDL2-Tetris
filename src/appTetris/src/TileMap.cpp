@@ -1,5 +1,5 @@
 #include "../include/TileMap.h"
-#include "../include/Tetrominoe.h"
+#include "../include/TetrominoeManager.h"
 
 /// <summary>
 /// Static Fields
@@ -31,19 +31,26 @@ void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint
 		}
 	}
 
-	static constexpr uint8_t TetrominoeSize = Tile::Size;
-	SetWindowCallback(Cols * TetrominoeSize, Rows * TetrominoeSize);
+	static constexpr uint8_t TileSize = Tile::Size;
+	SetWindowCallback(Cols * TileSize, Rows * TileSize);
 }
 
-void TileMap::Update(int8_t DirX, int8_t DirY)
+void TileMap::Update(TetrominoeManager* const TetrominoeManagerPtr, int8_t DirX, int8_t DirY)
 {
-	/*Find Current Tetrominoe position*/
-	/*Increase its position Index by using Args DirX & DirY*/
-	/*Create WrapAround when Index > Rows*/
-	/*Prevent WrapAround when Index > Cols && Index < 0*/
-	/*Going Up is not Allowed*/
+	if (!TetrominoeManagerPtr)
+	{
+		return;
+	}
+	// update position of all tetrominoes
+	TetrominoeManagerPtr->Update(DirX, DirY, Rows, Cols);
+	// render all tiles
+	for (const auto& it : Tilemap)
+	{
+		it.Render();
+	}
 }
 
 void TileMap::Clear()
 {
+	Tilemap.clear();
 }
