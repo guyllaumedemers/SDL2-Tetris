@@ -1,4 +1,5 @@
 #include "../include/TetrominoeManager.h"
+#include "../include/Tetrominoe.h"
 
 void TetrominoeManager::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {

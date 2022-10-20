@@ -21,15 +21,13 @@
 #include <memory>
 #endif
 
-#include "Tetrominoe.h"
-
 class TetrominoeManager final
 {
-	typedef std::function<void(Tetrominoe*)> DelGenerateRandomTetrominoe;
+	typedef std::function<void(class Tetrominoe*)> DelGenerateRandomTetrominoe;
 	DelGenerateRandomTetrominoe GenerateRandomTetrominoeEvent;
 
-	std::vector<std::unique_ptr<Tetrominoe>> TetrominoePool = std::vector<std::unique_ptr<Tetrominoe>>();
-	std::shared_ptr<Tetrominoe> ActiveTetrominoe = nullptr;
+	std::vector<std::unique_ptr<class Tetrominoe>> TetrominoePool = std::vector<std::unique_ptr<class Tetrominoe>>();
+	std::shared_ptr<class Tetrominoe> ActiveTetrominoe = nullptr;
 
 	friend class TileMap;
 
