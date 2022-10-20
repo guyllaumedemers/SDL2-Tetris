@@ -26,5 +26,7 @@ private:
 	int Init();
 	void Update();
 	void Clear();
+	void Subscribe();
+	void UnSubscribe();
 };
 #endif

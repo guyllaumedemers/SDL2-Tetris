@@ -21,13 +21,17 @@
 #include <memory>
 #endif
 
+/*cannot forward declare because of initializer list requirement with std::unique_ptr & std::shared_ptr,
+ *std::shared_ptr might be more flexible and not require initialization*/
+#include "Tetrominoe.h"
+
 class TetrominoeManager final
 {
-	typedef std::function<void(class Tetrominoe*)> DelGenerateRandomTetrominoe;
+	typedef std::function<void(Tetrominoe*)> DelGenerateRandomTetrominoe;
 	DelGenerateRandomTetrominoe GenerateRandomTetrominoeEvent;
 
-	std::vector<std::unique_ptr<class Tetrominoe>> TetrominoePool = std::vector<std::unique_ptr<class Tetrominoe>>();
-	std::shared_ptr<class Tetrominoe> ActiveTetrominoe = nullptr;
+	std::vector<std::unique_ptr<Tetrominoe>> TetrominoePool = std::vector<std::unique_ptr<Tetrominoe>>();
+	std::shared_ptr<Tetrominoe> ActiveTetrominoe = nullptr;
 
 	friend class TileMap;
 
@@ -36,5 +40,6 @@ public:
 	~TetrominoeManager() = default;
 
 	void Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
+	void Flip() const;
 };
 #endif

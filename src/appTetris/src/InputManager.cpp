@@ -11,19 +11,22 @@ int InputManager::WaitPollEvent(SDL_Event& Event) const
 		QuitGameEvent(true);
 		break;
 	case SDL_KEYDOWN:
-		switch (Event.key.type)
+		switch (Event.key.keysym.scancode)
 		{
-		case SDLK_UP:
+		case SDL_SCANCODE_UP:
 			DirectionalKeyPressedEvent(Idle, Plus);
 			break;
-		case SDLK_DOWN:
+		case SDL_SCANCODE_DOWN:
 			DirectionalKeyPressedEvent(Idle, Minus);
 			break;
-		case SDLK_LEFT:
+		case SDL_SCANCODE_LEFT:
 			DirectionalKeyPressedEvent(Minus, Idle);
 			break;
-		case SDLK_RIGHT:
+		case SDL_SCANCODE_RIGHT:
 			DirectionalKeyPressedEvent(Plus, Idle);
+			break;
+		case SDL_SCANCODE_SPACE:
+			DelSpaceKeyPressedEvent();
 			break;
 		default:
 			break;

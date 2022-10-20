@@ -43,5 +43,6 @@ void GameInstance::PollKeyEvent(int8_t DirX, int8_t DirY)
 	{
 		return;
 	}
+	std::printf("%d %d", DirX, DirY);
 	GridTileMap->Update(TetrominoeManagerPtr.get(), DirX, DirY);
 }

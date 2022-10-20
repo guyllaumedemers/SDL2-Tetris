@@ -6,6 +6,11 @@
 #include <SDL.h>
 #endif
 
+#ifndef INCLUDED_CSTD_INT
+#define INCLUDED_CSTD_INT
+#include <cstdint>
+#endif
+
 #ifndef INCLUDED_FUNCTIONAL
 #define INCLUDED_FUNCTIONAL
 #include <functional>
@@ -18,6 +23,9 @@ class InputManager final
 
 	typedef std::function<void(int8_t, int8_t)> DelDirectionalKeyPressed;
 	DelDirectionalKeyPressed DirectionalKeyPressedEvent;
+
+	typedef std::function<void()> DelSpaceKeyPressed;
+	DelSpaceKeyPressed DelSpaceKeyPressedEvent;
 
 	friend class GameManager;
 

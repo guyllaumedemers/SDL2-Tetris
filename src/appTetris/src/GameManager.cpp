@@ -19,9 +19,7 @@ int GameManager::Init()
 	{
 		return EXIT_FAILURE;
 	}
-	InputManagerPtr->QuitGameEvent = [&](bool bHasQuitGame) { bIsQuittingGame = bHasQuitGame; };
-	InputManagerPtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY) { GameInstancePtr->PollKeyEvent(DirX, DirY); };
-	GameInstancePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height) { SDLManagerPtr->SetWindowContextSize(Width, Height); };
+	Subscribe();
 	return SDLManagerPtr->Init();
 }
 
@@ -53,4 +51,37 @@ void GameManager::Clear()
 		return;
 	}
 	SDLManagerPtr->Clear();
+}
+
+void GameManager::Subscribe()
+{
+	InputManagerPtr->QuitGameEvent = [&](bool bHasQuitGame)
+	{
+		bIsQuittingGame = bHasQuitGame;
+	};
+	InputManagerPtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY)
+	{
+		GameInstancePtr->PollKeyEvent(DirX, DirY);
+	};
+	InputManagerPtr->DelSpaceKeyPressedEvent = [&]()
+	{
+		TetrominoeManager* const TetrominoeManagerPtr = GameInstancePtr->TetrominoeManagerPtr.get();
+		if (!TetrominoeManagerPtr)
+		{
+			return;
+		}
+		TetrominoeManagerPtr->Flip();
+	};
+	GameInstancePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)
+	{
+		SDLManagerPtr->SetWindowContextSize(Width, Height);
+	};
+}
+
+void GameManager::UnSubscribe()
+{
+	InputManagerPtr->QuitGameEvent = nullptr;
+	InputManagerPtr->DirectionalKeyPressedEvent = nullptr;
+	InputManagerPtr->DelSpaceKeyPressedEvent = nullptr;
+	GameInstancePtr->SetWindowEvent = nullptr;
 }
