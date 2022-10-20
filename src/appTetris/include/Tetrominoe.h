@@ -6,19 +6,40 @@
 #include <cstdint>
 #endif
 
-#include "Shape.h"
+#ifndef INCLUDED_COLLECTION_ARRAY
+#define INCLUDED_COLLECTION_ARRAY
+#include <array>
+#endif
+
+#ifndef INCLUDED_TETROMINOE_ENUM
+#define INCLUDED_TETROMINOE_ENUM
+enum ShapeEnum
+{
+	None = 0,
+	TShape = 1,
+	LShape = 2,
+	ZShape = 4,
+	OShape = 8,
+	IShape = 16
+};
+#endif
 
 class Tetrominoe final
 {
+	static constexpr size_t MaxEntriesPerShape = 4;
+	ShapeEnum Pattern = ShapeEnum::None;
+
+	std::array<uint8_t, MaxEntriesPerShape> TetrominoeEntryIndices = std::array<uint8_t, MaxEntriesPerShape>();
 	static constexpr uint8_t SpawnPosition = 25;
-	Shape TetrominoeShape;
 	bool bIsLocked = false;
 
 public:
 	Tetrominoe(ShapeEnum TetrominoeEnum = ShapeEnum::None);
 	~Tetrominoe() = default;
 
-	Shape& GetTetrominoe() { return TetrominoeShape; }
 	const bool& IsLocked() const { return bIsLocked; }
+
+	void Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
+	void Flip();
 };
 #endif
