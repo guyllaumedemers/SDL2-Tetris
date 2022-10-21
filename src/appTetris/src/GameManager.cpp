@@ -18,6 +18,7 @@ void GameManager::Init()
 	}
 	Subscribe();
 	SDLManagerPtr->Init();
+	GameInstancePtr->Play();
 }
 
 void GameManager::Update()
@@ -27,7 +28,6 @@ void GameManager::Update()
 		return;
 	}
 
-	GameInstancePtr->Play();
 	bIsQuittingGame = false;
 	while (!bIsQuittingGame)
 	{
