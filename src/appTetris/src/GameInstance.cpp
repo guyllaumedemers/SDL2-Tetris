@@ -2,26 +2,26 @@
 
 void GameInstance::Play()
 {
-	if (!GridTileMap)
+	if (!TileMapPtr)
 	{
 		return;
 	}
 	/*Should retrieved values from Preset Difficulty*/
 	const uint8_t Rows = 20;
 	const uint8_t Cols = 12;
-	GridTileMap->Init(Rows, Cols, [&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); });
+	TileMapPtr->Init(Rows, Cols, [&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); });
 }
 
 void GameInstance::Update()
 {
-	if (!GridTileMap)
+	if (!TileMapPtr)
 	{
 		return;
 	}
 	/*Should handle Game Loop Refresh Rate so Tile Movement dont fly offscreen*/
 	static constexpr int8_t OneDown = -1;
 	static constexpr int8_t Idle = 0;
-	GridTileMap->Update(TetrominoeManagerPtr.get(), Idle, OneDown);
+	TileMapPtr->Update(TetrominoeManagerPtr.get(), Idle, OneDown);
 }
 
 void GameInstance::Pause()
@@ -30,19 +30,18 @@ void GameInstance::Pause()
 
 void GameInstance::Quit()
 {
-	if (!GridTileMap)
+	if (!TileMapPtr)
 	{
 		return;
 	}
-	GridTileMap->Clear();
+	TileMapPtr->Clear();
 }
 
 void GameInstance::PollKeyEvent(int8_t DirX, int8_t DirY)
 {
-	if (!GridTileMap)
+	if (!TileMapPtr)
 	{
 		return;
 	}
-	std::printf("%d %d", DirX, DirY);
-	GridTileMap->Update(TetrominoeManagerPtr.get(), DirX, DirY);
+	TileMapPtr->Update(TetrominoeManagerPtr.get(), DirX, DirY);
 }

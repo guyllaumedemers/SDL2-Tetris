@@ -1,11 +1,11 @@
 #include "../include/SDLManager.h"
 
-int SDLManager::Init()
+void SDLManager::Init()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0 /*0 is Success here*/)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2 INIT FAILED!");
-		return EXIT_FAILURE;
+		exit(EXIT_FAILURE);
 	}
 
 	Window = std::unique_ptr<SDL_Window, FreeSDLWindow>(SDL_CreateWindow("TETRIS",
@@ -17,7 +17,7 @@ int SDLManager::Init()
 	if (!Window)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2 WINDOW CREATION FAILED!");
-		return EXIT_FAILURE;
+		exit(EXIT_FAILURE);
 	}
 
 	Renderer = std::unique_ptr<SDL_Renderer, FreeSDLRenderer>(SDL_CreateRenderer(
@@ -29,10 +29,8 @@ int SDLManager::Init()
 	if (!Renderer)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2 RENDERER CREATION FAILED!");
-		return EXIT_FAILURE;
+		exit(EXIT_FAILURE);
 	}
-
-	return EXIT_SUCCESS;
 }
 
 void SDLManager::Update(std::function<void()> GameInstanceFuncPtr)

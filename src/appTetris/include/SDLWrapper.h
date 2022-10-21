@@ -19,7 +19,7 @@ struct FreeSDLWindow final
 	}
 };
 
-struct FreeSDLRenderer
+struct FreeSDLRenderer final
 {
 	inline void operator()(SDL_Renderer* Renderer) const
 	{

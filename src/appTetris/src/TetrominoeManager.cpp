@@ -16,7 +16,6 @@ void TetrominoeManager::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t C
 
 void TetrominoeManager::Flip() const
 {
-	std::printf("NoActive Tetrominoe - Flipping");
 	if (!ActiveTetrominoe)
 	{
 		return;

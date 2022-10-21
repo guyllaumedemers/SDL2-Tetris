@@ -4,23 +4,20 @@
 
 int GameManager::Run()
 {
-	if (Init() != EXIT_SUCCESS)
-	{
-		return EXIT_FAILURE;
-	}
+	Init();
 	Update();
 	Clear();
 	return EXIT_SUCCESS;
 }
 
-int GameManager::Init()
+void GameManager::Init()
 {
 	if (!SDLManagerPtr || !InputManagerPtr || !GameInstancePtr)
 	{
-		return EXIT_FAILURE;
+		return;
 	}
 	Subscribe();
-	return SDLManagerPtr->Init();
+	SDLManagerPtr->Init();
 }
 
 void GameManager::Update()
@@ -51,6 +48,7 @@ void GameManager::Clear()
 		return;
 	}
 	SDLManagerPtr->Clear();
+	UnSubscribe();
 }
 
 void GameManager::Subscribe()

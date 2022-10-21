@@ -24,7 +24,7 @@ class GameInstance final
 	typedef std::function<void(uint16_t, uint16_t)> DelSetWindow;
 	DelSetWindow SetWindowEvent;
 
-	std::unique_ptr<TileMap> GridTileMap = std::make_unique<TileMap>();
+	std::unique_ptr<TileMap> TileMapPtr = std::make_unique<TileMap>();
 	std::unique_ptr<TetrominoeManager> TetrominoeManagerPtr = std::make_unique<TetrominoeManager>();
 
 	friend class GameManager;

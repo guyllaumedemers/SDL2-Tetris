@@ -31,7 +31,7 @@ class SDLManager final
 public:
 	SDLManager() = default;
 	~SDLManager() = default;
-	int Init();
+	void Init();
 	void Update(std::function<void()> GameInstanceFuncPtr);
 	void Clear();
 	void SetWindowContextSize(uint16_t Width, uint16_t Height);

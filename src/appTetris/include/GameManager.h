@@ -23,7 +23,7 @@ public:
 	int Run();
 
 private:
-	int Init();
+	void Init();
 	void Update();
 	void Clear();
 	void Subscribe();
