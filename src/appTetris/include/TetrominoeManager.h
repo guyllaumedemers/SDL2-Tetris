@@ -21,8 +21,6 @@
 #include <memory>
 #endif
 
-/*cannot forward declare because of initializer list requirement with std::unique_ptr & std::shared_ptr,
- *std::shared_ptr might be more flexible and not require initialization*/
 #include "Tetrominoe.h"
 
 class TetrominoeManager final
