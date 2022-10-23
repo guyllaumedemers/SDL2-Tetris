@@ -4,3 +4,9 @@
 [submodule "extern/libSDL2/pkg"]
 	path = extern/libSDL2/pkg
 	url = https://github.com/libsdl-org/SDL.git
+[submodule "extern/libBoost/pkg"]
+	path = extern/libBoost/pkg
+	url = https://github.com/boostorg/filesystem.git
+[submodule "extern/libSDLImage/pkg"]
+	path = extern/libSDLImage/pkg
+	url = https://github.com/libsdl-org/SDL_image.git

@@ -30,13 +30,14 @@ class TetrominoeManager final
 
 	std::vector<std::unique_ptr<Tetrominoe>> TetrominoePool = std::vector<std::unique_ptr<Tetrominoe>>();
 	std::shared_ptr<Tetrominoe> ActiveTetrominoe = nullptr;
-
 	friend class TileMap;
-
 public:
+	TetrominoeManager(const TetrominoeManager&) = delete;
+	TetrominoeManager(TetrominoeManager&&) = delete;
 	TetrominoeManager() = default;
 	~TetrominoeManager() = default;
-
+	TetrominoeManager& operator=(const TetrominoeManager&) = delete;
+	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
 	void Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip() const;
 };

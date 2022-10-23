@@ -28,10 +28,13 @@ class InputManager final
 	DelSpaceKeyPressed DelSpaceKeyPressedEvent;
 
 	friend class GameManager;
-
 public:
+	InputManager(const InputManager&) = delete;
+	InputManager(InputManager&&) = delete;
 	InputManager() = default;
 	~InputManager() = default;
+	InputManager& operator=(const InputManager&) = delete;
+	InputManager& operator=(InputManager&&) = delete;
 	int WaitPollEvent(SDL_Event& Event) const;
 };
 #endif

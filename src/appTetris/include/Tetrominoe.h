@@ -31,14 +31,17 @@ class Tetrominoe final
 
 	std::array<uint8_t, MaxEntriesPerShape> TetrominoeEntryIndices = std::array<uint8_t, MaxEntriesPerShape>();
 	static constexpr uint8_t SpawnPosition = 25;
-	bool bIsLocked = false;
 
+	bool bIsLocked = false;
 public:
+	Tetrominoe(const Tetrominoe&) = delete;
+	Tetrominoe(Tetrominoe&&) = delete;
+	Tetrominoe() = delete;
 	Tetrominoe(ShapeEnum TetrominoeEnum = ShapeEnum::None);
 	~Tetrominoe() = default;
-
+	Tetrominoe& operator=(const Tetrominoe&) = delete;
+	Tetrominoe& operator=(Tetrominoe&&) = delete;
 	const bool& IsLocked() const { return bIsLocked; }
-
 	void Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip();
 };

@@ -26,12 +26,14 @@ class GameInstance final
 
 	std::unique_ptr<TileMap> TileMapPtr = std::make_unique<TileMap>();
 	std::unique_ptr<TetrominoeManager> TetrominoeManagerPtr = std::make_unique<TetrominoeManager>();
-
 	friend class GameManager;
-
 public:
+	GameInstance(const GameInstance&) = delete;
+	GameInstance(GameInstance&&) = delete;
 	GameInstance() = default;
 	~GameInstance() = default;
+	GameInstance& operator=(const GameInstance&) = delete;
+	GameInstance& operator=(GameInstance&&) = delete;
 	void Play();
 	void Update();
 	void Pause();

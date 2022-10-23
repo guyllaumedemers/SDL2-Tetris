@@ -3,6 +3,26 @@
 	CXX
 )
 
+set(
+	CMAKE_CXX_STANDARD
+	20
+)
+
+set(
+	CMAKE_CXX_STANDARD_REQUIRED
+	ON
+)
+
+set(
+	CMAKE_CXX_EXTENSIONS
+	OFF
+)
+
+set(
+	CMAKE_CXX_COMPILE_FEATURES
+	cxx_std_20
+)
+
 project(
 	Demo
     VERSION 0.0.0.0
@@ -31,6 +51,7 @@ add_dependencies(
 	${PROJECT_NAME}
 	lib::imgui
 	lib::sdl2
+	lib::sdlimage
 )
 
 target_link_libraries(
@@ -38,58 +59,31 @@ target_link_libraries(
 	PRIVATE
 	lib::imgui
 	lib::sdl2
+	lib::sdlimage
 )
 
-get_target_property(
-	libSDL2_A
-	lib::sdl2
-	ALIASED_TARGET
-)
+# copy-move dll at executable level
 
 add_custom_command ( TARGET ${PROJECT_NAME} POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
     $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
 )
 
-# set project specifics
+# copy res in out-of-source build
 
-set(
-	MYCXX_VERSION_STANDARD
-	20
+add_custom_command ( TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    "${CMAKE_SOURCE_DIR}/res" "${CMAKE_CURRENT_BINARY_DIR}/res"
 )
-
-set(
-	CMAKE_CXX_STANDARD
-	${MYCXX_VERSION_STANDARD}
-)
-
-if(NOT ${CMAKE_CXX_STANDARD} EQUAL ${MYCXX_VERSION_STANDARD})
-	message(WARNING "WARNING! CXX_STANDARD SHOULD BE CXX_${MYCXX_VERSION_STANDARD}, CURRENTLY : ${CMAKE_CXX_STANDARD}")
-else()
-	message(WARNING "WARNING! CXX_STANDARD IS CXX_${CMAKE_CXX_STANDARD}")
-endif()
-
-set(
-	CMAKE_CXX_STANDARD_REQUIRED
-	ON
-)
-
-if(${CMAKE_CXX_STANDARD_REQUIRED})
-	message(WARNING "WARNING! CXX_STANDARD_REQUIRED IS ${CMAKE_CXX_STANDARD_REQUIRED}. MAKE SURE YOU HAVE THE LATEST COMPILER VERSION SUPPORTING THE CURRENT REQUIREMENTS FOR CXX_${CMAKE_CXX_STANDARD}")
-endif()
-
-set(
-	CMAKE_CXX_EXTENSIONS
-	OFF
-)
-
-if(NOT ${CMAKE_CXX_EXTENSIONS})
-	message(WARNING "WARNING! CXX_EXTENSIONS IS ${CMAKE_CXX_EXTENSIONS}!")
-endif()
 
 # check support for LINK Time Optimization between translation units
+# include built-in MODULE
 
-include(CheckIPOSupported)
+include(
+	CheckIPOSupported
+)
+
+# make call to MODULE function
 
 check_ipo_supported(
 	RESULT

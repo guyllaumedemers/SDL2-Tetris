@@ -27,10 +27,13 @@ class SDLManager final
 {
 	std::unique_ptr<SDL_Window, FreeSDLWindow> Window = nullptr;
 	std::unique_ptr<SDL_Renderer, FreeSDLRenderer> Renderer = nullptr;
-
 public:
+	SDLManager(const SDLManager&) = delete;
+	SDLManager(SDLManager&&) = delete;
 	SDLManager() = default;
 	~SDLManager() = default;
+	SDLManager& operator=(const SDLManager&) = delete;
+	SDLManager& operator=(SDLManager&&) = delete;
 	void Init();
 	void Update(std::function<void()> GameInstanceFuncPtr);
 	void Clear();

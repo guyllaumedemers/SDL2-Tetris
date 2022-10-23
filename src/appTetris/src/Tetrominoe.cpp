@@ -33,7 +33,12 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 
 void Tetrominoe::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {
-	
+	if (bIsLocked)
+	{
+		return;
+	}
+
+
 }
 
 void Tetrominoe::Flip()

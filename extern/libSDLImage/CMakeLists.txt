@@ -1,5 +1,5 @@
 ﻿project(
-	libBoost
+	libSDLImage	
 )
 
 # add directory for lib
@@ -10,26 +10,30 @@ add_library(
 )
 
 add_library(
-	lib::boost
+	lib::sdlimage
 	ALIAS
 	${PROJECT_NAME}
 )
+
+# avoid pkg/CMakeLists from running/generating a bunch of duplicated files for SHARED and STATIC
 
 add_subdirectory(
 	"${CMAKE_CURRENT_SOURCE_DIR}/pkg"
 	EXCLUDE_FROM_ALL
 )
 
-# currently has issues in boost CMakeLists and cannot link properly
+# include headers
 
 target_include_directories(
 	${PROJECT_NAME}
 	INTERFACE
-	"${CMAKE_CURRENT_SOURCE_DIR}/include"
+	"${CMAKE_CURRENT_SOURCE_DIR}/pkg"
 )
+
+# link src
 
 target_link_libraries(
 	${PROJECT_NAME}
 	INTERFACE
-	Boost::filesystem
+	SDL2_image::SDL2_image
 )

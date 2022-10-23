@@ -32,4 +32,16 @@ struct FreeSDLRenderer final
 	}
 };
 
+struct FreeSDLTexture final
+{
+	inline void operator()(SDL_Texture* Texture) const
+	{
+		if (!Texture)
+		{
+			return;
+		}
+
+		SDL_DestroyTexture(Texture);
+	}
+};
 #endif

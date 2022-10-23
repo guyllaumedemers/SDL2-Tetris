@@ -16,12 +16,14 @@ class GameManager final
 	std::unique_ptr<InputManager> InputManagerPtr = std::make_unique<InputManager>();
 	std::unique_ptr<GameInstance> GameInstancePtr = std::make_unique<GameInstance>();
 	bool bIsQuittingGame = false;
-
 public:
+	GameManager(const GameManager&) = delete;
+	GameManager(GameManager&&) = delete;
 	GameManager() = default;
 	~GameManager() = default;
+	GameManager& operator=(const GameManager&) = delete;
+	GameManager& operator=(GameManager&&) = delete;
 	int Run();
-
 private:
 	void Init();
 	void Update();

@@ -10,7 +10,12 @@ add_subdirectory(
 	"${CMAKE_BINARY_DIR}/extern/libSDL2"
 )
 
+#add_subdirectory(
+#	"libBoost"
+#	"${CMAKE_BINARY_DIR}/extern/libBoost"
+#)
+
 add_subdirectory(
-	"libBoost"
-	"${CMAKE_BINARY_DIR}/extern/libBoost"
+	"libSDLImage"
+	"${CMAKE_BINARY_DIR}/extern/libSDLImage"
 )
