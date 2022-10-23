@@ -1,5 +1,10 @@
 #include "../include/GameManager.h"
 
+#ifndef INCLUDED_SDL_LIB
+#define INCLUDED_SDL_LIB
+#include <SDL.h>
+#endif
+
 int GameManager::Run()
 {
 	Init();

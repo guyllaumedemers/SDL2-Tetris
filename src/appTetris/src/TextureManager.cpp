@@ -2,7 +2,6 @@
 #include "../include/TextureLoader.h"
 #include "../include/SDLManager.h"
 
-// exceptional Include guard in translation unit
 #ifndef INCLUDED_SDL_IMAGE
 #define INCLUDED_SDL_IMAGE
 #include <SDL_image.h>
