@@ -33,7 +33,7 @@ public:
 	~TextureManager() = default;
 	TextureManager& operator=(const TextureManager&) = delete;
 	TextureManager& operator=(TextureManager&&) = delete;
-	void Init(const class SDLManager* const SDLManagerPtr);
+	void Init(class SDLManager* const SDLManagerPtr);
 	void Clear();
 	SDL_Texture* GetTextureByName(std::string TextureName);
 };

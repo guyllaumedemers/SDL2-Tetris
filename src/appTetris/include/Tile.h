@@ -19,7 +19,7 @@ enum TileEnum
 struct Tile final
 {
 	TileEnum Attribute = TileEnum::Empty;
-	static constexpr uint8_t Size = 25;
+	static constexpr uint8_t Size = 20;
 	size_t IndexPosition = 0;
 	friend class TileMap;
 

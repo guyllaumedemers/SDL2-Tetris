@@ -27,16 +27,17 @@ void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDL
 		return;
 	}
 
-	SDL_Texture* const TextureTarget = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_ARGB4444, SDL_TEXTUREACCESS_TARGET, Tile::Size, Tile::Size);
+	SDL_Texture* TextureTarget = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, Tile::Size, Tile::Size);
 	if (!TextureTarget)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_TEXTURE_TARGET_PTR INVALID!");
 		return;
 	}
 
-	SDL_Rect const TextureRect = {
+	SDL_Rect const TextureRect =
+	{
 		static_cast<int>(IndexPosition % Cols) * Tile::Size,
-		static_cast<int>(IndexPosition / Rows) * Tile::Size,
+		static_cast<int>(IndexPosition / Cols) * Tile::Size,
 		Tile::Size,
 		Tile::Size
 	};
@@ -59,14 +60,16 @@ void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDL
 	if (Search == TexturePair.end())
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: ITERATOR_SEARCH INVALID!");
+		SDL_DestroyTexture(TextureTarget);
 		SDL_SetRenderTarget(Renderer, NULL);
 		return;
 	}
 
-	std::string const STextureTile = (Search->first == TileEnum::Filled) ? "" : Search->second; // temp - will have to look for tetrominoe type which occupy the space
+	std::string const STextureTile = (Search->first == TileEnum::Filled) ? "" : Search->second;
 	if (STextureTile.empty())
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_STRING INVALID!");
+		SDL_DestroyTexture(TextureTarget);
 		SDL_SetRenderTarget(Renderer, NULL);
 		return;
 	}
@@ -75,12 +78,17 @@ void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDL
 	if (!TextureTile)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_PTR INVALID!");
+		SDL_DestroyTexture(TextureTarget);
 		SDL_SetRenderTarget(Renderer, NULL);
 		return;
 	}
 
-	SDL_RenderCopy(Renderer, TextureTile, &TextureRect, &TextureRect);
+	SDL_RenderCopy(Renderer, TextureTile, NULL, NULL);
 
 	// set rendering target back to window
 	SDL_SetRenderTarget(Renderer, NULL);
+
+	// render tile on window renderer target
+	SDL_RenderCopy(Renderer, TextureTarget, NULL, &TextureRect);
+	SDL_DestroyTexture(TextureTarget);
 }

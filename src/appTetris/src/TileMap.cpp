@@ -18,7 +18,7 @@ void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint
 
 	for (size_t it = 0; it != (Rows * Cols); ++it)
 	{
-		const uint8_t Row = (it / Rows);
+		const uint8_t Row = (it / Cols);
 		const uint8_t Col = (it % Cols);
 
 		if (Row == 0 || Row == Rows - 1 || Col == 0 || Col == Cols - 1)

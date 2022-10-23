@@ -13,7 +13,7 @@
 #include <cstdlib>
 #endif
 
-void TextureManager::Init(const SDLManager* const SDLManagerPtr)
+void TextureManager::Init(SDLManager* const SDLManagerPtr)
 {
 	if (!SDLManagerPtr)
 	{
@@ -26,7 +26,7 @@ void TextureManager::Init(const SDLManager* const SDLManagerPtr)
 		exit(EXIT_FAILURE);
 	}
 
-	Textures = TextureLoader::GetTextures([&](std::string SFilePath, SDL_Renderer* InRenderer)
+	Textures = TextureLoader::GetTextures([&](std::string SFilePath, SDL_Renderer* const InRenderer)
 		{
 			return IMG_LoadTexture(InRenderer, SFilePath.c_str());
 		}, SDLManagerPtr->Renderer.get());

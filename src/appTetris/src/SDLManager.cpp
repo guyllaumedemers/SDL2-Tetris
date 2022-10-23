@@ -41,7 +41,7 @@ void SDLManager::Update(TextureManager* const TextureManagerPtr, std::function<v
 		return;
 	}
 
-	if(!TextureManagerPtr)
+	if (!TextureManagerPtr)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER INVALID!");
 		return;
@@ -67,5 +67,6 @@ void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height)
 	{
 		return;
 	}
+
 	SDL_SetWindowSize(Window.get(), Width, Height);
 }
