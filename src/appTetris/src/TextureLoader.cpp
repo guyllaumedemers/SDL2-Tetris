@@ -37,7 +37,6 @@ std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Te
 			SDL_Texture* const TargetTexture = FuncPtr(SFilePath, Renderer);
 			if (!TargetTexture)
 			{
-				std::printf("\n Texture Invalid");
 				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID!");
 				continue;
 			}
