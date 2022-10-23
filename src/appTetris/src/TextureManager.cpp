@@ -20,7 +20,7 @@ void TextureManager::Init(SDLManager* const SDLManagerPtr)
 		return;
 	}
 
-	if (!IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG))
+	if (IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG) == 0 /*0 is failure here*/)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2_Image INIT FAILED!");
 		exit(EXIT_FAILURE);

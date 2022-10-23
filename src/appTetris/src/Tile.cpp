@@ -27,7 +27,7 @@ void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDL
 		return;
 	}
 
-	SDL_Texture* TextureTarget = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, Tile::Size, Tile::Size);
+	SDL_Texture* const TextureTarget = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, Tile::Size, Tile::Size);
 	if (!TextureTarget)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_TEXTURE_TARGET_PTR INVALID!");
