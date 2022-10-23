@@ -15,7 +15,7 @@ add_library(
 	${PROJECT_NAME}
 )
 
-# avoid pkg/CMakeLists from running/generating a bunch of duplicated files for SHARED and STATIC
+# avoid pkg/CMakeLists from running
 
 add_subdirectory(
 	"${CMAKE_CURRENT_SOURCE_DIR}/pkg"
