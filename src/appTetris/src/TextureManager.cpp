@@ -27,7 +27,19 @@ void TextureManager::Init(SDLManager* const SDLManagerPtr)
 
 	Textures = TextureLoader::GetTextures([&](std::string SFilePath, SDL_Renderer* const InRenderer)
 		{
-			return IMG_LoadTexture(InRenderer, SFilePath.c_str());
+			try
+			{
+				SDL_Texture* OutTexture = IMG_LoadTexture(InRenderer, SFilePath.c_str());
+				if (!OutTexture)
+				{
+					throw std::exception();
+				}
+				return OutTexture;
+			}
+			catch (std::exception e)
+			{
+				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID! %s", e.what());
+			}
 		}, SDLManagerPtr->Renderer.get());
 }
 

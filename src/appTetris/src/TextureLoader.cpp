@@ -16,35 +16,43 @@ std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Te
 		return TextureMap;
 	}
 
-	std::filesystem::path BuildPath = std::filesystem::current_path().parent_path();
-	std::string ResPath = BuildPath.generic_string();
-
-	// bad solution which doesnt allow me to work in VSC Editor but allow open file mode
-#ifndef NDEBUG
-	ResPath += "/res";
-#else
-	ResPath += "/SDL2-TetrisApp/res";
-#endif
-
-	for (const auto& file : std::filesystem::directory_iterator(ResPath))
+	try
 	{
-		std::filesystem::path FilePath = file.path();
-		std::string SFilePath = FilePath.generic_string();
+		std::filesystem::path BuildPath = std::filesystem::current_path().parent_path();
+		std::string ResPath = BuildPath.generic_string();
 
-		SDL_Texture* const TargetTexture = FuncPtr(SFilePath, Renderer);
-		if (!TargetTexture)
 		{
-			std::printf("\n Texture Invalid");
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID!");
-			continue;
+			// workaround hack for Ressources Access... kinda shitty
+			std::string EditorResPATH = ResPath + "/SDL2-TetrisApp/res";
+			std::string OpenFileModePATH = ResPath + "/res";
+
+			std::filesystem::is_directory(EditorResPATH) ? ResPath = EditorResPATH : ResPath = OpenFileModePATH;
 		}
-		std::vector<std::string> Tokens = StringExtension::Split(SFilePath, '/');
-		if (Tokens.empty())
+
+		for (const auto& file : std::filesystem::directory_iterator(ResPath))
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: PATH_FORMAT DELIMITER INVALID!");
-			continue;
+			std::filesystem::path FilePath = file.path();
+			std::string SFilePath = FilePath.generic_string();
+
+			SDL_Texture* const TargetTexture = FuncPtr(SFilePath, Renderer);
+			if (!TargetTexture)
+			{
+				std::printf("\n Texture Invalid");
+				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID!");
+				continue;
+			}
+			std::vector<std::string> Tokens = StringExtension::Split(SFilePath, '/');
+			if (Tokens.empty())
+			{
+				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: PATH_FORMAT DELIMITER INVALID!");
+				continue;
+			}
+			TextureMap.insert(std::make_pair(Tokens.at(Tokens.size() - 1), TargetTexture));
 		}
-		TextureMap.insert(std::make_pair(Tokens.at(Tokens.size() - 1), TargetTexture));
+	}
+	catch (std::exception e)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_LOADER FAILED! %s", e.what());
 	}
 	return TextureMap;
 }
