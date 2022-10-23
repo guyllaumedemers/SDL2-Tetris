@@ -6,17 +6,17 @@
 /// </summary>
 /// <param name="Rows"></param>
 /// <param name="Cols"></param>
-uint8_t TileMap::Rows = 0;
-uint8_t TileMap::Cols = 0;
+uint8_t TileMap::sRows = 0;
+uint8_t TileMap::sCols = 0;
 //@end()
 
 void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint16_t)> SetWindowCallback)
 {
 	Tilemap = std::vector<Tile>();
-	this->Rows = Rows;
-	this->Cols = Cols;
+	sRows = Rows;
+	sCols = Cols;
 
-	for (auto it = 0; it != (Rows * Cols); ++it)
+	for (size_t it = 0; it != (Rows * Cols); ++it)
 	{
 		const uint8_t Row = (it / Rows);
 		const uint8_t Col = (it % Cols);
@@ -42,11 +42,11 @@ void TileMap::Update(TextureManager* const TextureManagerPtr, TetrominoeManager*
 	}
 
 	// update position of all tetrominoes
-	TetrominoeManagerPtr->Update(DirX, DirY, Rows, Cols);
+	TetrominoeManagerPtr->Update(DirX, DirY, sRows, sCols);
 	// render all tiles
 	for (auto& it : Tilemap)
 	{
-		it.Render(TextureManagerPtr, SDLManagerPtr, Rows, Cols);
+		it.Render(TextureManagerPtr, SDLManagerPtr, sRows, sCols);
 	}
 }
 

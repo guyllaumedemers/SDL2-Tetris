@@ -4,7 +4,7 @@ void SDLManager::Init()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0 /*0 is Success here*/)
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2 INIT FAILED!");
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 INIT FAILED!");
 		exit(EXIT_FAILURE);
 	}
 
@@ -16,7 +16,7 @@ void SDLManager::Init()
 
 	if (!Window)
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2 WINDOW CREATION FAILED!");
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 WINDOW CREATION FAILED!");
 		exit(EXIT_FAILURE);
 	}
 
@@ -28,7 +28,7 @@ void SDLManager::Init()
 
 	if (!Renderer)
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2 RENDERER CREATION FAILED!");
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 RENDERER CREATION FAILED!");
 		exit(EXIT_FAILURE);
 	}
 }
@@ -37,13 +37,13 @@ void SDLManager::Update(TextureManager* const TextureManagerPtr, std::function<v
 {
 	if (!Renderer)
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2 RENDERER UPDATE FAILED!");
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 RENDERER UPDATE FAILED!");
 		return;
 	}
 
 	if(!TextureManagerPtr)
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: TEXTURE_MANAGER INVALID!");
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER INVALID!");
 		return;
 	}
 

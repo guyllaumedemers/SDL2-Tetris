@@ -12,13 +12,13 @@ std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Te
 {
 	std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> TextureMap;
 	std::filesystem::path BuildPath = std::filesystem::current_path().parent_path();
-	std::string ResPath = BuildPath.generic_string() + "/res";
+	std::string ResPath = BuildPath.generic_string() + "/SDL2-TetrisApp/res";
 	for (const auto& file : std::filesystem::directory_iterator(ResPath)) {
 		std::filesystem::path FilePath = file.path();
 		std::string SFilePath = FilePath.generic_string();
 		SDL_Texture* TargetTexture = FuncPtr(SFilePath, Renderer);
 		std::vector<std::string> Tokens;
-		Tokens = StringExtension::Split(SFilePath, '_');
+		Tokens = StringExtension::Split(SFilePath, '/');
 		if (TargetTexture != nullptr) TextureMap.insert(std::make_pair(Tokens.at(Tokens.size() - 1), TargetTexture));
 	}
 	return TextureMap;

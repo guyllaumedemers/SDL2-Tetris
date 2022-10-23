@@ -7,42 +7,42 @@
 #include <SDL.h>
 #endif
 
-Tile::Tile(TileEnum TileEnum, uint8_t Index)
+Tile::Tile(TileEnum TileEnum, size_t Index)
 {
-	IndexPosition = Index;
-	Attribute = TileEnum;
+	this->IndexPosition = Index;
+	this->Attribute = TileEnum;
 }
 
 void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols)
 {
-	if (!TextureManagerPtr || SDLManagerPtr)
+	if (!TextureManagerPtr || !SDLManagerPtr)
 	{
 		return;
 	}
 
-	SDL_Renderer* const Ren = SDLManagerPtr->GetRenderer();
-	if (!Ren)
+	SDL_Renderer* const Renderer = SDLManagerPtr->GetRenderer();
+	if (!Renderer)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_RENDERER_PTR INVALID!");
 		return;
 	}
 
-	SDL_Texture* const TargetTexture = SDL_CreateTexture(Ren, SDL_PIXELFORMAT_ARGB4444, SDL_TEXTUREACCESS_TARGET, Tile::Size, Tile::Size);
-	if (!TargetTexture)
+	SDL_Texture* const TextureTarget = SDL_CreateTexture(Renderer, SDL_PIXELFORMAT_ARGB4444, SDL_TEXTUREACCESS_TARGET, Tile::Size, Tile::Size);
+	if (!TextureTarget)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_TEXTURE_TARGET_PTR INVALID!");
 		return;
 	}
 
-	SDL_Rect Rect{
-		(IndexPosition % Cols) * Tile::Size,
-		(IndexPosition / Rows) * Tile::Size,
+	SDL_Rect const TextureRect = {
+		static_cast<int>(IndexPosition % Cols) * Tile::Size,
+		static_cast<int>(IndexPosition / Rows) * Tile::Size,
 		Tile::Size,
 		Tile::Size
 	};
 
 	// set rendering target to individual tile
-	SDL_SetRenderTarget(Ren, TargetTexture);
+	SDL_SetRenderTarget(Renderer, TextureTarget);
 
 	static constexpr uint8_t Alpha = 255;
 	static const std::unordered_map<TileEnum, std::string> TexturePair =
@@ -52,35 +52,35 @@ void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDL
 		std::make_pair(TileEnum::Filled, std::string("Wildcard"))
 	};
 
-	SDL_SetRenderDrawColor(Ren, NULL, NULL, NULL, Alpha);
-	SDL_RenderClear(Ren);
+	SDL_SetRenderDrawColor(Renderer, NULL, NULL, NULL, Alpha);
+	SDL_RenderClear(Renderer);
 
 	auto const Search = TexturePair.find(Attribute);
 	if (Search == TexturePair.end())
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: ITERATOR_SEARCH INVALID!");
-		SDL_SetRenderTarget(Ren, NULL);
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: ITERATOR_SEARCH INVALID!");
+		SDL_SetRenderTarget(Renderer, NULL);
 		return;
 	}
 
 	std::string const STextureTile = (Search->first == TileEnum::Filled) ? "" : Search->second; // temp - will have to look for tetrominoe type which occupy the space
 	if (STextureTile.empty())
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_TEXTURE_TILE_STRING INVALID!");
-		SDL_SetRenderTarget(Ren, NULL);
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_STRING INVALID!");
+		SDL_SetRenderTarget(Renderer, NULL);
 		return;
 	}
 
-	SDL_Texture* const TileTexture = TextureManagerPtr->GetTextureByName(STextureTile);
-	if (!TileTexture)
+	SDL_Texture* const TextureTile = TextureManagerPtr->GetTextureByName(STextureTile);
+	if (!TextureTile)
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_TEXTURE_TILE_PTR INVALID!");
-		SDL_SetRenderTarget(Ren, NULL);
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_PTR INVALID!");
+		SDL_SetRenderTarget(Renderer, NULL);
 		return;
 	}
 
-	SDL_RenderCopy(Ren, TileTexture, &Rect, NULL);
+	SDL_RenderCopy(Renderer, TextureTile, &TextureRect, &TextureRect);
 
 	// set rendering target back to window
-	SDL_SetRenderTarget(Ren, NULL);
+	SDL_SetRenderTarget(Renderer, NULL);
 }

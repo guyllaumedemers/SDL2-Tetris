@@ -20,8 +20,8 @@
 
 class TileMap final
 {
-	static uint8_t Rows;
-	static uint8_t Cols;
+	static uint8_t sRows;
+	static uint8_t sCols;
 	std::vector<Tile> Tilemap = std::vector<Tile>();
 public:
 	TileMap(const TileMap&) = delete;

@@ -43,13 +43,13 @@ void GameManager::Update()
 			{
 				if (!TextureManagerPtrArg)
 				{
-					SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: TEXTURE_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
+					SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
 					return;
 				}
 
 				if (!SDLManagerPtrArg)
 				{
-					SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
+					SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
 					return;
 				}
 
@@ -88,14 +88,14 @@ void GameManager::Subscribe()
 		TextureManager* TextureManager = TextureManagerPtr.get();
 		if (!TextureManager)
 		{
-			SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: TEXTURE_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
 			return;
 		}
 
 		SDLManager* SDLManager = SDLManagerPtr.get();
 		if (!SDLManager)
 		{
-			SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
 			return;
 		}
 

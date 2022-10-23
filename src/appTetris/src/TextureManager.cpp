@@ -22,7 +22,7 @@ void TextureManager::Init(const SDLManager* const SDLManagerPtr)
 
 	if (!IMG_Init(IMG_INIT_JPG | IMG_INIT_PNG))
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL2_Image INIT FAILED!");
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2_Image INIT FAILED!");
 		exit(EXIT_FAILURE);
 	}
 
@@ -42,7 +42,7 @@ SDL_Texture* TextureManager::GetTextureByName(std::string TextureName)
 {
 	if (Textures.empty())
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: TEXTURES EMPTY!");
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURES EMPTY!");
 		return nullptr;
 	}
 

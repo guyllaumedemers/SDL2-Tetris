@@ -20,13 +20,13 @@ struct Tile final
 {
 	TileEnum Attribute = TileEnum::Empty;
 	static constexpr uint8_t Size = 25;
-	uint8_t IndexPosition = 0;
+	size_t IndexPosition = 0;
 	friend class TileMap;
 
 	//Tile(const Tile&) = delete;	// std::vector use copy constructor for assigning adding new entries
 	//Tile(Tile&&) = delete;		// std::vector use std::move for resizing
 	Tile() = delete;
-	Tile(TileEnum TileEnum, uint8_t Index);
+	Tile(TileEnum TileEnum, size_t Index);
 	~Tile() = default;
 	//Tile& operator=(const Tile&) = delete;
 	//Tile& operator=(Tile&&) = delete;
