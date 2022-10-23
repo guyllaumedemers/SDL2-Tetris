@@ -27,6 +27,7 @@ class SDLManager final
 {
 	std::unique_ptr<SDL_Window, FreeSDLWindow> Window = nullptr;
 	std::unique_ptr<SDL_Renderer, FreeSDLRenderer> Renderer = nullptr;
+	friend class TextureManager;
 public:
 	SDLManager(const SDLManager&) = delete;
 	SDLManager(SDLManager&&) = delete;
@@ -35,8 +36,9 @@ public:
 	SDLManager& operator=(const SDLManager&) = delete;
 	SDLManager& operator=(SDLManager&&) = delete;
 	void Init();
-	void Update(std::function<void()> GameInstanceFuncPtr);
+	void Update(class TextureManager* const TextureManagerPtr, std::function<void(TextureManager* const, SDLManager* const)> GameInstanceFuncPtr);
 	void Clear();
 	void SetWindowContextSize(uint16_t Width, uint16_t Height);
+	SDL_Renderer* const GetRenderer() const { return Renderer.get(); }
 };
 #endif

@@ -1,6 +1,11 @@
 #include "../include/TextureLoader.h"
 #include "../include/StringExtension.h"
+
+// exceptional Include guard in translation unit
+#ifndef INCLUDED_STD_FILESYSTEM
+#define INCLUDED_STD_FILESYSTEM
 #include <filesystem>
+#endif
 
 std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> TextureLoader::GetTextures(std::function<SDL_Texture* (std::string, SDL_Renderer*)> FuncPtr,
 	SDL_Renderer* Renderer)

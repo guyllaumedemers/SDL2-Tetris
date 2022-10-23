@@ -30,6 +30,6 @@ struct Tile final
 	~Tile() = default;
 	//Tile& operator=(const Tile&) = delete;
 	//Tile& operator=(Tile&&) = delete;
-	void Render() const;
+	void Render(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols);
 };
 #endif

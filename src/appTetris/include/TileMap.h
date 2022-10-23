@@ -31,7 +31,7 @@ public:
 	TileMap& operator=(const TileMap&) = delete;
 	TileMap& operator=(TileMap&&) = delete;
 	void Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint16_t)> SetWindowCallback);
-	void Update(class TetrominoeManager* const TetrominoeManagerPtr, int8_t DirX, int8_t DirY);
+	void Update(class TextureManager* const TextureManagerPtr, class TetrominoeManager* const TetrominoeManagerPtr, class SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY);
 	void Clear();
 };
 #endif

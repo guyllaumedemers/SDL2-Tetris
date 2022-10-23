@@ -35,9 +35,9 @@ public:
 	GameInstance& operator=(const GameInstance&) = delete;
 	GameInstance& operator=(GameInstance&&) = delete;
 	void Play();
-	void Update();
+	void Update(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr);
 	void Pause();
 	void Quit();
-	void PollKeyEvent(int8_t DirX, int8_t DirY);
+	void PollKeyEvent(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY);
 };
 #endif

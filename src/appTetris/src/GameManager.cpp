@@ -1,6 +1,4 @@
 #include "../include/GameManager.h"
-#include "../include/SDLManager.h"
-#include "../include/InputManager.h"
 
 int GameManager::Run()
 {
@@ -16,8 +14,10 @@ void GameManager::Init()
 	{
 		return;
 	}
+
 	Subscribe();
 	SDLManagerPtr->Init();
+	TextureManagerPtr->Init(SDLManagerPtr.get());
 	GameInstancePtr->Play();
 }
 
@@ -37,30 +37,71 @@ void GameManager::Update()
 			InputManagerPtr->WaitPollEvent(Event);
 		}
 		/*Workaround capture clause problem when used in conjunction with void(*)*/
-		SDLManagerPtr->Update([&]() { GameInstancePtr->Update(); });
+		SDLManagerPtr->Update(
+			TextureManagerPtr.get(),
+			[&](TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg)
+			{
+				if (!TextureManagerPtrArg)
+				{
+					SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: TEXTURE_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
+					return;
+				}
+
+				if (!SDLManagerPtrArg)
+				{
+					SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
+					return;
+				}
+
+				GameInstancePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
+			});
 	}
 }
 
 void GameManager::Clear()
 {
-	if (!SDLManagerPtr)
+	if (!SDLManagerPtr || !TextureManagerPtr || !GameInstancePtr)
 	{
 		return;
 	}
+
 	SDLManagerPtr->Clear();
+	TextureManagerPtr->Clear();
+	GameInstancePtr->Quit();
 	UnSubscribe();
 }
 
 void GameManager::Subscribe()
 {
+	if (!GameInstancePtr || !InputManagerPtr)
+	{
+		return;
+	}
+
 	InputManagerPtr->QuitGameEvent = [&](bool bHasQuitGame)
 	{
 		bIsQuittingGame = bHasQuitGame;
 	};
+
 	InputManagerPtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY)
 	{
-		GameInstancePtr->PollKeyEvent(DirX, DirY);
+		TextureManager* TextureManager = TextureManagerPtr.get();
+		if (!TextureManager)
+		{
+			SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: TEXTURE_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
+			return;
+		}
+
+		SDLManager* SDLManager = SDLManagerPtr.get();
+		if (!SDLManager)
+		{
+			SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
+			return;
+		}
+
+		GameInstancePtr->PollKeyEvent(TextureManager, SDLManager, DirX, DirY);
 	};
+
 	InputManagerPtr->DelSpaceKeyPressedEvent = [&]()
 	{
 		TetrominoeManager* const TetrominoeManagerPtr = GameInstancePtr->TetrominoeManagerPtr.get();
@@ -70,6 +111,7 @@ void GameManager::Subscribe()
 		}
 		TetrominoeManagerPtr->Flip();
 	};
+
 	GameInstancePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)
 	{
 		SDLManagerPtr->SetWindowContextSize(Width, Height);
@@ -78,6 +120,11 @@ void GameManager::Subscribe()
 
 void GameManager::UnSubscribe()
 {
+	if (!GameInstancePtr || !InputManagerPtr)
+	{
+		return;
+	}
+
 	InputManagerPtr->QuitGameEvent = nullptr;
 	InputManagerPtr->DirectionalKeyPressedEvent = nullptr;
 	InputManagerPtr->DelSpaceKeyPressedEvent = nullptr;

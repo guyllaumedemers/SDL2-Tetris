@@ -33,7 +33,7 @@ void SDLManager::Init()
 	}
 }
 
-void SDLManager::Update(std::function<void()> GameInstanceFuncPtr)
+void SDLManager::Update(TextureManager* const TextureManagerPtr, std::function<void(TextureManager* const, SDLManager* const)> GameInstanceFuncPtr)
 {
 	if (!Renderer)
 	{
@@ -41,13 +41,18 @@ void SDLManager::Update(std::function<void()> GameInstanceFuncPtr)
 		return;
 	}
 
-	SDL_Renderer* Ren = Renderer.get();
+	if(!TextureManagerPtr)
+	{
+		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: TEXTURE_MANAGER INVALID!");
+		return;
+	}
+
+	SDL_Renderer* const Ren = Renderer.get();
 	static constexpr uint8_t Alpha = 255;
 
 	SDL_SetRenderDrawColor(Ren, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(Ren);
-	/*Render Game Logic before Render Buffer Swap*/
-	GameInstanceFuncPtr();
+	GameInstanceFuncPtr(TextureManagerPtr, this);
 	SDL_RenderPresent(Ren);
 }
 

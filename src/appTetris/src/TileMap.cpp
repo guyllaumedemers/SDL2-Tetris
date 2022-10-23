@@ -31,22 +31,22 @@ void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint
 		}
 	}
 
-	static constexpr uint8_t TileSize = Tile::Size;
-	SetWindowCallback(Cols * TileSize, Rows * TileSize);
+	SetWindowCallback(Cols * Tile::Size, Rows * Tile::Size);
 }
 
-void TileMap::Update(TetrominoeManager* const TetrominoeManagerPtr, int8_t DirX, int8_t DirY)
+void TileMap::Update(TextureManager* const TextureManagerPtr, TetrominoeManager* const TetrominoeManagerPtr, SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY)
 {
-	if (!TetrominoeManagerPtr)
+	if (!TetrominoeManagerPtr || !TextureManagerPtr || !SDLManagerPtr)
 	{
 		return;
 	}
+
 	// update position of all tetrominoes
 	TetrominoeManagerPtr->Update(DirX, DirY, Rows, Cols);
 	// render all tiles
-	for (const auto& it : Tilemap)
+	for (auto& it : Tilemap)
 	{
-		it.Render();
+		it.Render(TextureManagerPtr, SDLManagerPtr, Rows, Cols);
 	}
 }
 
