@@ -31,10 +31,9 @@ add_dependencies(
 
 target_link_libraries(
 	${PROJECT_NAME}
-	PRIVATE
-	lib::imgui
-	lib::sdl2
-	lib::sdlimage
+	PRIVATE lib::imgui
+	PRIVATE lib::sdl2
+	PRIVATE lib::sdlimage
 )
 
 set_target_properties(
