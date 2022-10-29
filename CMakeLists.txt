@@ -9,6 +9,13 @@ project(
 	DESCRIPTION "Root"
 )
 
+if(CMAKE_CXX_COMPILER_LOADED)
+    message(STATUS "Compiler path: ${CMAKE_CXX_COMPILER}")
+    message(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
+    message(STATUS "Compiler Version: ${CMAKE_CXX_COMPILER_VERSION}")
+    message(STATUS "Compiler is part of GCC: ${CMAKE_COMPILER_IS_GNUCXX}")
+endif()
+
 # Update Git submodule, updated version to point to top level cmakelists
 find_package(Git QUIET)
 if(GIT_FOUND AND EXISTS "${CMAKE_SOURCE_DIR}/.git")

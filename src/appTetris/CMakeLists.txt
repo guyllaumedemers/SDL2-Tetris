@@ -1,33 +1,8 @@
-﻿set(
-	MYLANGUAGES
-	CXX
-)
-
-set(
-	CMAKE_CXX_STANDARD
-	20
-)
-
-set(
-	CMAKE_CXX_STANDARD_REQUIRED
-	ON
-)
-
-set(
-	CMAKE_CXX_EXTENSIONS
-	OFF
-)
-
-set(
-	CMAKE_CXX_COMPILE_FEATURES
-	cxx_std_20
-)
-
-project(
+﻿project(
 	Demo
     VERSION 0.0.0.0
     DESCRIPTION "Demo"
-    LANGUAGES ${MYLANGUAGES}
+	LANGUAGES C CXX
 )
 
 # project includes, sources
@@ -62,19 +37,20 @@ target_link_libraries(
 	lib::sdlimage
 )
 
-# copy-move dll at executable level
-
-add_custom_command ( TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different
-    $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
-	COMMAND_EXPAND_LISTS
+set_target_properties(
+	${PROJECT_NAME}
+	PROPERTIES
+	CMAKE_CXX_COMPILE_FEATURES cxx_std_20
+	CMAKE_CXX_STANDARD 20
+	CMAKE_CXX_STANDARD_REQUIRED ON
+	CMAKE_CXX_EXTENSIONS OFF
 )
 
-# copy res in out-of-source build
-
-add_custom_command ( TARGET ${PROJECT_NAME} POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E copy_directory
-    "${CMAKE_SOURCE_DIR}/res" "${PROJECT_BINARY_DIR}/res"
+target_compile_options(
+	${PROJECT_NAME}
+	PUBLIC CMAKE_CXX_STANDARD
+	PUBLIC CMAKE_CXX_STANDARD_REQUIRED
+	PUBLIC CMAKE_CXX_EXTENSIONS
 )
 
 # check support for LINK Time Optimization between translation units
@@ -87,12 +63,9 @@ include(
 # make call to MODULE function
 
 check_ipo_supported(
-	RESULT
-	IS_IPO_SUPPORTED
-	OUTPUT
-	IPO_SUPPORT_LOG_OUTPUT
-	LANGUAGES
-	${MYLANGUAGES}
+	RESULT IS_IPO_SUPPORTED
+	OUTPUT IPO_SUPPORT_LOG_OUTPUT
+	LANGUAGES C CXX
 )
 
 if(NOT ${IS_IPO_SUPPORTED})
@@ -119,3 +92,18 @@ if(${PRINT_UNSUPPORTED_COMPILE_FEATURES})
 		endif()
 	endforeach()
 endif()
+
+# copy-move dll at executable level
+
+add_custom_command ( TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different
+    $<TARGET_RUNTIME_DLLS:${PROJECT_NAME}> $<TARGET_FILE_DIR:${PROJECT_NAME}>
+	COMMAND_EXPAND_LISTS
+)
+
+# copy res in out-of-source build
+
+add_custom_command ( TARGET ${PROJECT_NAME} POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    "${CMAKE_SOURCE_DIR}/res" "${PROJECT_BINARY_DIR}/res"
+)
