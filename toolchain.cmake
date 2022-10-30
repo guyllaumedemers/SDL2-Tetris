@@ -37,11 +37,11 @@ endif()
 
 # split string using c-style algorithm *not really - unreliable - produce bad parsing. looking for ways to out variable and get list at least
 
-function(get_split_list_safe InSTRING SPLIT_STRING)
+function(get_split_list_safe IN_VAR OUT_VAR)
 	# init begin index
 	set(CURRENT_INDEX 0)
 	# cache string
-	set(STRING_COPY "${InSTRING}")
+	set(STRING_COPY "${IN_VAR}")
 	# delim
 	set(InDELIM ";")
 	# replace
@@ -60,7 +60,7 @@ function(get_split_list_safe InSTRING SPLIT_STRING)
 		# update string copy
 		set(STRING_COPY "${UPDATE_STRING}")
 		# append list
-		list(APPEND SPLIT_STRING "${OUT_SUBSTRING}")
+		list(APPEND OUT_VAR "${OUT_SUBSTRING}")
 		# update pos
 		set(CURRENT_INDEX "${DELIM_INDEX}")
 		#message(STATUS "${OUT_SUBSTRING}")
@@ -79,7 +79,7 @@ if(MSVC_GENERATOR)
 	#	message(STATUS "${ITEM}")
 	#endforeach()
 	message(STATUS "MSVC ENV var PATH")
-	get_split_list_safe("${MSVC_ENV_VAR}" OUT_MSVC_SPLIT_STRING CACHE STRING)
+	get_split_list_safe("${MSVC_ENV_VAR}" OUT_MSVC_SPLIT_STRING)
 	foreach(ITEM IN LISTS OUT_MSVC_SPLIT_STRING)
 		message(STATUS "${ITEM}")
 	endforeach()
