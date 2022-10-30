@@ -35,44 +35,68 @@ elseif(NOT ${REGEX_NINJA} STREQUAL "")
 	set(NINJA_GENERATOR TRUE)
 endif()
 
+# split string using c-style algorithm *not really - unreliable - produce bad parsing. looking for ways to out variable and get list at least
+
+function(get_split_list_safe InSTRING SPLIT_STRING)
+	# init begin index
+	set(CURRENT_INDEX 0)
+	# cache string
+	set(STRING_COPY "${InSTRING}")
+	# delim
+	set(InDELIM ";")
+	# replace
+	set(InREPLACE "")
+	# start
+	message(STATUS "parsing...")
+	while(NOT CURRENT_INDEX EQUAL -1)
+		# reset head position
+		set(CURRENT_INDEX 0)
+		# find delim pos
+		string(FIND "${STRING_COPY}" "${InDELIM}" DELIM_INDEX)
+		# extract substring
+		string(SUBSTRING "${STRING_COPY}" "${CURRENT_INDEX}" "${DELIM_INDEX}" OUT_SUBSTRING)
+		# remove value from entry
+		string(REPLACE "${OUT_SUBSTRING}${InDELIM}" "${InREPLACE}" UPDATE_STRING "${STRING_COPY}")
+		# update string copy
+		set(STRING_COPY "${UPDATE_STRING}")
+		# append list
+		list(APPEND SPLIT_STRING "${OUT_SUBSTRING}")
+		# update pos
+		set(CURRENT_INDEX "${DELIM_INDEX}")
+		#message(STATUS "${OUT_SUBSTRING}")
+	endwhile()
+	message(STATUS "complete!")
+endfunction()
+
 # set environment variable
 
-set(MSVC_ENV_VAR "$ENV{Path}")
+if(MSVC_GENERATOR)
+	set(MSVC_ENV_VAR "$ENV{Path}")
+	# run ENV var PATH _debug output
 
-# run debug test for ENV Path entry targeting x86 when x64 is target OS specified
+	## unreliable - produce bad parsing
+	#foreach(ITEM IN LISTS MSVC_ENV_VAR)
+	#	message(STATUS "${ITEM}")
+	#endforeach()
+	message(STATUS "MSVC ENV var PATH")
+	get_split_list_safe("${MSVC_ENV_VAR}" OUT_MSVC_SPLIT_STRING CACHE STRING)
+	foreach(ITEM IN LISTS OUT_MSVC_SPLIT_STRING)
+		message(STATUS "${ITEM}")
+	endforeach()
+elseif(NINJA_GENERATOR)
+	set(MINGW64_ENV_VAR "$ENV{Path}")
+	# run ENV var PATH _debug output
 
-## copy path
-#set(SPLIT_MSVC_ENV_VAR ${MSVC_ENV_VAR})
-## init pos 
-#set(MSVC_ENV_VAR_BEGIN 0)
-## init delim
-#set(MSVC_ENV_VAR_DELIM ";")
-## init replace
-#set(MSVC_ENV_VAR_REPLACE "")
-## split until
-#while(NOT MSVC_ENV_VAR_BEGIN EQUAL -1)
-#	# reset pos
-#	set(MSVC_ENV_VAR_BEGIN 0)
-#	# find delim
-#	string(FIND "${SPLIT_MSVC_ENV_VAR}" "${MSVC_ENV_VAR_DELIM}" MSVC_ENV_VAR_END)
-#	# substring, 0 + length 
-#	string(SUBSTRING "${SPLIT_MSVC_ENV_VAR}" "${MSVC_ENV_VAR_BEGIN}" "${MSVC_ENV_VAR_END}" OUT_MSVC_SUBSTRING)
-#	# print ENV var PATH
-#	message(STATUS "ENV var PATH: ${OUT_MSVC_SUBSTRING}")
-#	# remove substring from string
-#	string(REPLACE "${OUT_MSVC_SUBSTRING}${MSVC_ENV_VAR_DELIM}" "${MSVC_ENV_VAR_REPLACE}" OUT_MSVC_REDUCE_STRING "${SPLIT_MSVC_ENV_VAR}")
-#	# update target string
-#	set(SPLIT_MSVC_ENV_VAR "${OUT_MSVC_REDUCE_STRING}")
-#	# update pos
-#	set(MSVC_ENV_VAR_BEGIN "${MSVC_ENV_VAR_END}")
-#endwhile()
-
-foreach(ITEM IN LISTS MSVC_ENV_VAR)
-	message(STATUS "ENV var PATH: ${ITEM}")
-endforeach()
-
-
-set(MINGW64_ENV_VAR "$ENV{Path}")
+	## unreliable - produce bad parsing
+	#foreach(ITEM IN LISTS MINGW64_ENV_VAR)
+	#	message(STATUS "${ITEM}")
+	#endforeach()
+	message(STATUS "Ninja ENV var PATH")
+	get_split_list_safe("${MINGW64_ENV_VAR}" OUT_MINGW64_SPLIT_STRING)
+	foreach(ITEM IN LISTS OUT_MINGW64_SPLIT_STRING)
+		message(STATUS "${ITEM}")
+	endforeach()
+endif()
 	
 # set compiler options,  ERROR: somehow retrieve x86 when Env PATH set x64
 
