@@ -8,7 +8,7 @@ if(WIN32)
 		message(STATUS "system: ${CMAKE_SYSTEM_NAME}")
 	endif()
 	
-	set(CMAKE_SYSTEM_PROCESSOR AMD64)
+	set(CMAKE_SYSTEM_PROCESSOR x64)
 	if(NOT $<IF:$<CMAKE_SYSTEM_PROCESSOR:"">:TRUE>)
 		message(STATUS "processor: ${CMAKE_SYSTEM_PROCESSOR}")
 	endif()
@@ -19,6 +19,8 @@ endif()
 #set(CMAKE_GENERATOR "Visual Studio 17 2022")
 #set(CMAKE_GENERATOR_PLATEFORM "x64")
 #set(CMAKE_GENERATOR_TOOLSET "host=x64")
+
+message(STATUS "generator plateform: ${CMAKE_GENERATOR_PLATEFORM}")
 
 # check generator using regex
 
@@ -38,6 +40,36 @@ endif()
 # set environment variable
 
 set(MSVC_ENV_VAR "$ENV{Path}")
+
+# run debug test for ENV Path entry targeting x86 when x64 is target OS specified
+
+# copy path
+set(SPLIT_MSVC_ENV_VAR ${MSVC_ENV_VAR})
+# init pos 
+set(MSVC_ENV_VAR_BEGIN 0)
+# init delim
+set(MSVC_ENV_VAR_DELIM ";")
+# init replace
+set(MSVC_ENV_VAR_REPLACE "")
+# split until
+while(NOT MSVC_ENV_VAR_BEGIN EQUAL -1)
+	# reset pos
+	set(MSVC_ENV_VAR_BEGIN 0)
+	# find delim
+	string(FIND "${SPLIT_MSVC_ENV_VAR}" "${MSVC_ENV_VAR_DELIM}" MSVC_ENV_VAR_END)
+	# substring, 0 + length 
+	string(SUBSTRING "${SPLIT_MSVC_ENV_VAR}" "${MSVC_ENV_VAR_BEGIN}" "${MSVC_ENV_VAR_END}" OUT_MSVC_SUBSTRING)
+	# print ENV var PATH
+	message(STATUS "ENV var PATH: ${OUT_MSVC_SUBSTRING}")
+	# remove substring from string
+	string(REPLACE "${OUT_MSVC_SUBSTRING}${MSVC_ENV_VAR_DELIM}" "${MSVC_ENV_VAR_REPLACE}" OUT_MSVC_REDUCE_STRING "${SPLIT_MSVC_ENV_VAR}")
+	# update target string
+	set(SPLIT_MSVC_ENV_VAR "${OUT_MSVC_REDUCE_STRING}")
+	# update pos
+	set(MSVC_ENV_VAR_BEGIN "${MSVC_ENV_VAR_END}")
+endwhile()
+
+
 set(MINGW64_ENV_VAR "$ENV{Path}")
 	
 # set compiler options,  ERROR: somehow retrieve x86 when Env PATH set x64
