@@ -22,7 +22,7 @@ message(STATUS "generator plateform: ${CMAKE_GENERATOR_PLATEFORM}")
 
 # check generator using regex
 
-string(REGEX MATCH "^Visual Studio" REGEX_MSVC ${CMAKE_GENERATOR})
+string(REGEX MATCH "^Visual" REGEX_MSVC ${CMAKE_GENERATOR})
 string(REGEX MATCH "^Ninja" REGEX_NINJA ${CMAKE_GENERATOR})
 
 # check generator selected
@@ -35,37 +35,15 @@ elseif(NOT ${REGEX_NINJA} STREQUAL "")
 	set(NINJA_GENERATOR TRUE)
 endif()
 
-# split string using c-style algorithm *not really - unreliable - produce bad parsing. looking for ways to out variable and get list at least
+# split string using regex. looking for ways to out variable and print outside
 
-function(get_split_list_safe IN_VAR OUT_VAR)
-	# init begin index
-	set(CURRENT_INDEX 0)
-	# cache string
-	set(STRING_COPY "${IN_VAR}")
-	# delim
-	set(InDELIM ";")
-	# replace
-	set(InREPLACE "")
-	# start
-	message(STATUS "parsing...")
-	while(NOT CURRENT_INDEX EQUAL -1)
-		# reset head position
-		set(CURRENT_INDEX 0)
-		# find delim pos
-		string(FIND "${STRING_COPY}" "${InDELIM}" DELIM_INDEX)
-		# extract substring
-		string(SUBSTRING "${STRING_COPY}" "${CURRENT_INDEX}" "${DELIM_INDEX}" OUT_SUBSTRING)
-		# remove value from entry
-		string(REPLACE "${OUT_SUBSTRING}${InDELIM}" "${InREPLACE}" UPDATE_STRING "${STRING_COPY}")
-		# update string copy
-		set(STRING_COPY "${UPDATE_STRING}")
-		# append list
-		list(APPEND OUT_VAR "${OUT_SUBSTRING}")
-		# update pos
-		set(CURRENT_INDEX "${DELIM_INDEX}")
-		#message(STATUS "${OUT_SUBSTRING}")
-	endwhile()
-	message(STATUS "complete!")
+function(get_split_list_regex IN_VAR)
+	message(STATUS "regex parsing...")
+	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)]+[^\;]" OUT_VAR "${IN_VAR}")
+	foreach(ITEM IN LISTS OUT_VAR)
+		message(STATUS "${ITEM}")
+	endforeach()
+	message(STATUS "parse complete!")
 endfunction()
 
 # set environment variable
@@ -73,29 +51,11 @@ endfunction()
 if(MSVC_GENERATOR)
 	set(MSVC_ENV_VAR "$ENV{Path}")
 	# run ENV var PATH _debug output
-
-	## unreliable - produce bad parsing
-	#foreach(ITEM IN LISTS MSVC_ENV_VAR)
-	#	message(STATUS "${ITEM}")
-	#endforeach()
-	message(STATUS "MSVC ENV var PATH")
-	get_split_list_safe("${MSVC_ENV_VAR}" OUT_MSVC_SPLIT_STRING)
-	foreach(ITEM IN LISTS OUT_MSVC_SPLIT_STRING)
-		message(STATUS "${ITEM}")
-	endforeach()
+	get_split_list_regex("${MSVC_ENV_VAR}")
 elseif(NINJA_GENERATOR)
 	set(MINGW64_ENV_VAR "$ENV{Path}")
 	# run ENV var PATH _debug output
-
-	## unreliable - produce bad parsing
-	#foreach(ITEM IN LISTS MINGW64_ENV_VAR)
-	#	message(STATUS "${ITEM}")
-	#endforeach()
-	message(STATUS "Ninja ENV var PATH")
-	get_split_list_safe("${MINGW64_ENV_VAR}" OUT_MINGW64_SPLIT_STRING)
-	foreach(ITEM IN LISTS OUT_MINGW64_SPLIT_STRING)
-		message(STATUS "${ITEM}")
-	endforeach()
+	get_split_list_regex("${MINGW64_ENV_VAR}")
 endif()
 	
 # set compiler options,  ERROR: somehow retrieve x86 when Env PATH set x64
