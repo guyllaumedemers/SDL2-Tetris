@@ -1,4 +1,14 @@
-﻿project(
+﻿# temp solution, set GLOBAL compiler requirements
+
+set(CMAKE_CXX_COMPILE_FEATURES cxx_std_20)
+set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+set(CMAKE_C_STANDARD 17)
+set(CMAKE_C_STANDARD_REQUIRED ON)
+set(CMAKE_C_EXTENSIONS OFF)
+
+project(
 	Demo
     VERSION 0.0.0.0
     DESCRIPTION "Demo"
@@ -22,6 +32,22 @@ add_executable(
 	${MYPROJECT_SOURCES}
 )
 
+# set target standard
+
+#set_target_properties(
+#	${PROJECT_NAME}
+#	PROPERTIES
+#	CMAKE_CXX_COMPILE_FEATURES "cxx_std_20"
+#	CMAKE_CXX_STANDARD "20"
+#	CMAKE_CXX_STANDARD_REQUIRED ON
+#	CMAKE_CXX_EXTENSIONS OFF
+#	CMAKE_C_STANDARD "17"
+#	CMAKE_C_STANDARD_REQUIRED ON
+#	CMAKE_C_EXTENSIONS OFF
+#)
+
+# link dependencies
+
 add_dependencies(
 	${PROJECT_NAME}
 	lib::imgui
@@ -34,22 +60,6 @@ target_link_libraries(
 	PRIVATE lib::imgui
 	PRIVATE lib::sdl2
 	PRIVATE lib::sdlimage
-)
-
-set_target_properties(
-	${PROJECT_NAME}
-	PROPERTIES
-	CMAKE_CXX_COMPILE_FEATURES cxx_std_20
-	CMAKE_CXX_STANDARD 20
-	CMAKE_CXX_STANDARD_REQUIRED ON
-	CMAKE_CXX_EXTENSIONS OFF
-)
-
-target_compile_options(
-	${PROJECT_NAME}
-	PUBLIC CMAKE_CXX_STANDARD
-	PUBLIC CMAKE_CXX_STANDARD_REQUIRED
-	PUBLIC CMAKE_CXX_EXTENSIONS
 )
 
 # check support for LINK Time Optimization between translation units
