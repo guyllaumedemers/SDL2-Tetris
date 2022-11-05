@@ -123,7 +123,7 @@ if(MSVC_GENERATOR)
 		# print compiler path
 		message(STATUS "msvc c compiler dir: ${MSVC_C_COMPILER_PATH}")
 		# set compiler
-		set(CMAKE_C_COMPILER "${MSVC_C_COMPILER_PATH}/cl.exe")
+		set(CMAKE_C_COMPILER "${MSVC_C_COMPILER_PATH}cl.exe")
 		message(STATUS "c compiler executable path: ${CMAKE_C_COMPILER}")
 	endif()
 
@@ -137,13 +137,13 @@ if(MSVC_GENERATOR)
 		# print compiler path
 		message(STATUS "msvc cxx compiler dir: ${MSVC_CXX_COMPILER_PATH}")
 		# set compiler
-		set(CMAKE_CXX_COMPILER "${MSVC_CXX_COMPILER_PATH}/cl.exe")
+		set(CMAKE_CXX_COMPILER "${MSVC_CXX_COMPILER_PATH}cl.exe")
 		message(STATUS "cxx compiler executable path: ${CMAKE_CXX_COMPILER}")
 	endif()
 	# c compiler id
-	set(CMAKE_C_COMPILER_ID MSVC)
+	set(CMAKE_C_COMPILER_ID MSVC_VERSION)
 	# cxx compiler id
-	set(CMAKE_CXX_COMPILER_ID MSVC)
+	set(CMAKE_CXX_COMPILER_ID MSVC_VERSION)
 elseif(NINJA_GENERATOR OR MINGW_GENERATOR OR NMAKE_GENERATOR)
 	# find compiler at path
 	foreach(ITEM IN LISTS HOST_ENV_VAR)
@@ -153,7 +153,7 @@ elseif(NINJA_GENERATOR OR MINGW_GENERATOR OR NMAKE_GENERATOR)
 		# print compiler path
 		message(STATUS "c compiler dir: ${C_COMPILER_PATH}")
 		# set compiler
-		set(CMAKE_C_COMPILER "${C_COMPILER_PATH}/gcc.exe")
+		set(CMAKE_C_COMPILER "${C_COMPILER_PATH}gcc.exe")
 		message(STATUS "c compiler executable path: ${CMAKE_C_COMPILER}")
 	endif()
 
@@ -167,7 +167,7 @@ elseif(NINJA_GENERATOR OR MINGW_GENERATOR OR NMAKE_GENERATOR)
 		# print compiler path
 		message(STATUS "cxx compiler dir: ${CXX_COMPILER_PATH}")
 		# set compiler
-		set(CMAKE_CXX_COMPILER "${CXX_COMPILER_PATH}/g++.exe")
+		set(CMAKE_CXX_COMPILER "${CXX_COMPILER_PATH}g++.exe")
 		message(STATUS "cxx compiler executable path: ${CMAKE_CXX_COMPILER}")
 	endif()
 	# c compiler id
