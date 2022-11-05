@@ -1,13 +1,13 @@
-# toolchain specifics for windows
+# toolchain specifics for windows, generator expression drawback: https://stackoverflow.com/questions/28692896/cmake-generator-expression-is-not-evaluated
 
 if(WIN32)
 	set(CMAKE_SYSTEM_NAME Windows)
-	if(NOT $<IF:$<CMAKE_SYSTEM_NAME:"">:TRUE>)
+	if(NOT "${CMAKE_SYSTEM_NAME}" STREQUAL NOTFOUND)
 		message(STATUS "system: ${CMAKE_SYSTEM_NAME}")
 	endif()
 	
 	set(CMAKE_SYSTEM_PROCESSOR x64)
-	if(NOT $<IF:$<CMAKE_SYSTEM_PROCESSOR:"">:TRUE>)
+	if(NOT "${CMAKE_SYSTEM_PROCESSOR}" STREQUAL NOTFOUND)
 		message(STATUS "processor: ${CMAKE_SYSTEM_PROCESSOR}")
 	endif()
 endif()
@@ -18,32 +18,42 @@ endif()
 #set(CMAKE_GENERATOR_PLATEFORM "x64")
 #set(CMAKE_GENERATOR_TOOLSET "host=x64")
 
-message(STATUS "generator plateform: ${CMAKE_GENERATOR_PLATEFORM}")
-
 # check generator using regex
 
 string(REGEX MATCH "^Visual" REGEX_MSVC ${CMAKE_GENERATOR})
 string(REGEX MATCH "^Ninja" REGEX_NINJA ${CMAKE_GENERATOR})
+string(REGEX MATCH "^MinGW" REGEX_MINGW ${CMAKE_GENERATOR})
+string(REGEX MATCH "^NMake" REGEX_NMAKE ${CMAKE_GENERATOR})
 
 # check generator selected
 
-if(NOT ${REGEX_MSVC} STREQUAL "")
+if(NOT ${REGEX_MSVC} STREQUAL NOTFOUND)
 	message("select msvc generator: ${CMAKE_GENERATOR}, ${REGEX_MSVC}")
 	set(MSVC_GENERATOR TRUE)
-elseif(NOT ${REGEX_NINJA} STREQUAL "")
+elseif(NOT ${REGEX_NINJA} STREQUAL NOTFOUND)
 	message("select ninja generator: ${CMAKE_GENERATOR}, ${REGEX_NINJA}")
 	set(NINJA_GENERATOR TRUE)
+elseif(NOT ${REGEX_MINGW} STREQUAL NOTFOUND)
+	message("select mingw generator: ${CMAKE_GENERATOR}, ${REGEX_MINGW}")
+	set(MINGW_GENERATOR TRUE)
+elseif(NOT ${REGEX_NMAKE} STREQUAL NOTFOUND)
+	message("select nmake generator: ${CMAKE_GENERATOR}, ${REGEX_NMAKE}")
+	set(NMAKE_GENERATOR TRUE)
 endif()
 
-# split string using regex. looking for ways to out variable and print outside
+# split ENV var list
 
-function(get_split_list_regex IN_VAR OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
+function(get_env_path_list_regex IN_VAR OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
 	# out variable feature - version specific
 	set(BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED "3.25")
 	# regex parsing
-	message(STATUS "regex parsing...")
+	message(STATUS "env path directories...")
 	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)\+\-]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
-	message(STATUS "parse complete!")
+	# print splits
+	foreach(ITEM IN LISTS REGEX_OUT_VAR)
+		message(STATUS "${ITEM}")
+	endforeach()
+	message(STATUS "complete!")
 	# conditional out
 	if("${CMAKE_VERSION}" GREATER_EQUAL "${BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED}")
 		block(SCOPE_FOR VARIABLES)
@@ -54,15 +64,19 @@ function(get_split_list_regex IN_VAR OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
 	endif()
 endfunction()
 
-# parse ENV var list by Plateform.
+# filter ENV var list by Plateform.
 
-function(get_plateform_specific_list_regex IN_VAR OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
+function(get_plateform_specific_list_regex IN_VAR IN_FILTER OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
 	# out variable feature - version specific
 	set(BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED "3.25")
 	# regex parsing
-	message(STATUS "regex parsing...")
-	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)\+\-]+(x86|x64|86|64)[a-zA-Z\\\ 0-9\.\(\)\+\-]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
-	message(STATUS "parse complete!")
+	message(STATUS "target directories by plateform: ${IN_FILTER}")
+	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)\+\-]+(${IN_FILTER})[a-zA-Z\\\ 0-9\.\(\)\+\-]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
+	# print splits
+	foreach(ITEM IN LISTS REGEX_OUT_VAR)
+		message(STATUS "${ITEM}")
+	endforeach()
+	message(STATUS "complete!")
 	# conditional out
 	if("${CMAKE_VERSION}" GREATER_EQUAL "${BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED}")
 		block(SCOPE_FOR VARIABLES)
@@ -73,79 +87,92 @@ function(get_plateform_specific_list_regex IN_VAR OUT_UNIQUE_REGEX_FETCH_PLATEFO
 	endif()
 endfunction()
 
-message(STATUS "--------------------------------------------------------------------------------------------")
+# check plateform
+
+set(PLATEFORM_x64 "x64|64")
+set(PLATEFORM_x86 "x86|86")
+
+if(WIN32)
+	# there is no way of checking windows plateform here
+	set(PLATEFORM_WINDOW "${PLATEFORM_x64}")
+	message(STATUS "target plateform: ${PLATEFORM_WINDOW}")
+endif()
 
 # set environment variable
 
-if(MSVC_GENERATOR)
-	set(MSVC_ENV_VAR "$ENV{Path}")
-	# run ENV var PATH _debug output
-	get_split_list_regex("${MSVC_ENV_VAR}" OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
-	foreach(ITEM IN LISTS OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
-		message(STATUS "${ITEM}")
-	endforeach()
-	message(STATUS "--------------------------------------------------------------------------------------------")
-	# run Plateform ENV var PATH _debug output
-	get_plateform_specific_list_regex("${OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR}" OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
-	foreach(ITEM IN LISTS OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
-		message(STATUS "${ITEM}")
-	endforeach()
-elseif(NINJA_GENERATOR)
-	set(MINGW64_ENV_VAR "$ENV{Path}")
-	# run ENV var PATH _debug output
-	get_split_list_regex("${MINGW64_ENV_VAR}" OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
-	foreach(ITEM IN LISTS OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
-		message(STATUS "${ITEM}")
-	endforeach()
-	message(STATUS "--------------------------------------------------------------------------------------------")
-	# run Plateform ENV var PATH _debug output
-	get_plateform_specific_list_regex("${OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR}" OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
-	foreach(ITEM IN LISTS OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
-		message(STATUS "${ITEM}")
-	endforeach()
-endif()
+# cached env path
+set(HOST_ENV_VAR "$ENV{Path}")
+# run ENV var PATH _debug output
+get_env_path_list_regex("${HOST_ENV_VAR}" OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
+message(STATUS "--------------------------------------------------------------------------------------------")
+# run Plateform ENV var PATH _debug output
+get_plateform_specific_list_regex("${OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR}" "${PLATEFORM_WINDOW}" OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
+# update ENV var entries
+set(HOST_ENV_VAR "${OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR}")
 
 message(STATUS "--------------------------------------------------------------------------------------------")
 	
 # set compiler options,  ERROR: somehow retrieve x86 when Env PATH set x64
 
 if(MSVC_GENERATOR)
-	message(STATUS "Setting MSVC compiler")
-	find_path(MSVC_C_COMPILER_PATH "cl.exe" PATHS ${MSVC_ENV_VAR})
-	if(NOT $<IF:$<MSVC_C_COMPILER_PATH:"">:NOTFOUND>)
-		message(STATUS "msvc c compiler dir: ${MSVC_C_COMPILER_PATH}>")
+	# find compiler at path
+	foreach(ITEM IN LISTS HOST_ENV_VAR)
+		find_path(MSVC_C_COMPILER_PATH "cl.exe" PATHS "${ITEM}" NO_CACHE NO_DEFAULT_PATH)
+	endforeach()
+	if(NOT "${MSVC_C_COMPILER_PATH}" STREQUAL NOTFOUND)
+		# print compiler path
+		message(STATUS "msvc c compiler dir: ${MSVC_C_COMPILER_PATH}")
+		# set compiler
 		set(CMAKE_C_COMPILER "${MSVC_C_COMPILER_PATH}/cl.exe")
 		message(STATUS "c compiler executable path: ${CMAKE_C_COMPILER}")
 	endif()
 
 	message(STATUS "--------------------------------------------------------------------------------------------")
 	
-	find_path(MSVC_CXX_COMPILER_PATH "cl.exe" PATHS ${MSVC_ENV_VAR})
-	if(NOT $<IF:$<MSVC_CXX_COMPILER_PATH:"">:NOTFOUND>)
-		message(STATUS "msvc cxx compiler dir: ${MSVC_CXX_COMPILER_PATH}>")
+	# find compiler at path
+	foreach(ITEM IN LISTS HOST_ENV_VAR)
+		find_path(MSVC_CXX_COMPILER_PATH "cl.exe" PATHS "${ITEM}" NO_CACHE NO_DEFAULT_PATH)
+	endforeach()
+	if(NOT "${MSVC_CXX_COMPILER_PATH}" STREQUAL NOTFOUND)
+		# print compiler path
+		message(STATUS "msvc cxx compiler dir: ${MSVC_CXX_COMPILER_PATH}")
+		# set compiler
 		set(CMAKE_CXX_COMPILER "${MSVC_CXX_COMPILER_PATH}/cl.exe")
 		message(STATUS "cxx compiler executable path: ${CMAKE_CXX_COMPILER}")
 	endif()
+	# c compiler id
 	set(CMAKE_C_COMPILER_ID MSVC)
+	# cxx compiler id
 	set(CMAKE_CXX_COMPILER_ID MSVC)
-elseif(NINJA_GENERATOR)
-	message(STATUS "Setting Ninja compiler")
-	find_path(C_COMPILER_PATH "gcc.exe" PATHS ${MINGW64_ENV_VAR})
-	if(NOT $<IF:$<C_COMPILER_PATH:"">:NOTFOUND>)
-		message(STATUS "c compiler dir: ${C_COMPILER_PATH}>")
+elseif(NINJA_GENERATOR OR MINGW_GENERATOR OR NMAKE_GENERATOR)
+	# find compiler at path
+	foreach(ITEM IN LISTS HOST_ENV_VAR)
+		find_path(C_COMPILER_PATH "gcc.exe" PATHS "${HOST_ENV_VAR}" NO_CACHE NO_DEFAULT_PATH)
+	endforeach()
+	if(NOT "${C_COMPILER_PATH}" STREQUAL NOTFOUND)
+		# print compiler path
+		message(STATUS "c compiler dir: ${C_COMPILER_PATH}")
+		# set compiler
 		set(CMAKE_C_COMPILER "${C_COMPILER_PATH}/gcc.exe")
 		message(STATUS "c compiler executable path: ${CMAKE_C_COMPILER}")
 	endif()
 
 	message(STATUS "--------------------------------------------------------------------------------------------")
 	
-	find_path(CXX_COMPILER_PATH "g++.exe" PATHS ${MINGW64_ENV_VAR})
-	if(NOT $<IF:$<CXX_COMPILER_PATH:"">:NOTFOUND>)
-		message(STATUS "cxx compiler dir: ${CXX_COMPILER_PATH}>")
+	# find compiler at path
+	foreach(ITEM IN LISTS HOST_ENV_VAR)
+		find_path(CXX_COMPILER_PATH "g++.exe" PATHS "${HOST_ENV_VAR}" NO_CACHE NO_DEFAULT_PATH)
+	endforeach()
+	if(NOT "${CXX_COMPILER_PATH}" STREQUAL NOTFOUND)
+		# print compiler path
+		message(STATUS "cxx compiler dir: ${CXX_COMPILER_PATH}")
+		# set compiler
 		set(CMAKE_CXX_COMPILER "${CXX_COMPILER_PATH}/g++.exe")
 		message(STATUS "cxx compiler executable path: ${CMAKE_CXX_COMPILER}")
 	endif()
+	# c compiler id
 	set(CMAKE_C_COMPILER_ID GNU)
+	# cxx compiler id
 	set(CMAKE_CXX_COMPILER_ID GNU)
 endif()
 
