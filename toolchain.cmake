@@ -38,19 +38,19 @@ endif()
 # split string using regex. looking for ways to out variable and print outside
 
 function(get_split_list_regex IN_VAR OUT_VAR)
+	# out variable feature - version specific
 	set(BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED "3.25")
+	# regex parsing
+	message(STATUS "regex parsing...")
+	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
+	message(STATUS "parse complete!")
+	# conditional out
 	if(CMAKE_VERSION GREATER_EQUAL "${BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED}")
 		block(SCOPE_FOR VARIABLES)
-			message(STATUS "regex parsing...")
-			string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
-			message(STATUS "parse complete!")
 			return(PROPAGATE "${REGEX_OUT_VAR}")
 		endblock()
 	else()
-			message(STATUS "regex parsing...")
-			string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
-			message(STATUS "parse complete!")
-			set(OUT_VAR "${REGEX_OUT_VAR}" PARENT_SCOPE)
+		set(OUT_VAR "${REGEX_OUT_VAR}" PARENT_SCOPE)
 	endif()
 endfunction()
 
