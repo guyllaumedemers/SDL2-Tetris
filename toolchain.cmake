@@ -37,40 +37,75 @@ endif()
 
 # split string using regex. looking for ways to out variable and print outside
 
-function(get_split_list_regex IN_VAR OUT_VAR)
+function(get_split_list_regex IN_VAR OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
 	# out variable feature - version specific
 	set(BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED "3.25")
 	# regex parsing
 	message(STATUS "regex parsing...")
-	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
+	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)\+\-]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
 	message(STATUS "parse complete!")
 	# conditional out
-	if(CMAKE_VERSION GREATER_EQUAL "${BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED}")
+	if("${CMAKE_VERSION}" GREATER_EQUAL "${BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED}")
 		block(SCOPE_FOR VARIABLES)
 			return(PROPAGATE "${REGEX_OUT_VAR}")
 		endblock()
 	else()
-		set(OUT_VAR "${REGEX_OUT_VAR}" PARENT_SCOPE)
+		set(OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR "${REGEX_OUT_VAR}" PARENT_SCOPE)
 	endif()
 endfunction()
+
+# parse ENV var list by Plateform.
+
+function(get_plateform_specific_list_regex IN_VAR OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
+	# out variable feature - version specific
+	set(BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED "3.25")
+	# regex parsing
+	message(STATUS "regex parsing...")
+	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)\+\-]+(x86|x64|86|64)[a-zA-Z\\\ 0-9\.\(\)\+\-]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
+	message(STATUS "parse complete!")
+	# conditional out
+	if("${CMAKE_VERSION}" GREATER_EQUAL "${BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED}")
+		block(SCOPE_FOR VARIABLES)
+			return(PROPAGATE "${REGEX_OUT_VAR}")
+		endblock()
+	else()
+		set(OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR "${REGEX_OUT_VAR}" PARENT_SCOPE)
+	endif()
+endfunction()
+
+message(STATUS "--------------------------------------------------------------------------------------------")
 
 # set environment variable
 
 if(MSVC_GENERATOR)
 	set(MSVC_ENV_VAR "$ENV{Path}")
 	# run ENV var PATH _debug output
-	get_split_list_regex("${MSVC_ENV_VAR}" OUT_VAR)
-	foreach(ITEM IN LISTS OUT_VAR)
+	get_split_list_regex("${MSVC_ENV_VAR}" OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
+	foreach(ITEM IN LISTS OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
+		message(STATUS "${ITEM}")
+	endforeach()
+	message(STATUS "--------------------------------------------------------------------------------------------")
+	# run Plateform ENV var PATH _debug output
+	get_plateform_specific_list_regex("${OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR}" OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
+	foreach(ITEM IN LISTS OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
 		message(STATUS "${ITEM}")
 	endforeach()
 elseif(NINJA_GENERATOR)
 	set(MINGW64_ENV_VAR "$ENV{Path}")
 	# run ENV var PATH _debug output
-	get_split_list_regex("${MINGW64_ENV_VAR}" OUT_VAR)
-	foreach(ITEM IN LISTS OUT_VAR)
+	get_split_list_regex("${MINGW64_ENV_VAR}" OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
+	foreach(ITEM IN LISTS OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR)
+		message(STATUS "${ITEM}")
+	endforeach()
+	message(STATUS "--------------------------------------------------------------------------------------------")
+	# run Plateform ENV var PATH _debug output
+	get_plateform_specific_list_regex("${OUT_UNIQUE_REGEX_SPLIT_ENV_LIST_VAR}" OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
+	foreach(ITEM IN LISTS OUT_UNIQUE_REGEX_FETCH_PLATEFORM_LIST_VAR)
 		message(STATUS "${ITEM}")
 	endforeach()
 endif()
+
+message(STATUS "--------------------------------------------------------------------------------------------")
 	
 # set compiler options,  ERROR: somehow retrieve x86 when Env PATH set x64
 
