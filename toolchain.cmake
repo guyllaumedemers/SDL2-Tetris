@@ -37,13 +37,21 @@ endif()
 
 # split string using regex. looking for ways to out variable and print outside
 
-function(get_split_list_regex IN_VAR)
-	message(STATUS "regex parsing...")
-	string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)]+[^\;]" OUT_VAR "${IN_VAR}")
-	foreach(ITEM IN LISTS OUT_VAR)
-		message(STATUS "${ITEM}")
-	endforeach()
-	message(STATUS "parse complete!")
+function(get_split_list_regex IN_VAR OUT_VAR)
+	set(BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED "3.25")
+	if(CMAKE_VERSION GREATER_EQUAL "${BLOCK_STATEMENT_MINIMUM_VERSION_REQUIRED}")
+		block(SCOPE_FOR VARIABLES)
+			message(STATUS "regex parsing...")
+			string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
+			message(STATUS "parse complete!")
+			return(PROPAGATE "${REGEX_OUT_VAR}")
+		endblock()
+	else()
+			message(STATUS "regex parsing...")
+			string(REGEX MATCHALL "C\:[a-zA-Z\\\ 0-9\.\(\)]+[^\;]" REGEX_OUT_VAR "${IN_VAR}")
+			message(STATUS "parse complete!")
+			set(OUT_VAR "${REGEX_OUT_VAR}" PARENT_SCOPE)
+	endif()
 endfunction()
 
 # set environment variable
@@ -51,11 +59,17 @@ endfunction()
 if(MSVC_GENERATOR)
 	set(MSVC_ENV_VAR "$ENV{Path}")
 	# run ENV var PATH _debug output
-	get_split_list_regex("${MSVC_ENV_VAR}")
+	get_split_list_regex("${MSVC_ENV_VAR}" OUT_VAR)
+	foreach(ITEM IN LISTS OUT_VAR)
+		message(STATUS "${ITEM}")
+	endforeach()
 elseif(NINJA_GENERATOR)
 	set(MINGW64_ENV_VAR "$ENV{Path}")
 	# run ENV var PATH _debug output
-	get_split_list_regex("${MINGW64_ENV_VAR}")
+	get_split_list_regex("${MINGW64_ENV_VAR}" OUT_VAR)
+	foreach(ITEM IN LISTS OUT_VAR)
+		message(STATUS "${ITEM}")
+	endforeach()
 endif()
 	
 # set compiler options,  ERROR: somehow retrieve x86 when Env PATH set x64
