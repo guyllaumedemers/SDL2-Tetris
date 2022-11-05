@@ -5,9 +5,7 @@ Learning sdl2 and CMake, Out-of-Source Build
 ## Overview
 > SDL2-Tetris is a demo project built using Modern CMake.
 
-## Task Remaining
-- [ ] Generate Tetrominoe Index Array with proper values *Require Cols for Args (Really dont like how this require TileMap size Info)
-- [ ] Create Flip logic
-- [ ] Handle Rendering of Tetrominoe on top of TileMap
+## CMake Issue
+> Compiler selected point to an x86 directory that is set on current machine. Users should not have to modify their ENV path and remove x86 directory references. System should select proper path on x64 machine.
 
 💬 References on CMake are given under : [Modern CMake for C++](https://www.amazon.ca/Modern-CMake-Discover-approach-packaging/dp/1801070059), [Mastering CMake](https://www.amazon.ca/Mastering-CMake-Ken-Martin/dp/1930934319)
