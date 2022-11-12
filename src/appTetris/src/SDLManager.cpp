@@ -56,12 +56,12 @@ void SDLManager::Update(TextureManager* const TextureManagerPtr, std::function<v
 	SDL_RenderPresent(Ren);
 }
 
-void SDLManager::Clear()
+void SDLManager::Clear() const
 {
 	SDL_Quit();
 }
 
-void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height)
+void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height) const
 {
 	if (!Window)
 	{

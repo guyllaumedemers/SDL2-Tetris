@@ -1,6 +1,6 @@
 #include "../include/GameInstance.h"
 
-void GameInstance::Play()
+void GameInstance::Play() const
 {
 	if (!TileMapPtr)
 	{
@@ -8,12 +8,12 @@ void GameInstance::Play()
 	}
 
 	/*Should retrieved values from Preset Difficulty*/
-	const uint8_t&& Rows = 20;
-	const uint8_t&& Cols = 12;
-	TileMapPtr->Init(Rows, Cols, [&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); });
+	const uint8_t&& tempRows = 20;
+	const uint8_t&& tempCols = 12;
+	TileMapPtr->Init(tempRows, tempCols, [&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); });
 }
 
-void GameInstance::Update(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr)
+void GameInstance::Update(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr) const
 {
 	if (!TileMapPtr || !TextureManagerPtr || !SDLManagerPtr)
 	{
@@ -26,11 +26,11 @@ void GameInstance::Update(TextureManager* const TextureManagerPtr, SDLManager* c
 	TileMapPtr->Update(TextureManagerPtr, TetrominoeManagerPtr.get(), SDLManagerPtr, Idle, OneDown);
 }
 
-void GameInstance::Pause()
+void GameInstance::Pause() const
 {
 }
 
-void GameInstance::Quit()
+void GameInstance::Quit() const
 {
 	if (!TileMapPtr)
 	{
@@ -40,7 +40,7 @@ void GameInstance::Quit()
 	TileMapPtr->Clear();
 }
 
-void GameInstance::PollKeyEvent(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY)
+void GameInstance::PollKeyEvent(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY) const
 {
 	if (!TileMapPtr || !TextureManagerPtr || !SDLManagerPtr)
 	{

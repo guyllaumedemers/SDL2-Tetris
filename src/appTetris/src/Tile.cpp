@@ -7,13 +7,7 @@
 #include <SDL.h>
 #endif
 
-Tile::Tile(TileEnum TileEnum, size_t Index)
-{
-	IndexPosition = Index;
-	Attribute = TileEnum;
-}
-
-void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols)
+void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols) const
 {
 	if (!TextureManagerPtr || !SDLManagerPtr)
 	{
@@ -34,7 +28,7 @@ void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDL
 		return;
 	}
 
-	SDL_Rect const TextureRect =
+	const SDL_Rect TextureRect =
 	{
 		static_cast<int>(IndexPosition % Cols) * Tile::Size,
 		static_cast<int>(IndexPosition / Cols) * Tile::Size,

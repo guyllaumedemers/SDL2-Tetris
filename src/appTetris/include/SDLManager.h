@@ -37,8 +37,8 @@ public:
 	SDLManager& operator=(SDLManager&&) = delete;
 	void Init();
 	void Update(class TextureManager* const TextureManagerPtr, std::function<void(TextureManager* const, SDLManager* const)> GameInstanceFuncPtr);
-	void Clear();
-	void SetWindowContextSize(uint16_t Width, uint16_t Height);
+	void Clear() const;
+	void SetWindowContextSize(uint16_t Width, uint16_t Height) const;
 	SDL_Renderer* const GetRenderer() const { return Renderer.get(); }
 };
 #endif

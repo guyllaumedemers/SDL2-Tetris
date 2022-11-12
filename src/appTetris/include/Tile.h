@@ -18,18 +18,9 @@ enum TileEnum
 
 struct Tile final
 {
+	static constexpr uint8_t&& Size = 20;
 	TileEnum Attribute = TileEnum::Empty;
-	static constexpr uint8_t Size = 20;
 	size_t IndexPosition = 0;
-	friend class TileMap;
-
-	//Tile(const Tile&) = delete;	// std::vector use copy constructor for assigning adding new entries
-	//Tile(Tile&&) = delete;		// std::vector use std::move for resizing
-	Tile() = delete;
-	Tile(TileEnum TileEnum, size_t Index);
-	~Tile() = default;
-	//Tile& operator=(const Tile&) = delete;
-	//Tile& operator=(Tile&&) = delete;
-	void Render(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols);
+	void Render(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols) const;
 };
 #endif

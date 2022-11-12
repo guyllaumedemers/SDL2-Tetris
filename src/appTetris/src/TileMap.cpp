@@ -26,11 +26,11 @@ void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint
 
 		if (Row == Zero || Row == Rows - One || Col == Zero || Col == Cols - One)
 		{
-			Tilemap.emplace_back(Tile(TileEnum::Border, it));
+			Tilemap.emplace_back(Tile{ TileEnum::Border, it });
 		}
 		else
 		{
-			Tilemap.emplace_back(Tile(TileEnum::Empty, it));
+			Tilemap.emplace_back(Tile{ TileEnum::Empty, it });
 		}
 	}
 
@@ -45,7 +45,8 @@ void TileMap::Update(TextureManager* const TextureManagerPtr, TetrominoeManager*
 	}
 
 	// update position of all tetrominoes
-	TetrominoeManagerPtr->Update(DirX, DirY, sRows, sCols);
+	TetrominoeManagerPtr->Update(this, DirX, DirY, sRows, sCols);
+
 	// render all tiles
 	for (auto& it : Tilemap)
 	{

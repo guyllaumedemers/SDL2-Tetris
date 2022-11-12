@@ -23,6 +23,7 @@ class TileMap final
 	static uint8_t sRows;
 	static uint8_t sCols;
 	std::vector<Tile> Tilemap = std::vector<Tile>();
+	friend class TetrominoeManager;
 public:
 	TileMap(const TileMap&) = delete;
 	TileMap(TileMap&&) = delete;

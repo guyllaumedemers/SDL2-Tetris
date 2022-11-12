@@ -51,7 +51,7 @@ void TextureManager::Clear()
 	Textures.clear();
 }
 
-SDL_Texture* TextureManager::GetTextureByName(const std::string& TextureName)
+SDL_Texture* TextureManager::GetTextureByName(const std::string& TextureName) const
 {
 	if (Textures.empty())
 	{

@@ -34,10 +34,10 @@ public:
 	~GameInstance() = default;
 	GameInstance& operator=(const GameInstance&) = delete;
 	GameInstance& operator=(GameInstance&&) = delete;
-	void Play();
-	void Update(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr);
-	void Pause();
-	void Quit();
-	void PollKeyEvent(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY);
+	void Play() const;
+	void Update(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr) const;
+	void Pause() const;
+	void Quit() const;
+	void PollKeyEvent(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY) const;
 };
 #endif

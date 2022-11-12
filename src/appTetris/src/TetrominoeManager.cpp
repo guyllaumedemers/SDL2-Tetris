@@ -1,8 +1,14 @@
 #include "../include/TetrominoeManager.h"
 #include "../include/Tetrominoe.h"
+#include "../include/TileMap.h"
 
-void TetrominoeManager::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
+void TetrominoeManager::Update(TileMap* const TilemapPtr, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
+	if(!TilemapPtr)
+	{
+		return;
+	}
+
 	for (auto& it : TetrominoePool)
 	{
 		Tetrominoe* const Tetrominoe = it.get();
