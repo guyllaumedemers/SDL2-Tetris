@@ -1,5 +1,4 @@
 #include "../include/Tetrominoe.h"
-
 #include "../include/Tile.h"
 
 Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
@@ -87,7 +86,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, ui
 		Tile& PreviousTile = Tilemap.at(TetrominoeEntryIndex);
 		PreviousTile.Attribute = TileEnum::Empty;
 
-		const uint8_t&& JumpValue = static_cast<uint16_t>(DirX + (std::abs(DirY) * Cols));
+		const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
 		TetrominoeEntryIndex += JumpValue;
 
 		Tile& NextTile = Tilemap.at(TetrominoeEntryIndex);

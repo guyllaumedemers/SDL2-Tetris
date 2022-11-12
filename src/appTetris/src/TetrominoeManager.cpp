@@ -9,7 +9,7 @@ void TetrominoeManager::Update(TileMap* const TilemapPtrArg, int8_t DirX, int8_t
 		return;
 	}
 
-	for (auto& TetrominoeUniquePtr : TetrominoePool)
+	for (const auto& TetrominoeUniquePtr : TetrominoePool)
 	{
 		Tetrominoe* const TetrominoePtr = TetrominoeUniquePtr.get();
 		if (!TetrominoePtr)

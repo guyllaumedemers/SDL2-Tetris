@@ -50,7 +50,7 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 	SDL_SetRenderDrawColor(SDLRendererPtr, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(SDLRendererPtr);
 
-	auto const TexturePairFound = TexturePair.find(Attribute);
+	const auto TexturePairFound = TexturePair.find(Attribute);
 	if (TexturePairFound == TexturePair.end())
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: ITERATOR_SEARCH INVALID!");
