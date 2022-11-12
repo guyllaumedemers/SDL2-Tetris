@@ -5,7 +5,7 @@ Learning sdl2 and CMake, Out-of-Source Build
 ## Overview
 > SDL2-Tetris is a demo project built using Modern CMake. Project Optimization is under development and currently favor RValue Reference for storing RValue literals and Object requiring Move semantics. LValue Reference are currently favor for Heap allocated variables.
 
-#### Note : Assembly instructions call comparisons are required to confirm the improvement of code efficiency.
+#### Note : Assembly instructions call comparisons are required to confirm the improvement of code efficiency. Compiler optimization level will be disable in a near future.
 
 ## How to Run
 > To Run this project and generate MSVC solution, open powershell and run the following cmd from the project root directory.</br>
