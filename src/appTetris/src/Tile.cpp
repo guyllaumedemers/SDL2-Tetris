@@ -50,8 +50,8 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 	SDL_SetRenderDrawColor(SDLRendererPtr, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(SDLRendererPtr);
 
-	auto const Search = TexturePair.find(Attribute);
-	if (Search == TexturePair.end())
+	auto const TexturePairFound = TexturePair.find(Attribute);
+	if (TexturePairFound == TexturePair.end())
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: ITERATOR_SEARCH INVALID!");
 		SDL_DestroyTexture(SDLTextureTargetPtr);
@@ -59,16 +59,7 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 		return;
 	}
 
-	const std::string&& STextureTile = (Search->first == TileEnum::Filled) ? "" : Search->second;
-	if (STextureTile.empty())
-	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_STRING INVALID!");
-		SDL_DestroyTexture(SDLTextureTargetPtr);
-		SDL_SetRenderTarget(SDLRendererPtr, NULL);
-		return;
-	}
-
-	SDL_Texture* const SDLTextureTilePtr = TextureManagerPtrArg->GetTextureByName(STextureTile);
+	SDL_Texture* const SDLTextureTilePtr = TextureManagerPtrArg->GetTextureByName(TexturePairFound->second);
 	if (!SDLTextureTilePtr)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_PTR INVALID!");

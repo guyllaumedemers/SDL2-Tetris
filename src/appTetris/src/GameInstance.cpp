@@ -10,7 +10,7 @@ void GameInstance::Run() const
 	/*Should retrieved values from Preset Difficulty*/
 	const uint8_t&& tempRows = 20;
 	const uint8_t&& tempCols = 12;
-	TileMapUniquePtr->Init(tempRows, tempCols, [&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); });
+	TileMapUniquePtr->Initialize(tempRows, tempCols, [&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); });
 }
 
 void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const

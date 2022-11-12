@@ -49,7 +49,7 @@ public:
 	const bool& IsLocked() const { return bIsLocked; }
 	bool IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	bool IsMoveOverlappingExistingTile(const std::vector<class Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
-	void Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
+	void Update(std::vector<class Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip();
 };
 #endif

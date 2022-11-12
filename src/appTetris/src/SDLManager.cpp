@@ -33,7 +33,7 @@ void SDLManager::Initialize()
 	}
 }
 
-void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::function<void(TextureManager* const, SDLManager* const)> GameInstanceFuncPtrArg)
+void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::function<void(TextureManager* const, SDLManager* const)> UpdateFncPtrArg)
 {
 	if (!SDLRendererUniquePtr)
 	{
@@ -52,7 +52,7 @@ void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::functio
 
 	SDL_SetRenderDrawColor(SDLRendererPtr, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(SDLRendererPtr);
-	GameInstanceFuncPtrArg(TextureManagerPtrArg, this);
+	UpdateFncPtrArg(TextureManagerPtrArg, this);
 	SDL_RenderPresent(SDLRendererPtr);
 }
 

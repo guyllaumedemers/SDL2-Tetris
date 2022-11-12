@@ -1,5 +1,7 @@
 #include "../include/Tetrominoe.h"
 
+#include "../include/Tile.h"
+
 Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 {
 	if (!TetrominoeEnum /*ShapeEnum::None == 0*/)
@@ -33,7 +35,7 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 
 bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
-	bool&& IsMoveInBound = true;
+	static constexpr bool&& IsMoveInBound = true;
 
 	if (IsLocked())
 	{
@@ -58,24 +60,39 @@ bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t C
 
 bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
-	bool&& IsMoveOverlappingExistingTile = true;
+	static constexpr bool&& IsMoveOverlappingExistingTile = true;
 
 	if (Tilemap.empty())
 	{
 		return !IsMoveOverlappingExistingTile;
 	}
 
-	for(auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
-		
+		const Tile& Tile = Tilemap.at(TetrominoeEntryIndex);
+
+		if (Tile.Attribute == TileEnum::Filled)
+		{
+			return IsMoveOverlappingExistingTile;
+		}
 	}
 
-	return IsMoveOverlappingExistingTile;
+	return !IsMoveOverlappingExistingTile;
 }
 
-void Tetrominoe::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
+void Tetrominoe::Update(std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {
+	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+	{
+		Tile& PreviousTile = Tilemap.at(TetrominoeEntryIndex);
+		PreviousTile.Attribute = TileEnum::Empty;
 
+		const uint8_t&& JumpValue = static_cast<uint16_t>(DirX + (std::abs(DirY) * Cols));
+		TetrominoeEntryIndex += JumpValue;
+
+		Tile& NextTile = Tilemap.at(TetrominoeEntryIndex);
+		NextTile.Attribute = TileEnum::Filled;
+	}
 }
 
 void Tetrominoe::Flip()

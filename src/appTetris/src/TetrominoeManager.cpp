@@ -29,7 +29,7 @@ void TetrominoeManager::Update(TileMap* const TilemapPtrArg, int8_t DirX, int8_t
 			continue;
 		}
 
-		TetrominoePtr->Update(DirX, DirY, Rows, Cols);
+		TetrominoePtr->Update(TilemapPtrArg->Tilemap, DirX, DirY, Rows, Cols);
 	}
 }
 
