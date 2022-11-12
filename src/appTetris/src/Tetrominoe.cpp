@@ -31,11 +31,13 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 	Pattern = TetrominoeEnum;
 }
 
-void Tetrominoe::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
+bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
+	bool&& IsMoveInBound = true;
+
 	if (IsLocked())
 	{
-		return;
+		return !IsMoveInBound;
 	}
 
 	static constexpr uint8_t&& Zero = 0;
@@ -47,9 +49,25 @@ void Tetrominoe::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 
 		if (!CanMoveRow || !CanMoveCol)
 		{
-			return;
+			return !IsMoveInBound;
 		}
 	}
+
+	return IsMoveInBound;
+}
+
+bool Tetrominoe::IsMoveOverlappingExistingTile(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
+{
+	bool&& IsMoveOverlappingExistingTile = true;
+
+
+
+	return IsMoveOverlappingExistingTile;
+}
+
+void Tetrominoe::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
+{
+
 }
 
 void Tetrominoe::Flip()

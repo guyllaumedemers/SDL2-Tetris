@@ -38,6 +38,8 @@ public:
 	~TetrominoeManager() = default;
 	TetrominoeManager& operator=(const TetrominoeManager&) = delete;
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
+	void Add();
+	void Remove();
 	void Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip() const;
 };

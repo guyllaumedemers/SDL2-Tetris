@@ -17,14 +17,14 @@ void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint
 	sCols = Cols;
 
 	static constexpr uint8_t&& Zero = 0;
-	static constexpr uint8_t&& MinusOne = 1;
+	static constexpr uint8_t&& One = 1;
 
 	for (size_t it = 0; it != static_cast<size_t>(Rows * Cols); ++it)
 	{
 		const size_t&& Row = (it / Cols);
 		const size_t&& Col = (it % Cols);
 
-		if (Row == Zero || Row == Rows - MinusOne || Col == Zero || Col == Cols - MinusOne)
+		if (Row == Zero || Row == Rows - One || Col == Zero || Col == Cols - One)
 		{
 			Tilemap.emplace_back(Tile(TileEnum::Border, it));
 		}

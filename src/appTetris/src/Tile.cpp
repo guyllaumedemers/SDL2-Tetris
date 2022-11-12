@@ -9,8 +9,8 @@
 
 Tile::Tile(TileEnum TileEnum, size_t Index)
 {
-	this->IndexPosition = Index;
-	this->Attribute = TileEnum;
+	IndexPosition = Index;
+	Attribute = TileEnum;
 }
 
 void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols)
