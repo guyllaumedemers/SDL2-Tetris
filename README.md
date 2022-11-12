@@ -3,7 +3,7 @@ Learning sdl2 and CMake, Out-of-Source Build
 > Refactoring [SDL2-GameDev/Tetris](https://github.com/guyllaumedemers/SDL2-GameDev/tree/master/SDL2-Tetris)
 
 ## Overview
-> SDL2-Tetris is a demo project built using Modern CMake. Project Optimization is under development and currently favor RValue Reference for storing RValue literals and Object requiring Move semantics. LValue Reference are currently favor for Heap allocated variables.
+> SDL2-Tetris is a demo project built using Modern CMake. Project Optimization is under development and currently favor RValue Reference for storing RValue literals and data structure requiring Move semantics. LValue Reference are currently favor for Heap allocated variables.
 
 #### Note : Assembly instructions call comparisons are required to confirm the improvement of code efficiency. Compiler optimization level will be disable in a near future.
 
