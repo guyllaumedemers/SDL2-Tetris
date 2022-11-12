@@ -24,8 +24,8 @@ class GameInstance final
 	typedef std::function<void(uint16_t, uint16_t)> DelSetWindow;
 	DelSetWindow SetWindowEvent;
 
-	std::unique_ptr<TileMap> TileMapPtr = std::make_unique<TileMap>();
-	std::unique_ptr<TetrominoeManager> TetrominoeManagerPtr = std::make_unique<TetrominoeManager>();
+	std::unique_ptr<TileMap> TileMapUniquePtr = std::make_unique<TileMap>();
+	std::unique_ptr<TetrominoeManager> TetrominoeManagerUniquePtr = std::make_unique<TetrominoeManager>();
 	friend class GameManager;
 public:
 	GameInstance(const GameInstance&) = delete;
@@ -34,10 +34,9 @@ public:
 	~GameInstance() = default;
 	GameInstance& operator=(const GameInstance&) = delete;
 	GameInstance& operator=(GameInstance&&) = delete;
-	void Play() const;
-	void Update(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr) const;
-	void Pause() const;
+	void Run() const;
+	void Update(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg) const;
 	void Quit() const;
-	void PollKeyEvent(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY) const;
+	void PollKeyEvent(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg, int8_t DirX, int8_t DirY) const;
 };
 #endif

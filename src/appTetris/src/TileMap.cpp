@@ -10,7 +10,7 @@ uint8_t TileMap::sRows = 0;
 uint8_t TileMap::sCols = 0;
 //@end()
 
-void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint16_t)> SetWindowCallback)
+void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint16_t)> SetWindowCallbackFuncPtrArg)
 {
 	Tilemap = std::vector<Tile>();
 	sRows = Rows;
@@ -34,23 +34,24 @@ void TileMap::Init(uint8_t Rows, uint8_t Cols, std::function<void(uint16_t, uint
 		}
 	}
 
-	SetWindowCallback(Cols * Tile::Size, Rows * Tile::Size);
+	SetWindowCallbackFuncPtrArg(Cols * Tile::Size, Rows * Tile::Size);
 }
 
-void TileMap::Update(TextureManager* const TextureManagerPtr, TetrominoeManager* const TetrominoeManagerPtr, SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY)
+void TileMap::Update(TextureManager* const TextureManagerPtrArg, TetrominoeManager* const TetrominoeManagerPtrArg, SDLManager* const SDLManagerPtrArg,
+	int8_t DirX, int8_t DirY)
 {
-	if (!TetrominoeManagerPtr || !TextureManagerPtr || !SDLManagerPtr)
+	if (!TetrominoeManagerPtrArg || !TextureManagerPtrArg || !SDLManagerPtrArg)
 	{
 		return;
 	}
 
 	// update position of all tetrominoes
-	TetrominoeManagerPtr->Update(this, DirX, DirY, sRows, sCols);
+	TetrominoeManagerPtrArg->Update(this, DirX, DirY, sRows, sCols);
 
 	// render all tiles
 	for (auto& it : Tilemap)
 	{
-		it.Render(TextureManagerPtr, SDLManagerPtr, sRows, sCols);
+		it.Render(TextureManagerPtrArg, SDLManagerPtrArg, sRows, sCols);
 	}
 }
 

@@ -6,11 +6,11 @@
 #include <filesystem>
 #endif
 
-std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> TextureLoader::GetTextures(std::function<SDL_Texture* (const std::string&, SDL_Renderer* const)> FuncPtr,
-	SDL_Renderer* Renderer)
+std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> TextureLoader::GetTextures(std::function<SDL_Texture* (const std::string&, SDL_Renderer* const)> FuncPtrArg,
+	SDL_Renderer* RendererPtrArg)
 {
 	std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> TextureMap;
-	if (!Renderer)
+	if (!RendererPtrArg)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_LOADER INIT FAILED!");
 		return TextureMap;
@@ -34,8 +34,8 @@ std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Te
 			const std::filesystem::path& FilePath = file.path();
 			const std::string&& SFilePath = FilePath.generic_string();
 
-			SDL_Texture* const TargetTexture = FuncPtr(SFilePath, Renderer);
-			if (!TargetTexture)
+			SDL_Texture* const TargetTexturePtr = FuncPtrArg(SFilePath, RendererPtrArg);
+			if (!TargetTexturePtr)
 			{
 				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID!");
 				continue;
@@ -48,10 +48,10 @@ std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Te
 				continue;
 			}
 
-			TextureMap.insert(std::make_pair(Tokens.at(Tokens.size() - 1), TargetTexture));
+			TextureMap.insert(std::make_pair(Tokens.at(Tokens.size() - 1), TargetTexturePtr));
 		}
 	}
-	catch (std::exception e)
+	catch (const std::exception& e)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_LOADER FAILED! %s", e.what());
 	}

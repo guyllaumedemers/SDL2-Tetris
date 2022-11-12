@@ -42,10 +42,10 @@ bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t C
 
 	static constexpr uint8_t&& Zero = 0;
 
-	for (const auto& IndexPosition : TetrominoeEntryIndices)
+	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
-		const bool&& CanMoveCol = ((IndexPosition % Cols) + DirX) >= Zero && ((IndexPosition % Cols) + DirX) < Cols;
-		const bool&& CanMoveRow = ((IndexPosition / Cols) + DirY) >= Zero && ((IndexPosition / Cols) + DirY) < Cols;
+		const bool&& CanMoveCol = ((TetrominoeEntryIndex % Cols) + DirX) >= Zero && ((TetrominoeEntryIndex % Cols) + DirX) < Cols;
+		const bool&& CanMoveRow = ((TetrominoeEntryIndex / Cols) + DirY) >= Zero && ((TetrominoeEntryIndex / Cols) + DirY) < Cols;
 
 		if (!CanMoveRow || !CanMoveCol)
 		{
@@ -56,11 +56,19 @@ bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t C
 	return IsMoveInBound;
 }
 
-bool Tetrominoe::IsMoveOverlappingExistingTile(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
+bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
 	bool&& IsMoveOverlappingExistingTile = true;
 
+	if (Tilemap.empty())
+	{
+		return !IsMoveOverlappingExistingTile;
+	}
 
+	for(auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+	{
+		
+	}
 
 	return IsMoveOverlappingExistingTile;
 }

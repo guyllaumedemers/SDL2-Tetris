@@ -12,9 +12,9 @@
 #include <cstdlib>
 #endif
 
-void TextureManager::Init(SDLManager* const SDLManagerPtr)
+void TextureManager::Initialize(SDLManager* const SDLManagerPtrArg)
 {
-	if (!SDLManagerPtr)
+	if (!SDLManagerPtrArg)
 	{
 		return;
 	}
@@ -25,30 +25,30 @@ void TextureManager::Init(SDLManager* const SDLManagerPtr)
 		exit(EXIT_FAILURE);
 	}
 
-	Textures = TextureLoader::GetTextures([&](const std::string& SFilePath, SDL_Renderer* const InRenderer)
+	Textures = TextureLoader::GetTextures([&](const std::string& SFilePath, SDL_Renderer* const SDLRendererPtrArg)
 		{
 			SDL_Texture* OutTexture = nullptr;
 			try
 			{
-				OutTexture = IMG_LoadTexture(InRenderer, SFilePath.c_str());
+				OutTexture = IMG_LoadTexture(SDLRendererPtrArg, SFilePath.c_str());
 				if (!OutTexture)
 				{
 					throw std::exception();
 				}
 				return OutTexture;
 			}
-			catch (std::exception e)
+			catch (const std::exception& e)
 			{
 				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID! %s", e.what());
 			}
 			return OutTexture;
-		}, SDLManagerPtr->Renderer.get());
+		}, SDLManagerPtrArg->SDLRendererUniquePtr.get());
 }
 
-void TextureManager::Clear()
+void TextureManager::Flush()
 {
-	IMG_Quit();
 	Textures.clear();
+	IMG_Quit();
 }
 
 SDL_Texture* TextureManager::GetTextureByName(const std::string& TextureName) const

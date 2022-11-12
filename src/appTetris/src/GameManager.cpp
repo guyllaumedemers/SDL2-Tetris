@@ -7,28 +7,31 @@
 
 int GameManager::Run()
 {
-	Init();
+	Initialize();
 	Update();
-	Clear();
+	Quit();
 	return EXIT_SUCCESS;
 }
 
-void GameManager::Init()
+void GameManager::Initialize()
 {
-	if (!SDLManagerPtr || !InputManagerPtr || !GameInstancePtr)
+	if (!SDLManagerUniquePtr || !InputManagerUniquePtr || !GameInstanceUniquePtr)
 	{
 		return;
 	}
-
+	// subscribe to events
 	Subscribe();
-	SDLManagerPtr->Init();
-	TextureManagerPtr->Init(SDLManagerPtr.get());
-	GameInstancePtr->Play();
+	// initialize context
+	SDLManagerUniquePtr->Initialize();
+	// initialize textures
+	TextureManagerUniquePtr->Initialize(SDLManagerUniquePtr.get());
+	// run game loop
+	GameInstanceUniquePtr->Run();
 }
 
 void GameManager::Update()
 {
-	if (!SDLManagerPtr || !InputManagerPtr || !GameInstancePtr)
+	if (!SDLManagerUniquePtr || !InputManagerUniquePtr || !GameInstanceUniquePtr)
 	{
 		return;
 	}
@@ -39,11 +42,11 @@ void GameManager::Update()
 		SDL_Event Event;
 		if (SDL_WaitEvent(&Event) > NULL)
 		{
-			InputManagerPtr->WaitPollEvent(Event);
+			InputManagerUniquePtr->WaitPollEvent(Event);
 		}
 
-		SDLManagerPtr->Update(
-			TextureManagerPtr.get(),
+		SDLManagerUniquePtr->Update(
+			TextureManagerUniquePtr.get(),
 			[&](TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg)
 			{
 				if (!TextureManagerPtrArg)
@@ -58,58 +61,61 @@ void GameManager::Update()
 					return;
 				}
 
-				GameInstancePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
+				GameInstanceUniquePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
 			});
 	}
 }
 
-void GameManager::Clear()
+void GameManager::Quit() const
 {
-	if (!SDLManagerPtr || !TextureManagerPtr || !GameInstancePtr)
+	if (!SDLManagerUniquePtr || !TextureManagerUniquePtr || !GameInstanceUniquePtr)
 	{
 		return;
 	}
-
-	SDLManagerPtr->Clear();
-	TextureManagerPtr->Clear();
-	GameInstancePtr->Quit();
+	// unsubscribe to events
 	UnSubscribe();
+	// exit game
+	GameInstanceUniquePtr->Quit();
+	// flush textures
+	TextureManagerUniquePtr->Flush();
+	// clear context
+	SDLManagerUniquePtr->Quit();
 }
 
 void GameManager::Subscribe()
 {
-	if (!GameInstancePtr || !InputManagerPtr)
+	if (!GameInstanceUniquePtr || !InputManagerUniquePtr)
 	{
 		return;
 	}
 
-	InputManagerPtr->QuitGameEvent = [&](bool bHasQuitGame)
+	InputManagerUniquePtr->QuitGameEvent = [&](bool bHasQuitGame)
 	{
 		bIsQuittingGame = bHasQuitGame;
 	};
 
-	InputManagerPtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY)
+	InputManagerUniquePtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY)
 	{
-		TextureManager* const TextureManager = TextureManagerPtr.get();
+		TextureManager* const TextureManager = TextureManagerUniquePtr.get();
 		if (!TextureManager)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
 			return;
 		}
 
-		SDLManager* const SDLManager = SDLManagerPtr.get();
+		SDLManager* const SDLManager = SDLManagerUniquePtr.get();
 		if (!SDLManager)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
 			return;
 		}
 
-		GameInstancePtr->PollKeyEvent(TextureManager, SDLManager, DirX, DirY);
+		GameInstanceUniquePtr->PollKeyEvent(TextureManager, SDLManager, DirX, DirY);
 	};
 
-	InputManagerPtr->DelSpaceKeyPressedEvent = [&]()
+	InputManagerUniquePtr->DelSpaceKeyPressedEvent = [&]()
 	{
-		TetrominoeManager* const TetrominoeManagerPtr = GameInstancePtr->TetrominoeManagerPtr.get();
+		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->TetrominoeManagerUniquePtr.get();
 		if (!TetrominoeManagerPtr)
 		{
 			return;
@@ -117,21 +123,21 @@ void GameManager::Subscribe()
 		TetrominoeManagerPtr->Flip();
 	};
 
-	GameInstancePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)
+	GameInstanceUniquePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)
 	{
-		SDLManagerPtr->SetWindowContextSize(Width, Height);
+		SDLManagerUniquePtr->SetWindowContextSize(Width, Height);
 	};
 }
 
-void GameManager::UnSubscribe()
+void GameManager::UnSubscribe() const
 {
-	if (!GameInstancePtr || !InputManagerPtr)
+	if (!GameInstanceUniquePtr || !InputManagerUniquePtr)
 	{
 		return;
 	}
 
-	InputManagerPtr->QuitGameEvent = nullptr;
-	InputManagerPtr->DirectionalKeyPressedEvent = nullptr;
-	InputManagerPtr->DelSpaceKeyPressedEvent = nullptr;
-	GameInstancePtr->SetWindowEvent = nullptr;
+	InputManagerUniquePtr->QuitGameEvent = nullptr;
+	InputManagerUniquePtr->DirectionalKeyPressedEvent = nullptr;
+	InputManagerUniquePtr->DelSpaceKeyPressedEvent = nullptr;
+	GameInstanceUniquePtr->SetWindowEvent = nullptr;
 }

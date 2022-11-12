@@ -11,6 +11,11 @@
 #include <array>
 #endif
 
+#ifndef INCLUDED_COLLECTION_VECTOR
+#define INCLUDED_COLLECTION_VECTOR
+#include <vector>
+#endif
+
 #ifndef INCLUDED_TETROMINOE_ENUM
 #define INCLUDED_TETROMINOE_ENUM
 enum ShapeEnum
@@ -43,7 +48,7 @@ public:
 	Tetrominoe& operator=(Tetrominoe&&) = delete;
 	const bool& IsLocked() const { return bIsLocked; }
 	bool IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
-	bool IsMoveOverlappingExistingTile(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
+	bool IsMoveOverlappingExistingTile(const std::vector<class Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	void Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip();
 };

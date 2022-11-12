@@ -39,7 +39,7 @@ public:
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
 	void Add();
 	void Remove();
-	void Update(class TileMap* const TilemapPtr, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
+	void Update(class TileMap* const TilemapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	void Flip() const;
 };
 #endif

@@ -2,34 +2,34 @@
 #include "../include/Tetrominoe.h"
 #include "../include/TileMap.h"
 
-void TetrominoeManager::Update(TileMap* const TilemapPtr, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
+void TetrominoeManager::Update(TileMap* const TilemapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
-	if(!TilemapPtr)
+	if (!TilemapPtrArg)
 	{
 		return;
 	}
 
-	for (auto& it : TetrominoePool)
+	for (auto& TetrominoeUniquePtr : TetrominoePool)
 	{
-		Tetrominoe* const Tetrominoe = it.get();
-		if (!Tetrominoe)
+		Tetrominoe* const TetrominoePtr = TetrominoeUniquePtr.get();
+		if (!TetrominoePtr)
 		{
 			continue;
 		}
 
-		const bool&& IsMoveInBound = Tetrominoe->IsMoveInBound(DirX, DirY, Rows, Cols);
+		const bool&& IsMoveInBound = TetrominoePtr->IsMoveInBound(DirX, DirY, Rows, Cols);
 		if (!IsMoveInBound)
 		{
 			continue;
 		}
 
-		const bool&& IsMoveOverlappingExistingTile = Tetrominoe->IsMoveOverlappingExistingTile(DirX, DirY, Rows, Cols);
+		const bool&& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(TilemapPtrArg->Tilemap, DirX, DirY, Rows, Cols);
 		if (!IsMoveOverlappingExistingTile)
 		{
 			continue;
 		}
 
-		Tetrominoe->Update(DirX, DirY, Rows, Cols);
+		TetrominoePtr->Update(DirX, DirY, Rows, Cols);
 	}
 }
 

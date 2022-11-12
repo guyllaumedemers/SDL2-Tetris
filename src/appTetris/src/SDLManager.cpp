@@ -1,6 +1,6 @@
 #include "../include/SDLManager.h"
 
-void SDLManager::Init()
+void SDLManager::Initialize()
 {
 	if (SDL_Init(SDL_INIT_EVERYTHING) != 0 /*0 is Success here*/)
 	{
@@ -8,65 +8,66 @@ void SDLManager::Init()
 		exit(EXIT_FAILURE);
 	}
 
-	Window = std::unique_ptr<SDL_Window, FreeSDLWindow>(SDL_CreateWindow("TETRIS",
+	SDLWindowUniquePtr = std::unique_ptr<SDL_Window, FreeSDLWindow>(SDL_CreateWindow("TETRIS",
 		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
 		NULL, NULL,
 		NULL
 	));
 
-	if (!Window)
+	if (!SDLWindowUniquePtr)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 WINDOW CREATION FAILED!");
 		exit(EXIT_FAILURE);
 	}
 
-	Renderer = std::unique_ptr<SDL_Renderer, FreeSDLRenderer>(SDL_CreateRenderer(
-		Window.get(),
+	SDLRendererUniquePtr = std::unique_ptr<SDL_Renderer, FreeSDLRenderer>(SDL_CreateRenderer(
+		SDLWindowUniquePtr.get(),
 		-1,
 		SDL_RENDERER_ACCELERATED
 	));
 
-	if (!Renderer)
+	if (!SDLRendererUniquePtr)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 RENDERER CREATION FAILED!");
 		exit(EXIT_FAILURE);
 	}
 }
 
-void SDLManager::Update(TextureManager* const TextureManagerPtr, std::function<void(TextureManager* const, SDLManager* const)> GameInstanceFuncPtr)
+void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::function<void(TextureManager* const, SDLManager* const)> GameInstanceFuncPtrArg)
 {
-	if (!Renderer)
+	if (!SDLRendererUniquePtr)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 RENDERER UPDATE FAILED!");
 		return;
 	}
 
-	if (!TextureManagerPtr)
+	if (!TextureManagerPtrArg)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER INVALID!");
 		return;
 	}
 
-	SDL_Renderer* const Ren = Renderer.get();
+	SDL_Renderer* const SDLRendererPtr = SDLRendererUniquePtr.get();
 	static constexpr uint8_t&& Alpha = 255;
 
-	SDL_SetRenderDrawColor(Ren, NULL, NULL, NULL, Alpha);
-	SDL_RenderClear(Ren);
-	GameInstanceFuncPtr(TextureManagerPtr, this);
-	SDL_RenderPresent(Ren);
+	SDL_SetRenderDrawColor(SDLRendererPtr, NULL, NULL, NULL, Alpha);
+	SDL_RenderClear(SDLRendererPtr);
+	GameInstanceFuncPtrArg(TextureManagerPtrArg, this);
+	SDL_RenderPresent(SDLRendererPtr);
 }
 
-void SDLManager::Clear() const
+void SDLManager::Quit() const
 {
+	// quit sdl context, no need to call explicitly sdl_window_deleter & sdl_renderer_deleter
 	SDL_Quit();
 }
 
 void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height) const
 {
-	if (!Window)
+	if (!SDLWindowUniquePtr)
 	{
 		return;
 	}
 
-	SDL_SetWindowSize(Window.get(), Width, Height);
+	SDL_SetWindowSize(SDLWindowUniquePtr.get(), Width, Height);
 }

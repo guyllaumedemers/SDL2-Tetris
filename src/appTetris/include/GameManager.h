@@ -13,10 +13,10 @@
 
 class GameManager final
 {
-	std::unique_ptr<SDLManager> SDLManagerPtr = std::make_unique<SDLManager>();
-	std::unique_ptr<InputManager> InputManagerPtr = std::make_unique<InputManager>();
-	std::unique_ptr<GameInstance> GameInstancePtr = std::make_unique<GameInstance>();
-	std::unique_ptr<TextureManager> TextureManagerPtr = std::make_unique<TextureManager>();
+	std::unique_ptr<SDLManager> SDLManagerUniquePtr = std::make_unique<SDLManager>();
+	std::unique_ptr<InputManager> InputManagerUniquePtr = std::make_unique<InputManager>();
+	std::unique_ptr<GameInstance> GameInstanceUniquePtr = std::make_unique<GameInstance>();
+	std::unique_ptr<TextureManager> TextureManagerUniquePtr = std::make_unique<TextureManager>();
 	bool bIsQuittingGame = false;
 public:
 	GameManager(const GameManager&) = delete;
@@ -27,10 +27,10 @@ public:
 	GameManager& operator=(GameManager&&) = delete;
 	int Run();
 private:
-	void Init();
+	void Initialize();
 	void Update();
-	void Clear();
+	void Quit() const;
 	void Subscribe();
-	void UnSubscribe();
+	void UnSubscribe() const;
 };
 #endif
