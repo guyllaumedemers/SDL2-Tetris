@@ -2,7 +2,7 @@
 
 Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 {
-	if(!TetrominoeEnum /*ShapeEnum::None == 0*/)
+	if (!TetrominoeEnum /*ShapeEnum::None == 0*/)
 	{
 		return;
 	}
@@ -33,17 +33,28 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 
 void Tetrominoe::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {
-	if (bIsLocked)
+	if (IsLocked())
 	{
 		return;
 	}
 
+	static constexpr uint8_t&& Zero = 0;
 
+	for (const auto& IndexPosition : TetrominoeEntryIndices)
+	{
+		const bool&& CanMoveCol = ((IndexPosition % Cols) + DirX) >= Zero && ((IndexPosition % Cols) + DirX) < Cols;
+		const bool&& CanMoveRow = ((IndexPosition / Cols) + DirY) >= Zero && ((IndexPosition / Cols) + DirY) < Cols;
+
+		if (!CanMoveRow || !CanMoveCol)
+		{
+			return;
+		}
+	}
 }
 
 void Tetrominoe::Flip()
 {
-	if(bIsLocked)
+	if (IsLocked())
 	{
 		return;
 	}

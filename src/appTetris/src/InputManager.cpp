@@ -2,9 +2,9 @@
 
 int InputManager::WaitPollEvent(SDL_Event& Event) const
 {
-	static constexpr int8_t Minus = -1;
-	static constexpr int8_t Plus = 1;
-	static constexpr int8_t Idle = 0;
+	static constexpr int8_t&& Minus = -1;
+	static constexpr int8_t&& Plus = 1;
+	static constexpr int8_t&& Idle = 0;
 	switch (Event.type)
 	{
 	case SDL_QUIT:

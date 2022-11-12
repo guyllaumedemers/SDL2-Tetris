@@ -29,8 +29,8 @@ class Tetrominoe final
 	static constexpr size_t MaxEntriesPerShape = 4;
 	ShapeEnum Pattern = ShapeEnum::None;
 
-	std::array<uint8_t, MaxEntriesPerShape> TetrominoeEntryIndices = std::array<uint8_t, MaxEntriesPerShape>();
-	static constexpr uint8_t SpawnPosition = 25;
+	std::array<uint16_t, MaxEntriesPerShape> TetrominoeEntryIndices = std::array<uint16_t, MaxEntriesPerShape>();
+	static constexpr uint16_t SpawnPosition = 25;
 
 	bool bIsLocked = false;
 public:

@@ -6,7 +6,7 @@ void TetrominoeManager::Update(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t C
 	for (auto& it : TetrominoePool)
 	{
 		Tetrominoe* const Tetrominoe = it.get();
-		if (!Tetrominoe || Tetrominoe->IsLocked())
+		if (!Tetrominoe)
 		{
 			continue;
 		}

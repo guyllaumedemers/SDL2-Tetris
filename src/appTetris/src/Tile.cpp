@@ -45,8 +45,8 @@ void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDL
 	// set rendering target to individual tile
 	SDL_SetRenderTarget(Renderer, TextureTarget);
 
-	static constexpr uint8_t Alpha = 255;
-	static const std::unordered_map<TileEnum, std::string> TexturePair =
+	static constexpr uint8_t&& Alpha = 255;
+	static const std::unordered_map<TileEnum, std::string>&& TexturePair =
 	{
 		std::make_pair(TileEnum::Empty, std::string("Black")),
 		std::make_pair(TileEnum::Border, std::string("Grey")),
@@ -65,7 +65,7 @@ void Tile::Render(TextureManager* const TextureManagerPtr, SDLManager* const SDL
 		return;
 	}
 
-	std::string const STextureTile = (Search->first == TileEnum::Filled) ? "" : Search->second;
+	const std::string&& STextureTile = (Search->first == TileEnum::Filled) ? "" : Search->second;
 	if (STextureTile.empty())
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_STRING INVALID!");

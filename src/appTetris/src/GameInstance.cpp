@@ -8,8 +8,8 @@ void GameInstance::Play()
 	}
 
 	/*Should retrieved values from Preset Difficulty*/
-	const uint8_t Rows = 20;
-	const uint8_t Cols = 12;
+	const uint8_t&& Rows = 20;
+	const uint8_t&& Cols = 12;
 	TileMapPtr->Init(Rows, Cols, [&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); });
 }
 
@@ -21,8 +21,8 @@ void GameInstance::Update(TextureManager* const TextureManagerPtr, SDLManager* c
 	}
 
 	/*Should handle Game Loop Refresh Rate so Tile Movement dont fly offscreen*/
-	static constexpr int8_t OneDown = -1;
-	static constexpr int8_t Idle = 0;
+	static constexpr int8_t&& OneDown = -1;
+	static constexpr int8_t&& Idle = 0;
 	TileMapPtr->Update(TextureManagerPtr, TetrominoeManagerPtr.get(), SDLManagerPtr, Idle, OneDown);
 }
 

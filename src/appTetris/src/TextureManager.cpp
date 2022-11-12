@@ -25,11 +25,12 @@ void TextureManager::Init(SDLManager* const SDLManagerPtr)
 		exit(EXIT_FAILURE);
 	}
 
-	Textures = TextureLoader::GetTextures([&](std::string SFilePath, SDL_Renderer* const InRenderer)
+	Textures = TextureLoader::GetTextures([&](const std::string& SFilePath, SDL_Renderer* const InRenderer)
 		{
+			SDL_Texture* OutTexture = nullptr;
 			try
 			{
-				SDL_Texture* OutTexture = IMG_LoadTexture(InRenderer, SFilePath.c_str());
+				OutTexture = IMG_LoadTexture(InRenderer, SFilePath.c_str());
 				if (!OutTexture)
 				{
 					throw std::exception();
@@ -40,6 +41,7 @@ void TextureManager::Init(SDLManager* const SDLManagerPtr)
 			{
 				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID! %s", e.what());
 			}
+			return OutTexture;
 		}, SDLManagerPtr->Renderer.get());
 }
 
@@ -49,7 +51,7 @@ void TextureManager::Clear()
 	Textures.clear();
 }
 
-SDL_Texture* TextureManager::GetTextureByName(std::string TextureName)
+SDL_Texture* TextureManager::GetTextureByName(const std::string& TextureName)
 {
 	if (Textures.empty())
 	{

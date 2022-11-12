@@ -41,7 +41,7 @@ void GameManager::Update()
 		{
 			InputManagerPtr->WaitPollEvent(Event);
 		}
-		/*Workaround capture clause problem when used in conjunction with void(*)*/
+
 		SDLManagerPtr->Update(
 			TextureManagerPtr.get(),
 			[&](TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg)
@@ -90,14 +90,14 @@ void GameManager::Subscribe()
 
 	InputManagerPtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY)
 	{
-		TextureManager* TextureManager = TextureManagerPtr.get();
+		TextureManager* const TextureManager = TextureManagerPtr.get();
 		if (!TextureManager)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
 			return;
 		}
 
-		SDLManager* SDLManager = SDLManagerPtr.get();
+		SDLManager* const SDLManager = SDLManagerPtr.get();
 		if (!SDLManager)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
