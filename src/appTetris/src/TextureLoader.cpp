@@ -23,8 +23,8 @@ std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Te
 
 		{
 			// Workaround for ressources access using msvc open mode and debug
-			std::string&& EditorResPATH = ResPath + "/SDL2-TetrisApp/res";
-			std::string&& OpenFileModePATH = ResPath + "/res";
+			std::string&& EditorResPATH = ResPath + std::string("/SDL2-TetrisApp/res");
+			std::string&& OpenFileModePATH = ResPath + std::string("/res");
 
 			std::filesystem::is_directory(EditorResPATH) ? ResPath = EditorResPATH : ResPath = OpenFileModePATH;
 		}

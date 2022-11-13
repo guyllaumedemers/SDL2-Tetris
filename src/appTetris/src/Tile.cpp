@@ -59,7 +59,7 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 		return;
 	}
 
-	SDL_Texture* const SDLTextureTilePtr = TextureManagerPtrArg->GetTextureByName(TexturePairFound->second);
+	SDL_Texture* const SDLTextureTilePtr = TextureManagerPtrArg->GetTextureByName(TexturePairFound->second._Equal(std::string("Wildcard")) ? Wildcard : TexturePairFound->second);
 	if (!SDLTextureTilePtr)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_PTR INVALID!");

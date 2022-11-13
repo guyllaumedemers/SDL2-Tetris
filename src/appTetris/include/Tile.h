@@ -6,6 +6,11 @@
 #include <cstdint>
 #endif
 
+#ifndef INCLUDED_STRING
+#define INCLUDED_STRING
+#include <string>
+#endif
+
 #ifndef INCLUDED_TILE_ENUM
 #define INCLUDED_TILE_ENUM
 enum TileEnum
@@ -20,6 +25,7 @@ struct Tile final
 {
 	static constexpr uint8_t&& Size = 20;
 	TileEnum Attribute = TileEnum::Empty;
+	std::string Wildcard = std::string();
 	size_t IndexPosition = 0;
 	void Render(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols) const;
 };

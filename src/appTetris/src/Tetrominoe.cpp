@@ -1,6 +1,11 @@
 #include "../include/Tetrominoe.h"
 #include "../include/Tile.h"
 
+#ifndef INCLUDED_COLLECTION_UNORDERED_MAP
+#define INCLUDED_COLLECTION_UNORDERED_MAP
+#include <unordered_map>
+#endif
+
 Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 {
 	if (!TetrominoeEnum /*ShapeEnum::None == 0*/)
@@ -10,6 +15,7 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 	switch (TetrominoeEnum)
 	{
 	case None:
+		TetrominoeEntryIndices = {};
 		break;
 	case TShape:
 		TetrominoeEntryIndices = {};
@@ -26,6 +32,12 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 	case IShape:
 		TetrominoeEntryIndices = {};
 		break;
+	case JShape:
+		TetrominoeEntryIndices = {};
+		break;
+	case SShape:
+		TetrominoeEntryIndices = {};
+		break;
 	default:
 		break;
 	}
@@ -34,8 +46,8 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 
 bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
-	static constexpr uint8_t&& Zero = 0;
 	static constexpr bool&& IsMoveInBound = true;
+	static constexpr uint8_t&& Zero = 0;
 
 	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
@@ -76,16 +88,41 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tilemap,
 
 void Tetrominoe::Update(std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {
+	if (Tilemap.empty())
+	{
+		return;
+	}
+
+	static const std::unordered_map<ShapeEnum, std::string>&& ShapePair =
+	{
+		std::make_pair(ShapeEnum::None, std::string("Undefined")),
+		std::make_pair(ShapeEnum::TShape, std::string("Purple")),
+		std::make_pair(ShapeEnum::LShape, std::string("Orange")),
+		std::make_pair(ShapeEnum::ZShape, std::string("Red")),
+		std::make_pair(ShapeEnum::OShape, std::string("Yellow")),
+		std::make_pair(ShapeEnum::IShape, std::string("Cyan")),
+		std::make_pair(ShapeEnum::JShape, std::string("Blue")),
+		std::make_pair(ShapeEnum::SShape, std::string("Green"))
+	};
+
+	const auto ShapePairFound = ShapePair.find(Pattern);
+	if (ShapePairFound == ShapePair.end())
+	{
+		return;
+	}
+
 	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
 		Tile& PreviousTile = Tilemap.at(TetrominoeEntryIndex);
 		PreviousTile.Attribute = TileEnum::Empty;
+		PreviousTile.Wildcard = std::string("Undefined");
 
 		const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
 		TetrominoeEntryIndex += JumpValue;
 
 		Tile& NextTile = Tilemap.at(TetrominoeEntryIndex);
 		NextTile.Attribute = TileEnum::Filled;
+		PreviousTile.Wildcard = ShapePairFound->second;
 	}
 }
 

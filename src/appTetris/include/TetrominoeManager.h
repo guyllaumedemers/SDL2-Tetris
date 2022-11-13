@@ -22,6 +22,7 @@
 #endif
 
 #include "Tetrominoe.h"
+#include "Tile.h"
 
 class TetrominoeManager final
 {
@@ -39,7 +40,7 @@ public:
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
 	void Add();
 	void Remove();
-	void Update(class TileMap* const TilemapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
+	void Update(std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip() const;
 };
 #endif

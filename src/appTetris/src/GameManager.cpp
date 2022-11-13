@@ -5,6 +5,11 @@
 #include <SDL.h>
 #endif
 
+#ifndef INCLUDED_CSTD_INT
+#define INCLUDED_CSTD_INT
+#include <cstdint>
+#endif
+
 int GameManager::Run()
 {
 	Initialize();
