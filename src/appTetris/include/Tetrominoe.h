@@ -46,7 +46,7 @@ public:
 	Tetrominoe(const Tetrominoe&) = delete;
 	Tetrominoe(Tetrominoe&&) = delete;
 	Tetrominoe() = delete;
-	Tetrominoe(ShapeEnum TetrominoeEnum = ShapeEnum::None);
+	Tetrominoe(ShapeEnum TetrominoeEnum = ShapeEnum::None, uint8_t Rows, uint8_t Cols);
 	~Tetrominoe() = default;
 	Tetrominoe& operator=(const Tetrominoe&) = delete;
 	Tetrominoe& operator=(Tetrominoe&&) = delete;

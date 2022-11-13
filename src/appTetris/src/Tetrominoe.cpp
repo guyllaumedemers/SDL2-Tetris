@@ -6,37 +6,43 @@
 #include <unordered_map>
 #endif
 
-Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
+Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t Cols)
 {
 	if (!TetrominoeEnum /*ShapeEnum::None == 0*/)
 	{
 		return;
 	}
+
+	static constexpr uint8_t&& Zero = 0;
+	static constexpr uint8_t&& One = 1;
+	static constexpr uint8_t&& Two = 2;
+	static constexpr uint8_t&& Three = 3;
+
 	switch (TetrominoeEnum)
 	{
 	case None:
-		TetrominoeEntryIndices = {};
+		TetrominoeEntryIndices = { Zero, Zero, Zero, Zero };
 		break;
 	case TShape:
-		TetrominoeEntryIndices = {};
+		TetrominoeEntryIndices = { Zero, One, Two, static_cast<uint8_t>(One + (One * Cols)) };
 		break;
 	case LShape:
-		TetrominoeEntryIndices = {};
+		TetrominoeEntryIndices = { Zero, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(Two * Cols), static_cast<uint8_t>(One + (Two * Cols)) };
 		break;
 	case ZShape:
-		TetrominoeEntryIndices = {};
+		TetrominoeEntryIndices = { Zero, One, static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two + (One * Cols)) };
 		break;
 	case OShape:
-		TetrominoeEntryIndices = {};
+		TetrominoeEntryIndices = { Zero, One, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(One + (One * Cols)) };
 		break;
 	case IShape:
-		TetrominoeEntryIndices = {};
+		TetrominoeEntryIndices = { Zero, One, Two, Three };
 		break;
 	case JShape:
-		TetrominoeEntryIndices = {};
+		TetrominoeEntryIndices = { One, static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two * Cols), static_cast<uint8_t>(One + (Two * Cols)) };
 		break;
 	case SShape:
-		TetrominoeEntryIndices = {};
+		TetrominoeEntryIndices = { One, Two, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(One + (One * Cols)) };
 		break;
 	default:
 		break;
@@ -113,16 +119,22 @@ void Tetrominoe::Update(std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, ui
 
 	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
-		Tile& PreviousTile = Tilemap.at(TetrominoeEntryIndex);
-		PreviousTile.Attribute = TileEnum::Empty;
-		PreviousTile.Wildcard = std::string("Undefined");
+		{
+			Tile& PreviousTile = Tilemap.at(TetrominoeEntryIndex);
+
+			PreviousTile.Attribute = TileEnum::Empty;
+			PreviousTile.Wildcard = std::string("Undefined");
+		}
 
 		const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
 		TetrominoeEntryIndex += JumpValue;
 
-		Tile& NextTile = Tilemap.at(TetrominoeEntryIndex);
-		NextTile.Attribute = TileEnum::Filled;
-		PreviousTile.Wildcard = ShapePairFound->second;
+		{
+			Tile& NextTile = Tilemap.at(TetrominoeEntryIndex);
+
+			NextTile.Attribute = TileEnum::Filled;
+			NextTile.Wildcard = ShapePairFound->second;
+		}
 	}
 }
 
