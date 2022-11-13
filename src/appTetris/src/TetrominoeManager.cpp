@@ -17,6 +17,11 @@ void TetrominoeManager::Update(TileMap* const TilemapPtrArg, int8_t DirX, int8_t
 			continue;
 		}
 
+		if (TetrominoePtr->IsLocked())
+		{
+			continue;
+		}
+
 		const bool&& IsMoveInBound = TetrominoePtr->IsMoveInBound(DirX, DirY, Rows, Cols);
 		if (!IsMoveInBound)
 		{
@@ -24,7 +29,7 @@ void TetrominoeManager::Update(TileMap* const TilemapPtrArg, int8_t DirX, int8_t
 		}
 
 		const bool&& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(TilemapPtrArg->Tilemap, DirX, DirY, Rows, Cols);
-		if (!IsMoveOverlappingExistingTile)
+		if (IsMoveOverlappingExistingTile)
 		{
 			continue;
 		}

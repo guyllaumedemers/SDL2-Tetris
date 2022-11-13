@@ -34,14 +34,8 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum)
 
 bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
-	static constexpr bool&& IsMoveInBound = true;
-
-	if (IsLocked())
-	{
-		return !IsMoveInBound;
-	}
-
 	static constexpr uint8_t&& Zero = 0;
+	static constexpr bool&& IsMoveInBound = true;
 
 	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
@@ -68,7 +62,8 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tilemap,
 
 	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
-		const Tile& Tile = Tilemap.at(TetrominoeEntryIndex);
+		const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
+		const Tile& Tile = Tilemap.at(TetrominoeEntryIndex + JumpValue);
 
 		if (Tile.Attribute == TileEnum::Filled)
 		{
