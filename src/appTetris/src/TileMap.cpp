@@ -77,7 +77,7 @@ void TileMap::CheckRowCompletion(uint16_t IndexPosition)
 
 		// clear row at StartIndex to (StartIndex + sCols)
 	}
-	catch (const std::out_of_range e)
+	catch (const std::out_of_range& e)
 	{
 		// print error message
 	}

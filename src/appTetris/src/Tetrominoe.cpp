@@ -97,7 +97,7 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 			}
 		}
 	}
-	catch (const std::out_of_range e)
+	catch (const std::out_of_range& e)
 	{
 		// print error message
 	}
@@ -152,7 +152,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 			}
 		}
 	}
-	catch (const std::out_of_range e)
+	catch (const std::out_of_range& e)
 	{
 		// print error message
 	}
