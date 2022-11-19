@@ -52,7 +52,7 @@ public:
 	bool IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	bool IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	void Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
-	void Flip();
+	void FlipClockwise(uint8_t Rows, uint8_t Cols);
 	// --- Getter/Setter
 	const std::array<uint16_t, MaxEntriesPerShape>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }
 	const TetrominoeShapeEnum& GetTetrominoeShape() const { return TetrominoeShape; }

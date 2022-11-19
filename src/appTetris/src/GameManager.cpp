@@ -121,11 +121,14 @@ void GameManager::Subscribe()
 	InputManagerUniquePtr->DelSpaceKeyPressedEvent = [&]()
 	{
 		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->GetTetrominoeManager().get();
-		if (!TetrominoeManagerPtr)
+		TileMap* const TileMapPtr = GameInstanceUniquePtr->GetTileMap().get();
+
+		if (!TetrominoeManagerPtr || !TileMapPtr)
 		{
 			return;
 		}
-		TetrominoeManagerPtr->Flip();
+
+		TetrominoeManagerPtr->Flip(TileMapPtr->GetRows(), TileMapPtr->GetCols());
 	};
 
 	GameInstanceUniquePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)

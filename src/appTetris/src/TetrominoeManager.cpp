@@ -30,7 +30,7 @@ std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint
 	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(UniformDistribution(RandomGenerator)), Rows, Cols);
 }
 
-void TetrominoeManager::Initialize(TileMap* TileMapPtrArg)
+void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
 {
 	GenerateRandomTetrominoeEvent = [&]()
 	{
@@ -42,7 +42,7 @@ void TetrominoeManager::Initialize(TileMap* TileMapPtrArg)
 		Add(TileMapPtrArg->GetRows(), TileMapPtrArg->GetCols());
 	};
 
-	DelCheckRowCompletionEvent = [&](Tetrominoe* TetrominoePtrArg)
+	CheckRowCompletionEvent = [&](Tetrominoe* const TetrominoePtrArg)
 	{
 		if (!TileMapPtrArg || !TetrominoePtrArg)
 		{
@@ -56,7 +56,7 @@ void TetrominoeManager::Initialize(TileMap* TileMapPtrArg)
 	};
 }
 
-void TetrominoeManager::Update(TileMap* TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
+void TetrominoeManager::Update(TileMap* const TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {
 	if (!TileMapPtrArg)
 	{
@@ -95,7 +95,7 @@ void TetrominoeManager::Update(TileMap* TileMapPtrArg, int8_t DirX, int8_t DirY,
 void TetrominoeManager::Clear()
 {
 	GenerateRandomTetrominoeEvent = nullptr;
-	DelCheckRowCompletionEvent = nullptr;
+	CheckRowCompletionEvent = nullptr;
 
 	for (auto& TetrominoeSharedPtr : TetrominoePool)
 	{
@@ -105,12 +105,12 @@ void TetrominoeManager::Clear()
 	ActiveTetrominoe.reset();
 }
 
-void TetrominoeManager::Flip() const
+void TetrominoeManager::Flip(uint8_t Rows, uint8_t Cols) const
 {
 	if (!ActiveTetrominoe)
 	{
 		return;
 	}
 
-	ActiveTetrominoe->Flip();
+	ActiveTetrominoe->FlipClockwise(Rows, Cols);
 }

@@ -41,13 +41,13 @@ public:
 	void Initialize(class TileMap* const TileMapPtrArg);
 	void Update(class TileMap* const TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Clear();
-	void Flip() const;
+	void Flip(uint8_t Rows, uint8_t Cols) const;
 	// --- Getter/Setter
 	const std::vector<std::shared_ptr<Tetrominoe>>& GetTetrominoes() const { return TetrominoePool; }
 	const std::shared_ptr<Tetrominoe>& GetActiveTetrominoe() const { return ActiveTetrominoe; }
 	// --- Delegate
 	typedef std::function<void(Tetrominoe* const)> DelCheckRowCompletion;
-	DelCheckRowCompletion DelCheckRowCompletionEvent;
+	DelCheckRowCompletion CheckRowCompletionEvent;
 
 	typedef std::function<void()> DelGenerateRandomTetrominoe;
 	DelGenerateRandomTetrominoe GenerateRandomTetrominoeEvent;

@@ -1,5 +1,10 @@
 #include "../include/TileMap.h"
 
+#ifndef INCLUDED_EXCEPTION
+#define INCLUDED_EXCEPTION
+#include <stdexcept>
+#endif
+
 /// <summary>
 /// Static Fields
 /// </summary>
@@ -43,9 +48,9 @@ void TileMap::Update(TextureManager* const TextureManagerPtrArg, SDLManager* con
 		return;
 	}
 
-	for (const auto& it : Tiles)
+	for (const auto& Tile : Tiles)
 	{
-		it.Render(TextureManagerPtrArg, SDLManagerPtrArg, sRows, sCols);
+		Tile.Render(TextureManagerPtrArg, SDLManagerPtrArg, sRows, sCols);
 	}
 }
 
@@ -56,4 +61,24 @@ void TileMap::Clear()
 
 void TileMap::CheckRowCompletion(uint16_t IndexPosition)
 {
+	try
+	{
+		const uint8_t&& Row = static_cast<uint8_t>(IndexPosition / sCols);
+		const size_t&& StartIndex = static_cast<size_t>(Row * sCols);
+
+		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
+		{
+			const Tile& Tile = Tiles.at(Index);
+			if (Tile.Attribute == TileEnum::Empty)
+			{
+				return;
+			}
+		}
+
+		// clear row at StartIndex to (StartIndex + sCols)
+	}
+	catch (const std::out_of_range e)
+	{
+		// print error message
+	}
 }
