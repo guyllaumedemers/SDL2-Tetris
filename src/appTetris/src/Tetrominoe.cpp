@@ -6,9 +6,9 @@
 #include <unordered_map>
 #endif
 
-Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t Cols)
+Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t Cols)
 {
-	if (!TetrominoeEnum /*ShapeEnum::None == 0*/)
+	if (!TetrominoeEnum /*TetrominoeShapeEnum::None == 0*/)
 	{
 		return;
 	}
@@ -47,7 +47,7 @@ Tetrominoe::Tetrominoe(ShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t Cols)
 	default:
 		break;
 	}
-	Pattern = TetrominoeEnum;
+	TetrominoeShape = TetrominoeEnum;
 }
 
 bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
@@ -69,19 +69,20 @@ bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t C
 	return IsMoveInBound;
 }
 
-bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
+bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
 	static constexpr bool&& IsMoveOverlappingExistingTile = true;
 
-	if (Tilemap.empty())
+	if (Tiles.empty())
 	{
 		return !IsMoveOverlappingExistingTile;
 	}
 
+	const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
+
 	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
-		const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
-		const Tile& Tile = Tilemap.at(TetrominoeEntryIndex + JumpValue);
+		const Tile& Tile = Tiles.at(TetrominoeEntryIndex + JumpValue);
 
 		if (Tile.Attribute == TileEnum::Filled)
 		{
@@ -92,45 +93,46 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tilemap,
 	return !IsMoveOverlappingExistingTile;
 }
 
-void Tetrominoe::Update(std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
+void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {
-	if (Tilemap.empty())
+	if (Tiles.empty())
 	{
 		return;
 	}
 
-	static const std::unordered_map<ShapeEnum, std::string>&& ShapePair =
+	static const std::unordered_map<TetrominoeShapeEnum, std::string>&& ShapePair =
 	{
-		std::make_pair(ShapeEnum::None, std::string("Undefined")),
-		std::make_pair(ShapeEnum::TShape, std::string("Purple")),
-		std::make_pair(ShapeEnum::LShape, std::string("Orange")),
-		std::make_pair(ShapeEnum::ZShape, std::string("Red")),
-		std::make_pair(ShapeEnum::OShape, std::string("Yellow")),
-		std::make_pair(ShapeEnum::IShape, std::string("Cyan")),
-		std::make_pair(ShapeEnum::JShape, std::string("Blue")),
-		std::make_pair(ShapeEnum::SShape, std::string("Green"))
+		std::make_pair(TetrominoeShapeEnum::None, std::string("Undefined")),
+		std::make_pair(TetrominoeShapeEnum::TShape, std::string("Purple")),
+		std::make_pair(TetrominoeShapeEnum::LShape, std::string("Orange")),
+		std::make_pair(TetrominoeShapeEnum::ZShape, std::string("Red")),
+		std::make_pair(TetrominoeShapeEnum::OShape, std::string("Yellow")),
+		std::make_pair(TetrominoeShapeEnum::IShape, std::string("Cyan")),
+		std::make_pair(TetrominoeShapeEnum::JShape, std::string("Blue")),
+		std::make_pair(TetrominoeShapeEnum::SShape, std::string("Green"))
 	};
 
-	const auto ShapePairFound = ShapePair.find(Pattern);
+	const auto ShapePairFound = ShapePair.find(TetrominoeShape);
 	if (ShapePairFound == ShapePair.end())
 	{
 		return;
 	}
 
+	const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
+
 	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
 		{
-			Tile& PreviousTile = Tilemap.at(TetrominoeEntryIndex);
+			Tile& PreviousTile = Tiles.at(TetrominoeEntryIndex);
 
 			PreviousTile.Attribute = TileEnum::Empty;
 			PreviousTile.Wildcard = std::string("Undefined");
 		}
 
-		const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
 		TetrominoeEntryIndex += JumpValue;
 
 		{
-			Tile& NextTile = Tilemap.at(TetrominoeEntryIndex);
+			Tile& NextTile = Tiles.at(TetrominoeEntryIndex);
 
 			NextTile.Attribute = TileEnum::Filled;
 			NextTile.Wildcard = ShapePairFound->second;

@@ -1,5 +1,4 @@
 #include "../include/TileMap.h"
-#include "../include/TetrominoeManager.h"
 
 /// <summary>
 /// Static Fields
@@ -12,7 +11,7 @@ uint8_t TileMap::sCols = 0;
 
 void TileMap::Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(uint16_t, uint16_t)>& SetWindowFncPtrArg)
 {
-	Tilemap = std::vector<Tile>();
+	Tiles = std::vector<Tile>();
 	sRows = Rows;
 	sCols = Cols;
 
@@ -26,30 +25,25 @@ void TileMap::Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(ui
 
 		if (Row == Zero || Row == Rows - One || Col == Zero || Col == Cols - One)
 		{
-			Tilemap.emplace_back(Tile{ TileEnum::Border, std::string("Undefined"), Index });
+			Tiles.emplace_back(Tile{ TileEnum::Border, std::string("Undefined"), Index });
 		}
 		else
 		{
-			Tilemap.emplace_back(Tile{ TileEnum::Empty, std::string("Undefined"), Index });
+			Tiles.emplace_back(Tile{ TileEnum::Empty, std::string("Undefined"), Index });
 		}
 	}
 
 	SetWindowFncPtrArg(Cols * Tile::Size, Rows * Tile::Size);
 }
 
-void TileMap::Update(TextureManager* const TextureManagerPtrArg, TetrominoeManager* const TetrominoeManagerPtrArg, SDLManager* const SDLManagerPtrArg,
-	int8_t DirX, int8_t DirY)
+void TileMap::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg, int8_t DirX, int8_t DirY)
 {
-	if (!TetrominoeManagerPtrArg || !TextureManagerPtrArg || !SDLManagerPtrArg)
+	if (!TextureManagerPtrArg || !SDLManagerPtrArg)
 	{
 		return;
 	}
 
-	// update position of all tetrominoes
-	TetrominoeManagerPtrArg->Update(Tilemap, DirX, DirY, sRows, sCols);
-
-	// render all tiles
-	for (const auto& it : Tilemap)
+	for (const auto& it : Tiles)
 	{
 		it.Render(TextureManagerPtrArg, SDLManagerPtrArg, sRows, sCols);
 	}
@@ -57,5 +51,9 @@ void TileMap::Update(TextureManager* const TextureManagerPtrArg, TetrominoeManag
 
 void TileMap::Clear()
 {
-	Tilemap.clear();
+	Tiles.clear();
+}
+
+void TileMap::CheckRowCompletion(uint16_t IndexPosition)
+{
 }

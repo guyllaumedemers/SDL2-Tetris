@@ -25,9 +25,8 @@
 
 class SDLManager final
 {
-	std::unique_ptr<SDL_Window, FreeSDLWindow> SDLWindowUniquePtr = nullptr;
 	std::unique_ptr<SDL_Renderer, FreeSDLRenderer> SDLRendererUniquePtr = nullptr;
-	friend class TextureManager;
+	std::unique_ptr<SDL_Window, FreeSDLWindow> SDLWindowUniquePtr = nullptr;
 public:
 	SDLManager(const SDLManager&) = delete;
 	SDLManager(SDLManager&&) = delete;
@@ -39,6 +38,9 @@ public:
 	void Update(class TextureManager* const TextureManagerPtr, std::function<void(class TextureManager* const, SDLManager* const)> UpdateFncPtrArg);
 	void Quit() const;
 	void SetWindowContextSize(uint16_t Width, uint16_t Height) const;
-	SDL_Renderer* const GetRenderer() const { return SDLRendererUniquePtr.get(); }
+	// --- Getter/Setter
+	const std::unique_ptr<SDL_Renderer, FreeSDLRenderer>& GetRenderer() const { return SDLRendererUniquePtr; }
+	const std::unique_ptr<SDL_Window, FreeSDLWindow>& GetWindow() const { return SDLWindowUniquePtr; }
+	// ---
 };
 #endif

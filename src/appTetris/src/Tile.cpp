@@ -14,7 +14,7 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 		return;
 	}
 
-	SDL_Renderer* const SDLRendererPtr = SDLManagerPtrArg->GetRenderer();
+	SDL_Renderer* const SDLRendererPtr = SDLManagerPtrArg->GetRenderer().get();
 	if (!SDLRendererPtr)
 	{
 		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_RENDERER_PTR INVALID!");

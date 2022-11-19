@@ -31,7 +31,7 @@ void GameManager::Initialize()
 	// initialize textures
 	TextureManagerUniquePtr->Initialize(SDLManagerUniquePtr.get());
 	// run game loop
-	GameInstanceUniquePtr->Run();
+	GameInstanceUniquePtr->Initialize();
 }
 
 void GameManager::Update()
@@ -80,7 +80,7 @@ void GameManager::Quit() const
 	// unsubscribe to events
 	UnSubscribe();
 	// exit game
-	GameInstanceUniquePtr->Quit();
+	GameInstanceUniquePtr->Clear();
 	// flush textures
 	TextureManagerUniquePtr->Flush();
 	// clear context
@@ -120,7 +120,7 @@ void GameManager::Subscribe()
 
 	InputManagerUniquePtr->DelSpaceKeyPressedEvent = [&]()
 	{
-		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->TetrominoeManagerUniquePtr.get();
+		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->GetTetrominoeManager().get();
 		if (!TetrominoeManagerPtr)
 		{
 			return;

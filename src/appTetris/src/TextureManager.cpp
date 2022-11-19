@@ -42,7 +42,7 @@ void TextureManager::Initialize(SDLManager* const SDLManagerPtrArg)
 				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID! %s", e.what());
 			}
 			return OutTexture;
-		}, SDLManagerPtrArg->SDLRendererUniquePtr.get());
+		}, SDLManagerPtrArg->GetRenderer().get());
 }
 
 void TextureManager::Flush()

@@ -22,15 +22,15 @@
 #endif
 
 #include "Tetrominoe.h"
-#include "Tile.h"
 
 class TetrominoeManager final
 {
-	typedef std::function<void(Tetrominoe*)> DelGenerateRandomTetrominoe;
-	DelGenerateRandomTetrominoe GenerateRandomTetrominoeEvent;
-
-	std::vector<std::unique_ptr<Tetrominoe>> TetrominoePool = std::vector<std::unique_ptr<Tetrominoe>>();
+	std::vector<std::shared_ptr<Tetrominoe>> TetrominoePool = std::vector<std::shared_ptr<Tetrominoe>>();
 	std::shared_ptr<Tetrominoe> ActiveTetrominoe = nullptr;
+
+	void Add();
+	void Remove();
+	std::unique_ptr<Tetrominoe> GenerateRandomTetromioeShape() const;
 public:
 	TetrominoeManager(const TetrominoeManager&) = delete;
 	TetrominoeManager(TetrominoeManager&&) = delete;
@@ -38,9 +38,19 @@ public:
 	~TetrominoeManager() = default;
 	TetrominoeManager& operator=(const TetrominoeManager&) = delete;
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
-	void Add();
-	void Remove();
-	void Update(std::vector<Tile>& Tilemap, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
+	void Initialize(class TileMap* TileMapPtrArg);
+	void Update(class TileMap* TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
+	void Clear();
 	void Flip() const;
+	// --- Getter/Setter
+	const std::vector<std::shared_ptr<Tetrominoe>>& GetTetrominoes() const { return TetrominoePool; }
+	const std::shared_ptr<Tetrominoe>& GetActiveTetrominoe() const { return ActiveTetrominoe; }
+	// --- Delegate
+	typedef std::function<void(Tetrominoe*)> DelCheckRowCompletion;
+	DelCheckRowCompletion DelCheckRowCompletionEvent;
+
+	typedef std::function<void()> DelGenerateRandomTetrominoe;
+	DelGenerateRandomTetrominoe GenerateRandomTetrominoeEvent;
+	// ---
 };
 #endif

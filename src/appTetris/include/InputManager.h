@@ -18,16 +18,6 @@
 
 class InputManager final
 {
-	typedef std::function<void(bool)> DelQuitGame;
-	DelQuitGame QuitGameEvent;
-
-	typedef std::function<void(int8_t, int8_t)> DelDirectionalKeyPressed;
-	DelDirectionalKeyPressed DirectionalKeyPressedEvent;
-
-	typedef std::function<void()> DelSpaceKeyPressed;
-	DelSpaceKeyPressed DelSpaceKeyPressedEvent;
-
-	friend class GameManager;
 public:
 	InputManager(const InputManager&) = delete;
 	InputManager(InputManager&&) = delete;
@@ -36,5 +26,15 @@ public:
 	InputManager& operator=(const InputManager&) = delete;
 	InputManager& operator=(InputManager&&) = delete;
 	int WaitPollEvent(SDL_Event& Event) const;
+	// --- Delegate
+	typedef std::function<void(int8_t, int8_t)> DelDirectionalKeyPressed;
+	DelDirectionalKeyPressed DirectionalKeyPressedEvent;
+
+	typedef std::function<void()> DelSpaceKeyPressed;
+	DelSpaceKeyPressed DelSpaceKeyPressedEvent;
+
+	typedef std::function<void(bool)> DelQuitGame;
+	DelQuitGame QuitGameEvent;
+	// --
 };
 #endif

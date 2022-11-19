@@ -37,6 +37,8 @@ public:
 	~TextureLoader() = default;
 	TextureLoader& operator=(const TextureLoader&) = delete;
 	TextureLoader& operator=(TextureLoader&&) = delete;
+	// --- Getter/Setter
 	static std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> GetTextures(std::function<SDL_Texture* (const std::string&, SDL_Renderer* const)> FuncPtr, SDL_Renderer* Renderer);
+	// ---
 };
 #endif

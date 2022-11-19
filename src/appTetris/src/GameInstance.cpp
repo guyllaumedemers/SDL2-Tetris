@@ -1,16 +1,26 @@
 #include "../include/GameInstance.h"
 
-void GameInstance::Run() const
+void GameInstance::Initialize() const
 {
-	if (!TileMapUniquePtr)
+	if (!TileMapUniquePtr || !TetrominoeManagerUniquePtr)
 	{
 		return;
 	}
 
-	/*Should retrieved values from Preset Difficulty*/
 	const uint8_t&& tempRows = 20;
 	const uint8_t&& tempCols = 12;
-	TileMapUniquePtr->Initialize(tempRows, tempCols, [&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); });
+
+	// intialize tilemap grid
+	TileMapUniquePtr->Initialize(
+		tempRows,
+		tempCols,
+		[&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); }
+	);
+
+	// initialize events in tetrominoe manager
+	TetrominoeManagerUniquePtr->Initialize(
+		TileMapUniquePtr.get()
+	);
 }
 
 void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const
@@ -20,19 +30,35 @@ void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager
 		return;
 	}
 
-	/*Should handle Game Loop Refresh Rate so Tile Movement dont fly offscreen*/
 	static constexpr int8_t&& OneDown = -1;
 	static constexpr int8_t&& Idle = 0;
-	TileMapUniquePtr->Update(TextureManagerPtrArg, TetrominoeManagerUniquePtr.get(), SDLManagerPtrArg, Idle, OneDown);
+
+	// update tetrominoes
+	TetrominoeManagerUniquePtr->Update(
+		TileMapUniquePtr.get(),
+		Idle,
+		OneDown,
+		TileMapUniquePtr->GetRows(),
+		TileMapUniquePtr->GetCols()
+	);
+
+	// update tilemap
+	TileMapUniquePtr->Update(
+		TextureManagerPtrArg,
+		SDLManagerPtrArg,
+		Idle,
+		OneDown
+	);
 }
 
-void GameInstance::Quit() const
+void GameInstance::Clear() const
 {
-	if (!TileMapUniquePtr)
+	if (!TileMapUniquePtr || !TetrominoeManagerUniquePtr)
 	{
 		return;
 	}
 
+	TetrominoeManagerUniquePtr->Clear();
 	TileMapUniquePtr->Clear();
 }
 
@@ -43,5 +69,5 @@ void GameInstance::PollKeyEvent(TextureManager* const TextureManagerPtrArg, SDLM
 		return;
 	}
 
-	TileMapUniquePtr->Update(TextureManagerPtrArg, TetrominoeManagerUniquePtr.get(), SDLManagerPtrArg, DirX, DirY);
+	TileMapUniquePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg, DirX, DirY);
 }
