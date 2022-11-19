@@ -51,7 +51,7 @@ void TextureManager::Flush()
 	IMG_Quit();
 }
 
-SDL_Texture* TextureManager::GetTextureByName(const std::string& TextureName) const
+SDL_Texture* const TextureManager::GetTextureByName(const std::string& TextureName) const
 {
 	if (Textures.empty())
 	{

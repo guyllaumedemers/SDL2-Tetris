@@ -6,9 +6,9 @@
 #include <random>
 #endif
 
-void TetrominoeManager::Add()
+void TetrominoeManager::Add(uint8_t Rows, uint8_t Cols)
 {
-	ActiveTetrominoe = GenerateRandomTetromioeShape();
+	ActiveTetrominoe = GenerateRandomTetromioeShape(Rows, Cols);
 
 	if (!ActiveTetrominoe)
 	{
@@ -22,19 +22,24 @@ void TetrominoeManager::Remove()
 {
 }
 
-std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape() const
+std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint8_t Rows, uint8_t Cols) const
 {
 	std::random_device Seed;
 	std::mt19937 RandomGenerator(Seed());
 	std::uniform_int_distribution<int> UniformDistribution(TetrominoeShapeEnum::TShape, TetrominoeShapeEnum::SShape);
-	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(UniformDistribution(RandomGenerator)));
+	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(UniformDistribution(RandomGenerator)), Rows, Cols);
 }
 
 void TetrominoeManager::Initialize(TileMap* TileMapPtrArg)
 {
 	GenerateRandomTetrominoeEvent = [&]()
 	{
-		Add();
+		if (!TileMapPtrArg)
+		{
+			return;
+		}
+
+		Add(TileMapPtrArg->GetRows(), TileMapPtrArg->GetCols());
 	};
 
 	DelCheckRowCompletionEvent = [&](Tetrominoe* TetrominoePtrArg)

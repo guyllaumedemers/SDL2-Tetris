@@ -36,7 +36,7 @@ public:
 	void Initialize(class SDLManager* const SDLManagerPtr);
 	void Flush();
 	// --- Getter/Setter
-	SDL_Texture* GetTextureByName(const std::string& TextureName) const;
+	SDL_Texture* const GetTextureByName(const std::string& TextureName) const;
 	// --- 
 };
 #endif

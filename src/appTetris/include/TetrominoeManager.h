@@ -28,9 +28,9 @@ class TetrominoeManager final
 	std::vector<std::shared_ptr<Tetrominoe>> TetrominoePool = std::vector<std::shared_ptr<Tetrominoe>>();
 	std::shared_ptr<Tetrominoe> ActiveTetrominoe = nullptr;
 
-	void Add();
+	void Add(uint8_t Rows, uint8_t Cols);
 	void Remove();
-	std::unique_ptr<Tetrominoe> GenerateRandomTetromioeShape() const;
+	std::unique_ptr<Tetrominoe> GenerateRandomTetromioeShape(uint8_t Rows, uint8_t Cols) const;
 public:
 	TetrominoeManager(const TetrominoeManager&) = delete;
 	TetrominoeManager(TetrominoeManager&&) = delete;
@@ -38,15 +38,15 @@ public:
 	~TetrominoeManager() = default;
 	TetrominoeManager& operator=(const TetrominoeManager&) = delete;
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
-	void Initialize(class TileMap* TileMapPtrArg);
-	void Update(class TileMap* TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
+	void Initialize(class TileMap* const TileMapPtrArg);
+	void Update(class TileMap* const TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Clear();
 	void Flip() const;
 	// --- Getter/Setter
 	const std::vector<std::shared_ptr<Tetrominoe>>& GetTetrominoes() const { return TetrominoePool; }
 	const std::shared_ptr<Tetrominoe>& GetActiveTetrominoe() const { return ActiveTetrominoe; }
 	// --- Delegate
-	typedef std::function<void(Tetrominoe*)> DelCheckRowCompletion;
+	typedef std::function<void(Tetrominoe* const)> DelCheckRowCompletion;
 	DelCheckRowCompletion DelCheckRowCompletionEvent;
 
 	typedef std::function<void()> DelGenerateRandomTetrominoe;
