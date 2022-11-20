@@ -16,6 +16,11 @@
 #include <vector>
 #endif
 
+#ifndef INCLUDED_COLLECTION_UNORDERED_MAP
+#define INCLUDED_COLLECTION_UNORDERED_MAP
+#include <unordered_map>
+#endif
+
 #ifndef INCLUDED_TETROMINOE_ENUM
 #define INCLUDED_TETROMINOE_ENUM
 enum TetrominoeShapeEnum
@@ -56,6 +61,8 @@ public:
 	// --- Getter/Setter
 	const std::array<uint16_t, MaxEntriesPerShape>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }
 	const TetrominoeShapeEnum& GetTetrominoeShape() const { return TetrominoeShape; }
+	std::vector<uint16_t> ConvertTetrominoeEntryIndicies() const { return std::vector(TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end()); }
+	std::string GetTetrominoeWildcard() const;
 	const bool& IsLocked() const { return bIsLocked; }
 	void SetIsLocked() { bIsLocked = true; }
 	// ---

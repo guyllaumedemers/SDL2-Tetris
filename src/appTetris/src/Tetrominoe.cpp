@@ -1,11 +1,6 @@
 #include "../include/Tetrominoe.h"
 #include "../include/Tile.h"
 
-#ifndef INCLUDED_COLLECTION_UNORDERED_MAP
-#define INCLUDED_COLLECTION_UNORDERED_MAP
-#include <unordered_map>
-#endif
-
 #ifndef INCLUDED_EXCEPTION
 #define INCLUDED_EXCEPTION
 #include <stdexcept>
@@ -111,28 +106,11 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 		return;
 	}
 
-	static const std::unordered_map<TetrominoeShapeEnum, std::string>&& TetrominoeShapePair =
-	{
-		std::make_pair(TetrominoeShapeEnum::None, std::string("Undefined")),
-		std::make_pair(TetrominoeShapeEnum::TShape, std::string("Purple")),
-		std::make_pair(TetrominoeShapeEnum::LShape, std::string("Orange")),
-		std::make_pair(TetrominoeShapeEnum::ZShape, std::string("Red")),
-		std::make_pair(TetrominoeShapeEnum::OShape, std::string("Yellow")),
-		std::make_pair(TetrominoeShapeEnum::IShape, std::string("Cyan")),
-		std::make_pair(TetrominoeShapeEnum::JShape, std::string("Blue")),
-		std::make_pair(TetrominoeShapeEnum::SShape, std::string("Green"))
-	};
-
-	const auto TetrominoeShapePairFound = TetrominoeShapePair.find(TetrominoeShape);
-	if (TetrominoeShapePairFound == TetrominoeShapePair.end())
-	{
-		return;
-	}
-
-	const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
-
 	try
 	{
+		const std::string&& Wildcard = GetTetrominoeWildcard();
+		const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
+
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
 			{
@@ -148,7 +126,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 				Tile& NextTile = Tiles.at(TetrominoeEntryIndex);
 
 				NextTile.Attribute = TileAttributeEnum::Filled;
-				NextTile.Wildcard = TetrominoeShapePairFound->second;
+				NextTile.Wildcard = Wildcard;
 			}
 		}
 	}
@@ -171,4 +149,26 @@ void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
 
 		// shapes are different, bounds are different and rotation behaviour are different
 	}
+}
+
+std::string Tetrominoe::GetTetrominoeWildcard() const
+{
+	static const std::unordered_map<TetrominoeShapeEnum, std::string>&& TetrominoeShapePair =
+	{
+		std::make_pair(TetrominoeShapeEnum::None, std::string("Undefined")),
+		std::make_pair(TetrominoeShapeEnum::TShape, std::string("Purple")),
+		std::make_pair(TetrominoeShapeEnum::LShape, std::string("Orange")),
+		std::make_pair(TetrominoeShapeEnum::ZShape, std::string("Red")),
+		std::make_pair(TetrominoeShapeEnum::OShape, std::string("Yellow")),
+		std::make_pair(TetrominoeShapeEnum::IShape, std::string("Cyan")),
+		std::make_pair(TetrominoeShapeEnum::JShape, std::string("Blue")),
+		std::make_pair(TetrominoeShapeEnum::SShape, std::string("Green"))
+	};
+
+	const auto TetrominoeShapePairFound = TetrominoeShapePair.find(TetrominoeShape);
+	if (TetrominoeShapePairFound == TetrominoeShapePair.end())
+	{
+		return std::string("Undefined");
+	}
+	return TetrominoeShapePairFound->second;
 }

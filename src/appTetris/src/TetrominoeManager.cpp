@@ -20,6 +20,7 @@ void TetrominoeManager::Add(uint8_t Rows, uint8_t Cols)
 
 void TetrominoeManager::Remove()
 {
+	// do something
 }
 
 std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint8_t Rows, uint8_t Cols) const
@@ -28,6 +29,27 @@ std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint
 	std::mt19937 RandomGenerator(Seed());
 	std::uniform_int_distribution<int> UniformDistribution(TetrominoeShapeEnum::TShape, TetrominoeShapeEnum::SShape);
 	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(UniformDistribution(RandomGenerator)), Rows, Cols);
+}
+
+void TetrominoeManager::RealignTetrominoes(TileMap* const TileMapPtrArg) const
+{
+	if (!TileMapPtrArg)
+	{
+		return;
+	}
+
+	for (const auto& TetrominoeSharedPtr : TetrominoePool)
+	{
+		Tetrominoe* const TetrominoePtr = TetrominoeSharedPtr.get();
+		if (!TetrominoePtr)
+		{
+			continue;
+		}
+
+		// update tetrominoe index entry so they sit at the lowest point in the grid
+
+		TileMapPtrArg->RealignGridAtPosition(TetrominoePtr->ConvertTetrominoeEntryIndicies(), TetrominoePtr->GetTetrominoeWildcard());
+	}
 }
 
 void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
@@ -39,7 +61,9 @@ void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
 			return;
 		}
 
-		Add(TileMapPtrArg->GetRows(), TileMapPtrArg->GetCols());
+		const uint8_t& Rows = TileMapPtrArg->GetRows();
+		const uint8_t& Cols = TileMapPtrArg->GetCols();
+		Add(Rows, Cols);
 	};
 
 	CheckRowCompletionEvent = [&](Tetrominoe* const TetrominoePtrArg)
@@ -53,6 +77,8 @@ void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
 		{
 			TileMapPtrArg->CheckRowCompletion(TetrominoeEntryIndex);
 		}
+
+		RealignTetrominoes(TileMapPtrArg);
 	};
 }
 

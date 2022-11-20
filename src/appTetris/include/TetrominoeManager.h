@@ -31,6 +31,7 @@ class TetrominoeManager final
 	void Add(uint8_t Rows, uint8_t Cols);
 	void Remove();
 	std::unique_ptr<Tetrominoe> GenerateRandomTetromioeShape(uint8_t Rows, uint8_t Cols) const;
+	void RealignTetrominoes(class TileMap* const TileMapPtrArg) const;
 public:
 	TetrominoeManager(const TetrominoeManager&) = delete;
 	TetrominoeManager(TetrominoeManager&&) = delete;
