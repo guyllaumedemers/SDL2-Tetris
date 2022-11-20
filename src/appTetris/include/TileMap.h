@@ -31,7 +31,7 @@ public:
 	TileMap& operator=(const TileMap&) = delete;
 	TileMap& operator=(TileMap&&) = delete;
 	void Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(uint16_t, uint16_t)>& SetWindowFncPtrArg);
-	void Update(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, int8_t DirX, int8_t DirY);
+	void Update(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr) const;
 	void Clear();
 	void CheckRowCompletion(uint16_t IndexPosition);
 	// --- Getter/Setter

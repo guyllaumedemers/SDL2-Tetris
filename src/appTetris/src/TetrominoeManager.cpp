@@ -56,7 +56,7 @@ void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
 	};
 }
 
-void TetrominoeManager::Update(TileMap* const TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
+void TetrominoeManager::Update(TileMap* const TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
 	if (!TileMapPtrArg)
 	{

@@ -91,7 +91,7 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 		{
 			const Tile& Tile = Tiles.at(TetrominoeEntryIndex + JumpValue);
 
-			if (Tile.Attribute == TileEnum::Filled)
+			if (Tile.Attribute == TileAttributeEnum::Filled)
 			{
 				return IsMoveOverlappingExistingTile;
 			}
@@ -138,7 +138,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 			{
 				Tile& PreviousTile = Tiles.at(TetrominoeEntryIndex);
 
-				PreviousTile.Attribute = TileEnum::Empty;
+				PreviousTile.Attribute = TileAttributeEnum::Empty;
 				PreviousTile.Wildcard = std::string("Undefined");
 			}
 
@@ -147,7 +147,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 			{
 				Tile& NextTile = Tiles.at(TetrominoeEntryIndex);
 
-				NextTile.Attribute = TileEnum::Filled;
+				NextTile.Attribute = TileAttributeEnum::Filled;
 				NextTile.Wildcard = TetrominoeShapePairFound->second;
 			}
 		}

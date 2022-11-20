@@ -13,7 +13,7 @@
 
 #ifndef INCLUDED_TILE_ENUM
 #define INCLUDED_TILE_ENUM
-enum TileEnum
+enum TileAttributeEnum
 {
 	Empty = 0,
 	Border = 1,
@@ -24,7 +24,7 @@ enum TileEnum
 struct Tile final
 {
 	static constexpr uint8_t&& Size = 20;
-	TileEnum Attribute = TileEnum::Empty;
+	TileAttributeEnum Attribute = TileAttributeEnum::Empty;
 	std::string Wildcard = std::string();
 	size_t IndexPosition = 0;
 	void Render(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols) const;

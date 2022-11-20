@@ -101,21 +101,13 @@ void GameManager::Subscribe()
 
 	InputManagerUniquePtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY)
 	{
-		TextureManager* const TextureManagerPtr = TextureManagerUniquePtr.get();
-		if (!TextureManagerPtr)
+		if (!GameInstanceUniquePtr)
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: GAME_INSTANCE_PTR INVALID IN KEY_PRESS_EVENT!");
 			return;
 		}
 
-		SDLManager* const SDLManagerPtr = SDLManagerUniquePtr.get();
-		if (!SDLManagerPtr)
-		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN KEY_PRESS_EVENT!");
-			return;
-		}
-
-		GameInstanceUniquePtr->PollKeyEvent(TextureManagerPtr, SDLManagerPtr, DirX, DirY);
+		GameInstanceUniquePtr->PollKeyEvent(DirX, DirY);
 	};
 
 	InputManagerUniquePtr->DelSpaceKeyPressedEvent = [&]()

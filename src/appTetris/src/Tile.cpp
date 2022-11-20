@@ -40,11 +40,11 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 	SDL_SetRenderTarget(SDLRendererPtr, SDLTextureTargetPtr);
 
 	static constexpr uint8_t&& Alpha = 255;
-	static const std::unordered_map<TileEnum, std::string>&& TexturePair =
+	static const std::unordered_map<TileAttributeEnum, std::string>&& TexturePair =
 	{
-		std::make_pair(TileEnum::Empty, std::string("Black")),
-		std::make_pair(TileEnum::Border, std::string("Grey")),
-		std::make_pair(TileEnum::Filled, std::string("Wildcard"))
+		std::make_pair(TileAttributeEnum::Empty, std::string("Black")),
+		std::make_pair(TileAttributeEnum::Border, std::string("Grey")),
+		std::make_pair(TileAttributeEnum::Filled, std::string("Wildcard"))
 	};
 
 	SDL_SetRenderDrawColor(SDLRendererPtr, NULL, NULL, NULL, Alpha);

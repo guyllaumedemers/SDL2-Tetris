@@ -30,18 +30,18 @@ void TileMap::Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(ui
 
 		if (Row == Zero || Row == Rows - One || Col == Zero || Col == Cols - One)
 		{
-			Tiles.emplace_back(Tile{ TileEnum::Border, std::string("Undefined"), Index });
+			Tiles.emplace_back(Tile{ TileAttributeEnum::Border, std::string("Undefined"), Index });
 		}
 		else
 		{
-			Tiles.emplace_back(Tile{ TileEnum::Empty, std::string("Undefined"), Index });
+			Tiles.emplace_back(Tile{ TileAttributeEnum::Empty, std::string("Undefined"), Index });
 		}
 	}
 
 	SetWindowFncPtrArg(Cols * Tile::Size, Rows * Tile::Size);
 }
 
-void TileMap::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg, int8_t DirX, int8_t DirY)
+void TileMap::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const
 {
 	if (!TextureManagerPtrArg || !SDLManagerPtrArg)
 	{
@@ -69,7 +69,7 @@ void TileMap::CheckRowCompletion(uint16_t IndexPosition)
 		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
 		{
 			const Tile& Tile = Tiles.at(Index);
-			if (Tile.Attribute == TileEnum::Empty)
+			if (Tile.Attribute == TileAttributeEnum::Empty)
 			{
 				return;
 			}

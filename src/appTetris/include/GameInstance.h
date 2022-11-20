@@ -33,7 +33,7 @@ public:
 	void Initialize() const;
 	void Update(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg) const;
 	void Clear() const;
-	void PollKeyEvent(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg, int8_t DirX, int8_t DirY) const;
+	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	// --- Getter/Setter
 	const std::unique_ptr<TileMap>& GetTileMap() const { return TileMapUniquePtr; }
 	const std::unique_ptr<TetrominoeManager>& GetTetrominoeManager() const { return TetrominoeManagerUniquePtr; }

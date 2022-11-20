@@ -45,9 +45,7 @@ void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager
 	// update tilemap
 	TileMapUniquePtr->Update(
 		TextureManagerPtrArg,
-		SDLManagerPtrArg,
-		Idle,
-		OneDown
+		SDLManagerPtrArg
 	);
 }
 
@@ -62,12 +60,18 @@ void GameInstance::Clear() const
 	TileMapUniquePtr->Clear();
 }
 
-void GameInstance::PollKeyEvent(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg, int8_t DirX, int8_t DirY) const
+void GameInstance::PollKeyEvent(int8_t DirX, int8_t DirY) const
 {
-	if (!TileMapUniquePtr || !TextureManagerPtrArg || !SDLManagerPtrArg)
+	if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
 	{
 		return;
 	}
 
-	TileMapUniquePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg, DirX, DirY);
+	TetrominoeManagerUniquePtr->Update(
+		TileMapUniquePtr.get(),
+		DirX,
+		DirY,
+		TileMapUniquePtr->GetRows(),
+		TileMapUniquePtr->GetCols()
+	);
 }
