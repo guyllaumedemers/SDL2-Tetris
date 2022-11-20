@@ -58,10 +58,10 @@ public:
 	bool IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	void Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void FlipClockwise(uint8_t Rows, uint8_t Cols);
+	void Realign(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	// --- Getter/Setter
 	const std::array<uint16_t, MaxEntriesPerShape>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }
 	const TetrominoeShapeEnum& GetTetrominoeShape() const { return TetrominoeShape; }
-	std::vector<uint16_t> ConvertTetrominoeEntryIndicies() const { return std::vector(TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end()); }
 	std::string GetTetrominoeWildcard() const;
 	const bool& IsLocked() const { return bIsLocked; }
 	void SetIsLocked() { bIsLocked = true; }

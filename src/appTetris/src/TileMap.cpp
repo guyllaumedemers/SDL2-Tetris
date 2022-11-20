@@ -61,11 +61,11 @@ void TileMap::Clear()
 
 void TileMap::CheckRowCompletion(uint16_t IndexPosition)
 {
+	const uint8_t&& Row = static_cast<uint8_t>(IndexPosition / sCols);
+	const size_t&& StartIndex = static_cast<size_t>(Row * sCols);
+
 	try
 	{
-		const uint8_t&& Row = static_cast<uint8_t>(IndexPosition / sCols);
-		const size_t&& StartIndex = static_cast<size_t>(Row * sCols);
-
 		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
 		{
 			const Tile& Tile = Tiles.at(Index);
@@ -85,34 +85,16 @@ void TileMap::CheckRowCompletion(uint16_t IndexPosition)
 
 void TileMap::ClearRow(uint8_t Row)
 {
+	const size_t&& StartIndex = static_cast<size_t>(Row * sCols);
+
 	try
 	{
-		const size_t&& StartIndex = static_cast<size_t>(Row * sCols);
-
 		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
 		{
 			Tile& Tile = Tiles.at(Index);
 
 			Tile.Attribute = TileAttributeEnum::Empty;
 			Tile.Wildcard = std::string("Undefined");
-		}
-	}
-	catch (const std::out_of_range& e)
-	{
-		// print message
-	}
-}
-
-void TileMap::RealignGridAtPosition(const std::vector<uint16_t>& TetrominoeEntryIndices, const std::string& Wildcard)
-{
-	try
-	{
-		for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
-		{
-			Tile& Tile = Tiles.at(TetrominoeEntryIndex);
-
-			Tile.Attribute = TileAttributeEnum::Filled;
-			Tile.Wildcard = Wildcard;
 		}
 	}
 	catch (const std::out_of_range& e)

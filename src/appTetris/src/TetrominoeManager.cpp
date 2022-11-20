@@ -38,6 +38,9 @@ void TetrominoeManager::RealignTetrominoes(TileMap* const TileMapPtrArg) const
 		return;
 	}
 
+	const uint8_t& Rows = TileMapPtrArg->GetRows();
+	const uint8_t& Cols = TileMapPtrArg->GetCols();
+
 	for (const auto& TetrominoeSharedPtr : TetrominoePool)
 	{
 		Tetrominoe* const TetrominoePtr = TetrominoeSharedPtr.get();
@@ -46,9 +49,7 @@ void TetrominoeManager::RealignTetrominoes(TileMap* const TileMapPtrArg) const
 			continue;
 		}
 
-		// update tetrominoe index entry so they sit at the lowest point in the grid
-
-		TileMapPtrArg->RealignGridAtPosition(TetrominoePtr->ConvertTetrominoeEntryIndicies(), TetrominoePtr->GetTetrominoeWildcard());
+		TetrominoePtr->Realign(TileMapPtrArg->GetTiles(), Rows, Cols);
 	}
 }
 

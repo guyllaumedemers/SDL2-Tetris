@@ -85,8 +85,7 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 		for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
 			const Tile& Tile = Tiles.at(TetrominoeEntryIndex + JumpValue);
-
-			if (Tile.Attribute == TileAttributeEnum::Filled)
+			if (Tile.Attribute != TileAttributeEnum::Empty)
 			{
 				return IsMoveOverlappingExistingTile;
 			}
@@ -106,11 +105,11 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 		return;
 	}
 
+	const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
+	const std::string&& Wildcard = GetTetrominoeWildcard();
+
 	try
 	{
-		const std::string&& Wildcard = GetTetrominoeWildcard();
-		const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
-
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
 			{
@@ -151,6 +150,17 @@ void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
 	}
 }
 
+void Tetrominoe::Realign(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
+{
+	static constexpr int8_t&& Zero = 0;
+	static constexpr int8_t&& MinueOne = -1;
+
+	while (IsMoveInBound(Zero, MinueOne, Rows, Cols) && !IsMoveOverlappingExistingTile(Tiles, Zero, MinueOne, Rows, Cols))
+	{
+		Update(const_cast<std::vector<Tile>&>(Tiles), Zero, MinueOne, Rows, Cols);
+	}
+}
+
 std::string Tetrominoe::GetTetrominoeWildcard() const
 {
 	static const std::unordered_map<TetrominoeShapeEnum, std::string>&& TetrominoeShapePair =
@@ -165,10 +175,6 @@ std::string Tetrominoe::GetTetrominoeWildcard() const
 		std::make_pair(TetrominoeShapeEnum::SShape, std::string("Green"))
 	};
 
-	const auto TetrominoeShapePairFound = TetrominoeShapePair.find(TetrominoeShape);
-	if (TetrominoeShapePairFound == TetrominoeShapePair.end())
-	{
-		return std::string("Undefined");
-	}
-	return TetrominoeShapePairFound->second;
+	const auto&& TetrominoeShapePairFound = TetrominoeShapePair.find(TetrominoeShape);
+	return (TetrominoeShapePairFound != TetrominoeShapePair.end()) ? TetrominoeShapePairFound->second : std::string("Undefined");
 }
