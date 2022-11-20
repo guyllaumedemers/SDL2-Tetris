@@ -31,6 +31,48 @@ std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint
 	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(UniformDistribution(RandomGenerator)), Rows, Cols);
 }
 
+void TetrominoeManager::ClearTetrominoesOnRow(TileMap* const TileMapPtrArg, size_t TetrominoeIndex)
+{
+	if (!TileMapPtrArg)
+	{
+		return;
+	}
+
+	const uint8_t& Rows = TileMapPtrArg->GetRows();
+	const uint8_t& Cols = TileMapPtrArg->GetCols();
+
+	const uint8_t&& TargetRow = static_cast<uint8_t>(TetrominoeIndex / Cols);
+	const uint8_t&& Zero = 0;
+	const uint8_t&& One = 1;
+
+	try
+	{
+		for (auto& TetrominoeSharedPtr : TetrominoePool)
+		{
+			Tetrominoe* const TetrominoePtr = TetrominoeSharedPtr.get();
+			if (!TetrominoePtr)
+			{
+				continue;
+			}
+
+			const std::vector<uint16_t>& TetrominoeEntryIndicies = TetrominoePtr->GetTetrominoeIndices();
+			for (size_t Index = TetrominoeEntryIndicies.size() - One; Index >= Zero; --Index)
+			{
+				const uint8_t&& TetrominoeEntryIndexRow = static_cast<uint8_t>(TetrominoeEntryIndicies.at(Index) / Cols);
+				if (TetrominoeEntryIndexRow != TargetRow)
+				{
+					continue;
+				}
+				const_cast<std::vector<uint16_t>&>(TetrominoeEntryIndicies).erase(std::prev(TetrominoeEntryIndicies.end()));
+			}
+		}
+	}
+	catch (const std::out_of_range& e)
+	{
+		// print message
+	}
+}
+
 void TetrominoeManager::RealignTetrominoes(TileMap* const TileMapPtrArg) const
 {
 	if (!TileMapPtrArg)
@@ -76,7 +118,13 @@ void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
 
 		for (const auto& TetrominoeEntryIndex : TetrominoePtrArg->GetTetrominoeIndices())
 		{
-			TileMapPtrArg->CheckRowCompletion(TetrominoeEntryIndex);
+			const bool&& bIsRowComplete = TileMapPtrArg->CheckRowCompletion(TetrominoeEntryIndex);
+			if (!bIsRowComplete)
+			{
+				continue;
+			}
+
+			ClearTetrominoesOnRow(TileMapPtrArg, TetrominoeEntryIndex);
 		}
 
 		RealignTetrominoes(TileMapPtrArg);

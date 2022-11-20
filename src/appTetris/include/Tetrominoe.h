@@ -6,11 +6,6 @@
 #include <cstdint>
 #endif
 
-#ifndef INCLUDED_COLLECTION_ARRAY
-#define INCLUDED_COLLECTION_ARRAY
-#include <array>
-#endif
-
 #ifndef INCLUDED_COLLECTION_VECTOR
 #define INCLUDED_COLLECTION_VECTOR
 #include <vector>
@@ -40,11 +35,10 @@ enum TetrominoeShapeEnum
 
 class Tetrominoe final
 {
-	static constexpr size_t MaxEntriesPerShape = 4;
 	static constexpr uint16_t SpawnPosition = 25;
 
 	TetrominoeShapeEnum TetrominoeShape = TetrominoeShapeEnum::None;
-	std::array<uint16_t, MaxEntriesPerShape> TetrominoeEntryIndices = std::array<uint16_t, MaxEntriesPerShape>();
+	std::vector<uint16_t> TetrominoeEntryIndices = std::vector<uint16_t>();
 	bool bIsLocked = false;
 public:
 	Tetrominoe(const Tetrominoe&) = delete;
@@ -60,7 +54,7 @@ public:
 	void FlipClockwise(uint8_t Rows, uint8_t Cols);
 	void Realign(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	// --- Getter/Setter
-	const std::array<uint16_t, MaxEntriesPerShape>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }
+	const std::vector<uint16_t>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }
 	const TetrominoeShapeEnum& GetTetrominoeShape() const { return TetrominoeShape; }
 	std::string GetTetrominoeWildcard() const;
 	const bool& IsLocked() const { return bIsLocked; }

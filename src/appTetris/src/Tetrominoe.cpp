@@ -153,11 +153,11 @@ void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
 void Tetrominoe::Realign(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
 {
 	static constexpr int8_t&& Zero = 0;
-	static constexpr int8_t&& MinueOne = -1;
+	static constexpr int8_t&& OneDown = -1;
 
-	while (IsMoveInBound(Zero, MinueOne, Rows, Cols) && !IsMoveOverlappingExistingTile(Tiles, Zero, MinueOne, Rows, Cols))
+	while (IsMoveInBound(Zero, OneDown, Rows, Cols) && !IsMoveOverlappingExistingTile(Tiles, Zero, OneDown, Rows, Cols))
 	{
-		Update(const_cast<std::vector<Tile>&>(Tiles), Zero, MinueOne, Rows, Cols);
+		Update(const_cast<std::vector<Tile>&>(Tiles), Zero, OneDown, Rows, Cols);
 	}
 }
 

@@ -23,7 +23,7 @@ class TileMap final
 	std::vector<Tile> Tiles = std::vector<Tile>();
 	static uint8_t sRows;
 	static uint8_t sCols;
-	void ClearRow(uint8_t Row);
+	void ClearRow(size_t StartIndex);
 public:
 	TileMap(const TileMap&) = delete;
 	TileMap(TileMap&&) = delete;
@@ -34,7 +34,7 @@ public:
 	void Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(uint16_t, uint16_t)>& SetWindowFncPtrArg);
 	void Update(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr) const;
 	void Clear();
-	void CheckRowCompletion(uint16_t IndexPosition);
+	bool CheckRowCompletion(uint16_t TetrominoeEntryIndex);
 	// --- Getter/Setter
 	const std::vector<Tile>& GetTiles() const { return Tiles; }
 	const uint8_t& GetRows() const { return sRows; }

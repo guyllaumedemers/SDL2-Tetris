@@ -59,10 +59,11 @@ void TileMap::Clear()
 	Tiles.clear();
 }
 
-void TileMap::CheckRowCompletion(uint16_t IndexPosition)
+bool TileMap::CheckRowCompletion(uint16_t TetrominoeEntryIndex)
 {
-	const uint8_t&& Row = static_cast<uint8_t>(IndexPosition / sCols);
+	const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / sCols);
 	const size_t&& StartIndex = static_cast<size_t>(Row * sCols);
+	bool&& bIsRowComplete = true;
 
 	try
 	{
@@ -71,22 +72,22 @@ void TileMap::CheckRowCompletion(uint16_t IndexPosition)
 			const Tile& Tile = Tiles.at(Index);
 			if (Tile.Attribute == TileAttributeEnum::Empty)
 			{
-				return;
+				return !bIsRowComplete;
 			}
 		}
 
-		ClearRow(Row);
+		ClearRow(StartIndex);
 	}
 	catch (const std::out_of_range& e)
 	{
 		// print message
+		bIsRowComplete = false;
 	}
+	return bIsRowComplete;
 }
 
-void TileMap::ClearRow(uint8_t Row)
+void TileMap::ClearRow(size_t StartIndex)
 {
-	const size_t&& StartIndex = static_cast<size_t>(Row * sCols);
-
 	try
 	{
 		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
