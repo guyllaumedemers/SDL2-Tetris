@@ -142,23 +142,30 @@ void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
 		return;
 	}
 
-	static constexpr uint8_t&& One = 1;
-	static constexpr uint8_t&& Two = 2;
-	const size_t&& Size = TetrominoeEntryIndices.size();
-
-	for (size_t Index = 0; Index <= ((Size - One) /Two); --Index)
+	try
 	{
-		uint16_t& IndexEntry = TetrominoeEntryIndices.at(Index);
-		uint16_t& IndexEntryPrime = TetrominoeEntryIndices.at(Size - One - Index);
+		static constexpr uint8_t&& One = 1;
+		static constexpr uint8_t&& Two = 2;
+		const size_t&& Size = TetrominoeEntryIndices.size();
 
-		uint8_t&& Col = static_cast<uint8_t>(IndexEntry % Cols);
-		uint8_t&& Row = static_cast<uint8_t>(IndexEntry / Cols);
+		for (size_t Index = 0; Index <= ((Size - One) / Two); ++Index)
+		{
+			uint16_t& IndexEntry = TetrominoeEntryIndices.at(Index);
+			uint16_t& IndexEntryPrime = TetrominoeEntryIndices.at(Size - One - Index);
 
-		uint8_t&& ColPrime = static_cast<uint8_t>(IndexEntryPrime % Cols);
-		uint8_t&& RowPrime = static_cast<uint8_t>(IndexEntryPrime / Cols);
+			uint8_t&& Col = static_cast<uint8_t>(IndexEntry % Cols);
+			uint8_t&& Row = static_cast<uint8_t>(IndexEntry / Cols);
 
-		IndexEntry = (Col * Cols) + RowPrime;
-		IndexEntryPrime = (ColPrime * Cols) + Row;
+			uint8_t&& ColPrime = static_cast<uint8_t>(IndexEntryPrime % Cols);
+			uint8_t&& RowPrime = static_cast<uint8_t>(IndexEntryPrime / Cols);
+
+			IndexEntry = (Col * Cols) + RowPrime;
+			IndexEntryPrime = (ColPrime * Cols) + Row;
+		}
+	}
+	catch (const std::out_of_range& e)
+	{
+		// print error message
 	}
 }
 
