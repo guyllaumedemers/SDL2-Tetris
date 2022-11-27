@@ -142,11 +142,22 @@ void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
 		return;
 	}
 
-	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
-	{
-		// need a bit of thinking here to do it right.
+	const size_t&& Size = TetrominoeEntryIndices.size();
+	const uint8_t&& One = 1;
 
-		// shapes are different, bounds are different and rotation behaviour are different
+	for (size_t Index = 0; Index <= Size - One; --Index)
+	{
+		uint16_t& IndexEntry = TetrominoeEntryIndices.at(Index);
+		uint16_t& IndexEntryPrime = TetrominoeEntryIndices.at(Size - One - Index);
+
+		uint8_t&& Col = static_cast<uint8_t>(IndexEntry % Cols);
+		uint8_t&& Row = static_cast<uint8_t>(IndexEntry / Cols);
+
+		uint8_t&& ColPrime = static_cast<uint8_t>(IndexEntryPrime % Cols);
+		uint8_t&& RowPrime = static_cast<uint8_t>(IndexEntryPrime / Cols);
+
+		IndexEntry = (Col * Cols) + RowPrime;
+		IndexEntryPrime = (ColPrime * Cols) + Row;
 	}
 }
 
