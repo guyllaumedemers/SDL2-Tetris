@@ -142,10 +142,11 @@ void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
 		return;
 	}
 
+	static constexpr uint8_t&& One = 1;
+	static constexpr uint8_t&& Two = 2;
 	const size_t&& Size = TetrominoeEntryIndices.size();
-	const uint8_t&& One = 1;
 
-	for (size_t Index = 0; Index <= Size - One; --Index)
+	for (size_t Index = 0; Index <= ((Size - One) /Two); --Index)
 	{
 		uint16_t& IndexEntry = TetrominoeEntryIndices.at(Index);
 		uint16_t& IndexEntryPrime = TetrominoeEntryIndices.at(Size - One - Index);
