@@ -1,8 +1,8 @@
 #include "../include/GameManager.h"
 
-#ifndef INCLUDED_SDL_LIB
-#define INCLUDED_SDL_LIB
-#include <SDL.h>
+#ifndef INCLUDED_SDL_LOG
+#define INCLUDED_SDL_LOG
+#include <SDL_log.h>
 #endif
 
 #ifndef INCLUDED_CSTD_INT

@@ -1,4 +1,5 @@
 #include "include/GameManager.h"
+// https://stackoverflow.com/questions/13865842/does-static-constexpr-variable-inside-a-function-make-sense
 
 int main(int argc, char** argv)
 {
