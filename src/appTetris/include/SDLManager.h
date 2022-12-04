@@ -35,11 +35,23 @@ struct SDLClock final
 };
 #endif
 
+#ifndef INCLUDED_SDL_TIMER
+#define INCLUDED_SDL_TIMER
+struct SDLTimer final
+{
+	inline void Start(uint32_t Time, SDL_TimerCallback CallbackEvent, void* Params)
+	{
+		(Time != 0.f && CallbackEvent != nullptr) ? SDL_AddTimer(Time, CallbackEvent, Params) : NULL;
+	};
+};
+#endif
+
 class SDLManager final
 {
 	std::unique_ptr<SDL_Renderer, FreeSDLRenderer> SDLRendererUniquePtr = nullptr;
 	std::unique_ptr<SDL_Window, FreeSDLWindow> SDLWindowUniquePtr = nullptr;
 	SDLClock Clock;
+	SDLTimer Timer;
 public:
 	SDLManager(const SDLManager&) = delete;
 	SDLManager(SDLManager&&) = delete;
@@ -56,6 +68,7 @@ public:
 	// --- Getter/Setter
 	const std::unique_ptr<SDL_Renderer, FreeSDLRenderer>& GetRenderer() const { return SDLRendererUniquePtr; }
 	const std::unique_ptr<SDL_Window, FreeSDLWindow>& GetWindow() const { return SDLWindowUniquePtr; }
+	SDLTimer& GetTimer() { return Timer; }
 	// ---
 };
 #endif

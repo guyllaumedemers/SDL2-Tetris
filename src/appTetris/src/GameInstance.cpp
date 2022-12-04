@@ -1,8 +1,9 @@
 #include "../include/GameInstance.h"
+#include "../include/SDLManager.h"
 
-void GameInstance::Initialize() const
+void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
 {
-	if (!TileMapUniquePtr || !TetrominoeManagerUniquePtr)
+	if (!TileMapUniquePtr || !TetrominoeManagerUniquePtr || !SDLManagerPtrArg)
 	{
 		return;
 	}
@@ -21,6 +22,18 @@ void GameInstance::Initialize() const
 	TetrominoeManagerUniquePtr->Initialize(
 		TileMapUniquePtr.get()
 	);
+
+	const uint8_t&& Timeout = 3;
+
+	// create functor
+	Uint32(*Functor)(Uint32 Interval, void* Params) = [](Uint32 Interval, void* Params)
+	{
+		static_cast<TetrominoeManager*>(Params)->GenerateRandomTetrominoeEvent();
+		return static_cast<Uint32>(0);
+	};
+
+	// initialize sdl timer callback
+	SDLManagerPtrArg->GetTimer().Start(Timeout, Functor, TetrominoeManagerUniquePtr.get());
 }
 
 void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const

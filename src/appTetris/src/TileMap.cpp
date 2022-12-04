@@ -33,7 +33,7 @@ void TileMap::Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(ui
 		const size_t&& Row = (Index / Cols);
 		const size_t&& Col = (Index % Cols);
 
-		if (Row == Zero || Row == Rows - One || Col == Zero || Col == Cols - One)
+		if (Row == Zero || Row == (Rows - One) || Col == Zero || Col == (Cols - One))
 		{
 			Tiles.emplace_back(Tile{ TileAttributeEnum::Border, std::string("Undefined"), Index });
 		}

@@ -31,7 +31,7 @@ void GameManager::Initialize()
 	// initialize textures
 	TextureManagerUniquePtr->Initialize(SDLManagerUniquePtr.get());
 	// initialize game loop
-	GameInstanceUniquePtr->Initialize();
+	GameInstanceUniquePtr->Initialize(SDLManagerUniquePtr.get());
 }
 
 void GameManager::Update()
