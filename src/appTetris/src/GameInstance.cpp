@@ -29,7 +29,7 @@ void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
 	Uint32(*Functor)(Uint32 Interval, void* Params) = [](Uint32 Interval, void* Params)
 	{
 		static_cast<TetrominoeManager*>(Params)->GenerateRandomTetrominoeEvent();
-		return static_cast<Uint32>(0);
+		return static_cast<Uint32>(NULL);
 	};
 
 	// initialize sdl timer callback

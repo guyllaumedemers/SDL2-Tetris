@@ -146,33 +146,35 @@ void TetrominoeManager::Update(TileMap* const TileMapPtrArg, int8_t DirX, int8_t
 		return;
 	}
 
-	for (const auto& TetrominoeUniquePtr : TetrominoePool)
+	Tetrominoe* const TetrominoePtr = ActiveTetrominoe.get();
+	if (!TetrominoePtr)
 	{
-		Tetrominoe* const TetrominoePtr = TetrominoeUniquePtr.get();
-		if (!TetrominoePtr)
-		{
-			continue;
-		}
-
-		if (TetrominoePtr->IsLocked())
-		{
-			continue;
-		}
-
-		const bool&& IsMoveInBound = TetrominoePtr->IsMoveInBound(DirX, DirY, Rows, Cols);
-		if (!IsMoveInBound)
-		{
-			continue;
-		}
-
-		const bool&& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(TileMapPtrArg->GetTiles(), DirX, DirY, Rows, Cols);
-		if (IsMoveOverlappingExistingTile)
-		{
-			continue;
-		}
-
-		TetrominoePtr->Update(const_cast<std::vector<Tile>&>(TileMapPtrArg->GetTiles()), DirX, DirY, Rows, Cols);
+		return;
 	}
+
+	if (TetrominoePtr->IsLocked())
+	{
+		return;
+	}
+
+	const bool&& IsMoveInBound = TetrominoePtr->IsMoveInBound(DirX, DirY, Rows, Cols);
+	if (!IsMoveInBound)
+	{
+		return;
+	}
+
+	const bool&& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(TileMapPtrArg->GetTiles(), DirX, DirY, Rows, Cols);
+	if (IsMoveOverlappingExistingTile)
+	{
+		{
+			// Should check if the player is pressing spacebar for rotating before locking the piece
+			TetrominoePtr->SetIsLocked();
+			GenerateRandomTetrominoeEvent();
+		}
+		return;
+	}
+
+	TetrominoePtr->Update(const_cast<std::vector<Tile>&>(TileMapPtrArg->GetTiles()), DirX, DirY, Rows, Cols);
 }
 
 void TetrominoeManager::Clear()
