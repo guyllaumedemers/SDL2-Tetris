@@ -1,6 +1,6 @@
 #include "../include/InputManager.h"
 
-int InputManager::WaitPollEvent(SDL_Event& Event) const
+int InputManager::RunEvent(SDL_Event& Event) const
 {
 	static constexpr int8_t&& Minus = -1;
 	static constexpr int8_t&& Plus = 1;

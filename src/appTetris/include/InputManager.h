@@ -25,7 +25,7 @@ public:
 	~InputManager() = default;
 	InputManager& operator=(const InputManager&) = delete;
 	InputManager& operator=(InputManager&&) = delete;
-	int WaitPollEvent(SDL_Event& Event) const;
+	int RunEvent(SDL_Event& Event) const;
 	// --- Delegate
 	typedef std::function<void(int8_t, int8_t)> DelDirectionalKeyPressed;
 	DelDirectionalKeyPressed DirectionalKeyPressedEvent;

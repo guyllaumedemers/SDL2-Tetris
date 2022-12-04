@@ -36,18 +36,25 @@ void GameManager::Initialize()
 
 void GameManager::Update()
 {
-	if (!SDLManagerUniquePtr || !InputManagerUniquePtr || !GameInstanceUniquePtr)
-	{
-		return;
-	}
-
 	bIsQuittingGame = false;
 	while (!bIsQuittingGame)
 	{
+		if (!SDLManagerUniquePtr)
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN GAME_MANAGER UPDATE!");
+			exit(EXIT_FAILURE);
+		}
+
 		SDL_Event Event;
 		if (SDL_PollEvent(&Event) > NULL)
 		{
-			InputManagerUniquePtr->WaitPollEvent(Event);
+			if (!InputManagerUniquePtr)
+			{
+				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: INPUT_MANAGER_PTR INVALID IN GAME_MANAGER UPDATE!");
+				exit(EXIT_FAILURE);
+			}
+
+			InputManagerUniquePtr->RunEvent(Event);
 		}
 
 		SDLManagerUniquePtr->Update(
@@ -57,13 +64,19 @@ void GameManager::Update()
 				if (!TextureManagerPtrArg)
 				{
 					SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
-					return;
+					exit(EXIT_FAILURE);
 				}
 
 				if (!SDLManagerPtrArg)
 				{
 					SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
-					return;
+					exit(EXIT_FAILURE);
+				}
+
+				if (!GameInstanceUniquePtr)
+				{
+					SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: GAMEINSTANCE_PTR INVALID IN SDL_MANAGER_UPDATE!");
+					exit(EXIT_FAILURE);
 				}
 
 				GameInstanceUniquePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
