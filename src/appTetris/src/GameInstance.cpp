@@ -23,17 +23,18 @@ void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
 		TileMapUniquePtr.get()
 	);
 
-	const uint8_t&& Timeout = 3;
+	const uint8_t&& CallbackDelay = static_cast<uint8_t>(3 * 1000);
 
 	// create functor
-	Uint32(*Functor)(Uint32 Interval, void* Params) = [](Uint32 Interval, void* Params)
+	Uint32(*Functor)(Uint32, void*) = [](Uint32 Interval, void* Params)
 	{
 		static_cast<TetrominoeManager*>(Params)->GenerateRandomTetrominoeEvent();
+		// do not want to repeat this first invoke, so we run 0
 		return static_cast<Uint32>(NULL);
 	};
 
 	// initialize sdl timer callback
-	SDLManagerPtrArg->GetTimer().Start(Timeout, Functor, TetrominoeManagerUniquePtr.get());
+	SDLManagerPtrArg->GetTimer().Start(CallbackDelay, Functor, TetrominoeManagerUniquePtr.get());
 }
 
 void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const
