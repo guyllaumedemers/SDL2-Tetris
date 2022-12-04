@@ -68,7 +68,7 @@ bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t C
 	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
 		const bool&& CanMoveCol = ((TetrominoeEntryIndex % Cols) + DirX) >= Zero && ((TetrominoeEntryIndex % Cols) + DirX) < Cols;
-		const bool&& CanMoveRow = ((TetrominoeEntryIndex / Cols) + DirY) >= Zero && ((TetrominoeEntryIndex / Cols) + DirY) < Cols;
+		const bool&& CanMoveRow = ((TetrominoeEntryIndex / Cols) + std::abs(DirY)) >= Zero && ((TetrominoeEntryIndex / Cols) + std::abs(DirY)) < Rows;
 
 		if (!CanMoveRow || !CanMoveCol)
 		{
@@ -92,8 +92,16 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 
 	try
 	{
-		for (const auto& TetrominoeEntryIndex : std::views::reverse(TetrominoeEntryIndices))
+		for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
+			const bool&& IsJumpIndexOverlappingItsOwnIndex = std::find(TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(),
+				TetrominoeEntryIndex + JumpValue) != TetrominoeEntryIndices.end();
+
+			if (IsJumpIndexOverlappingItsOwnIndex)
+			{
+				continue;
+			}
+
 			const Tile& Tile = Tiles.at(TetrominoeEntryIndex + JumpValue);
 			if (Tile.Attribute != TileAttributeEnum::Empty)
 			{
