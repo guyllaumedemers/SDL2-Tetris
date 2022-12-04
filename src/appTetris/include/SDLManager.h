@@ -23,6 +23,8 @@
 
 #include "SDLWrapper.h"
 
+#ifndef INCLUDED_SDL_CLOCK
+#define INCLUDED_SDL_CLOCK
 struct SDLClock final
 {
 	double Last = 0;
@@ -31,6 +33,7 @@ struct SDLClock final
 
 	inline void Initialize() { Now = Last = static_cast<double>(SDL_GetTicks64()); }
 };
+#endif
 
 class SDLManager final
 {

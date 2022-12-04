@@ -87,7 +87,7 @@ void SDLManager::LimitFrameRate(float Fps)
 
 double SDLManager::GetDeltaTime()
 {
-	static const double&& MSPerSecond = static_cast<double>(1000.f);
+	static constexpr double&& MSPerSecond = static_cast<double>(1000.f);
 
 	Clock.Now = static_cast<double>(SDL_GetTicks64());
 	Clock.DeltaTime = (Clock.Now - Clock.Last) / MSPerSecond;

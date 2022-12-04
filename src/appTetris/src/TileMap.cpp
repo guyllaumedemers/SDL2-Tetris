@@ -5,6 +5,11 @@
 #include <stdexcept>
 #endif
 
+#ifndef INCLUDED_SDL_LOG
+#define INCLUDED_SDL_LOG
+#include <SDL_log.h>
+#endif
+
 /// <summary>
 /// Static Fields
 /// </summary>
@@ -80,7 +85,7 @@ bool TileMap::CheckRowCompletion(uint16_t TetrominoeEntryIndex)
 	}
 	catch (const std::out_of_range& e)
 	{
-		// print message
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN CHECK ROW COMPLETION FUNCTION! %s", e.what());
 		bIsRowComplete = false;
 	}
 	return bIsRowComplete;
@@ -100,6 +105,6 @@ void TileMap::ClearRow(size_t StartIndex)
 	}
 	catch (const std::out_of_range& e)
 	{
-		// print message
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN CLEAR ROW FUNCTION! %s", e.what());
 	}
 }
