@@ -20,6 +20,9 @@ void TetrominoeManager::Add(uint8_t Rows, uint8_t Cols)
 		return;
 	}
 
+	// initialize Tetrominoe spawn point
+	ActiveTetrominoe->Align();
+	// append the pool
 	TetrominoePool.push_back(ActiveTetrominoe);
 }
 

@@ -6,6 +6,11 @@
 #include <stdexcept>
 #endif
 
+#ifndef INCLUDED_RANGE
+#define INCLUDED_RANGE
+#include <ranges>
+#endif
+
 #ifndef INCLUDED_SDL_LOG
 #define INCLUDED_SDL_LOG
 #include <SDL_log.h>
@@ -87,7 +92,7 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 
 	try
 	{
-		for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		for (const auto& TetrominoeEntryIndex : std::views::reverse(TetrominoeEntryIndices))
 		{
 			const Tile& Tile = Tiles.at(TetrominoeEntryIndex + JumpValue);
 			if (Tile.Attribute != TileAttributeEnum::Empty)
@@ -115,7 +120,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 
 	try
 	{
-		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		for (auto& TetrominoeEntryIndex : std::views::reverse(TetrominoeEntryIndices))
 		{
 			{
 				Tile& PreviousTile = Tiles.at(TetrominoeEntryIndex);
@@ -182,6 +187,14 @@ void Tetrominoe::Realign(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t C
 	while (IsMoveInBound(Zero, OneDown, Rows, Cols) && !IsMoveOverlappingExistingTile(Tiles, Zero, OneDown, Rows, Cols))
 	{
 		Update(const_cast<std::vector<Tile>&>(Tiles), Zero, OneDown, Rows, Cols);
+	}
+}
+
+void Tetrominoe::Align()
+{
+	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+	{
+		TetrominoeEntryIndex += SpawnPosition;
 	}
 }
 

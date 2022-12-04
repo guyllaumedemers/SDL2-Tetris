@@ -35,7 +35,7 @@ enum TetrominoeShapeEnum
 
 class Tetrominoe final
 {
-	static constexpr uint16_t SpawnPosition = 25;
+	static constexpr uint16_t&& SpawnPosition = 15;
 
 	TetrominoeShapeEnum TetrominoeShape = TetrominoeShapeEnum::None;
 	std::vector<uint16_t> TetrominoeEntryIndices = std::vector<uint16_t>();
@@ -53,6 +53,7 @@ public:
 	void Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void FlipClockwise(uint8_t Rows, uint8_t Cols);
 	void Realign(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
+	void Align();
 	// --- Getter/Setter
 	const std::vector<uint16_t>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }
 	const TetrominoeShapeEnum& GetTetrominoeShape() const { return TetrominoeShape; }
