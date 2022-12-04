@@ -145,7 +145,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 	}
 }
 
-void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
+void Tetrominoe::FlipMatrix(uint8_t Rows, uint8_t Cols)
 {
 	if (IsLocked())
 	{
@@ -154,23 +154,14 @@ void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
 
 	try
 	{
-		static constexpr uint8_t&& One = 1;
-		static constexpr uint8_t&& Two = 2;
-		const size_t&& Size = TetrominoeEntryIndices.size();
+		// matrix flip isnt right. need to rethink on it.
 
-		for (size_t Index = 0; Index <= ((Size - One) / Two); ++Index)
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
-			uint16_t& IndexEntry = TetrominoeEntryIndices.at(Index);
-			uint16_t& IndexEntryPrime = TetrominoeEntryIndices.at(Size - One - Index);
+			const uint8_t&& Col = static_cast<uint8_t>(TetrominoeEntryIndex % Cols);
+			const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / Cols);
 
-			uint8_t&& Col = static_cast<uint8_t>(IndexEntry % Cols);
-			uint8_t&& Row = static_cast<uint8_t>(IndexEntry / Cols);
-
-			uint8_t&& ColPrime = static_cast<uint8_t>(IndexEntryPrime % Cols);
-			uint8_t&& RowPrime = static_cast<uint8_t>(IndexEntryPrime / Cols);
-
-			IndexEntry = (Col * Cols) + RowPrime;
-			IndexEntryPrime = (ColPrime * Cols) + Row;
+			TetrominoeEntryIndex = (Col * Cols) + Row;
 		}
 	}
 	catch (const std::out_of_range& e)

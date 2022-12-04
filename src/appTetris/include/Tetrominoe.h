@@ -51,7 +51,7 @@ public:
 	bool IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	bool IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	void Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
-	void FlipClockwise(uint8_t Rows, uint8_t Cols);
+	void FlipMatrix(uint8_t Rows, uint8_t Cols);
 	void Realign(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	void Align();
 	// --- Getter/Setter

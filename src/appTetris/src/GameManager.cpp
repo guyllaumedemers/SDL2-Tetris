@@ -127,7 +127,7 @@ void GameManager::Subscribe()
 
 	InputManagerUniquePtr->DelSpaceKeyPressedEvent = [&]()
 	{
-		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->GetTetrominoeManager().get();
+ 		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->GetTetrominoeManager().get();
 		TileMap* const TileMapPtr = GameInstanceUniquePtr->GetTileMap().get();
 
 		if (!TetrominoeManagerPtr || !TileMapPtr)

@@ -195,5 +195,5 @@ void TetrominoeManager::Flip(uint8_t Rows, uint8_t Cols) const
 		return;
 	}
 
-	ActiveTetrominoe->FlipClockwise(Rows, Cols);
+	ActiveTetrominoe->FlipMatrix(Rows, Cols);
 }
