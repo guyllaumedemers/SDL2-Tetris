@@ -6,6 +6,11 @@
 #include <random>
 #endif
 
+#ifndef INCLUDED_SDL_LOG
+#define INCLUDED_SDL_LOG
+#include <SDL_log.h>
+#endif
+
 void TetrominoeManager::Add(uint8_t Rows, uint8_t Cols)
 {
 	ActiveTetrominoe = GenerateRandomTetromioeShape(Rows, Cols);
@@ -69,7 +74,7 @@ void TetrominoeManager::ClearTetrominoesOnRow(TileMap* const TileMapPtrArg, size
 	}
 	catch (const std::out_of_range& e)
 	{
-		// print message
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN CLEAR ROW FUNCTION! %s", e.what());
 	}
 }
 

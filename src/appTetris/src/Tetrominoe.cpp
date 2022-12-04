@@ -6,6 +6,11 @@
 #include <stdexcept>
 #endif
 
+#ifndef INCLUDED_SDL_LOG
+#define INCLUDED_SDL_LOG
+#include <SDL_log.h>
+#endif
+
 Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t Cols)
 {
 	if (!TetrominoeEnum /*TetrominoeShapeEnum::None == 0*/)
@@ -93,7 +98,7 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 	}
 	catch (const std::out_of_range& e)
 	{
-		// print error message
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN OVERLAPPING FUNCTION! %s", e.what());
 	}
 	return !IsMoveOverlappingExistingTile;
 }
@@ -131,7 +136,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 	}
 	catch (const std::out_of_range& e)
 	{
-		// print error message
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN UPDATE FUNCTION! %s", e.what());
 	}
 }
 
@@ -165,7 +170,7 @@ void Tetrominoe::FlipClockwise(uint8_t Rows, uint8_t Cols)
 	}
 	catch (const std::out_of_range& e)
 	{
-		// print error message
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN FLIP FUNCTION FUNCTION! %s", e.what());
 	}
 }
 

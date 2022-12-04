@@ -31,6 +31,8 @@ void SDLManager::Initialize()
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 RENDERER CREATION FAILED!");
 		exit(EXIT_FAILURE);
 	}
+
+	Clock.Initialize();
 }
 
 void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::function<void(TextureManager* const, SDLManager* const)> UpdateFncPtrArg)
@@ -70,4 +72,25 @@ void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height) const
 	}
 
 	SDL_SetWindowSize(SDLWindowUniquePtr.get(), Width, Height);
+}
+
+void SDLManager::LimitFrameRate(float Fps)
+{
+	static const double&& MSPerFrame = static_cast<double>((1.f / Fps));
+	double&& Time = 0.f;
+
+	while (Time < MSPerFrame)
+	{
+		Time += GetDeltaTime();
+	}
+}
+
+double SDLManager::GetDeltaTime()
+{
+	static const double&& MSPerSecond = static_cast<double>(1000.f);
+
+	Clock.Now = static_cast<double>(SDL_GetTicks64());
+	Clock.DeltaTime = (Clock.Now - Clock.Last) / MSPerSecond;
+	Clock.Last = Clock.Now;
+	return Clock.DeltaTime;
 }

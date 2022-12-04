@@ -45,7 +45,7 @@ void TextureManager::Initialize(SDLManager* const SDLManagerPtrArg)
 		}, SDLManagerPtrArg->GetRenderer().get());
 }
 
-void TextureManager::Flush()
+void TextureManager::Clear()
 {
 	Textures.clear();
 	IMG_Quit();

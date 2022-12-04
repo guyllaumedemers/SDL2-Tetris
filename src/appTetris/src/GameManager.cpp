@@ -30,7 +30,7 @@ void GameManager::Initialize()
 	SDLManagerUniquePtr->Initialize();
 	// initialize textures
 	TextureManagerUniquePtr->Initialize(SDLManagerUniquePtr.get());
-	// run game loop
+	// initialize game loop
 	GameInstanceUniquePtr->Initialize();
 }
 
@@ -45,7 +45,7 @@ void GameManager::Update()
 	while (!bIsQuittingGame)
 	{
 		SDL_Event Event;
-		if (SDL_WaitEvent(&Event) > NULL)
+		if (SDL_PollEvent(&Event) > NULL)
 		{
 			InputManagerUniquePtr->WaitPollEvent(Event);
 		}
@@ -68,6 +68,8 @@ void GameManager::Update()
 
 				GameInstanceUniquePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
 			});
+
+		SDLManagerUniquePtr->LimitFrameRate(FRAME_RATE);
 	}
 }
 
@@ -82,7 +84,7 @@ void GameManager::Quit() const
 	// exit game
 	GameInstanceUniquePtr->Clear();
 	// flush textures
-	TextureManagerUniquePtr->Flush();
+	TextureManagerUniquePtr->Clear();
 	// clear context
 	SDLManagerUniquePtr->Quit();
 }
@@ -117,6 +119,7 @@ void GameManager::Subscribe()
 
 		if (!TetrominoeManagerPtr || !TileMapPtr)
 		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOEMANAGER_PTR || TILEMAP_PTR ARE INVALID IN SPACE_PRESS_EVENT!");
 			return;
 		}
 
@@ -125,6 +128,12 @@ void GameManager::Subscribe()
 
 	GameInstanceUniquePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)
 	{
+		if (!SDLManagerUniquePtr)
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDLMANAGER_PTR IS INVALID IN SETWINDOW CALLBACK!");
+			return;
+		}
+
 		SDLManagerUniquePtr->SetWindowContextSize(Width, Height);
 	};
 }

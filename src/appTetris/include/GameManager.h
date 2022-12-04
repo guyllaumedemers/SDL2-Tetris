@@ -6,6 +6,10 @@
 #include <memory>
 #endif
 
+#ifndef FRAME_RATE
+#define FRAME_RATE 60.0
+#endif
+
 #include "SDLManager.h"
 #include "InputManager.h"
 #include "GameInstance.h"
