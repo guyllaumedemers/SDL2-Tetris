@@ -37,15 +37,15 @@ void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
 	SDLManagerPtrArg->GetTimer().Start(Delay, InitializationFunctor, TetrominoeManagerUniquePtr.get());
 
 	// create functor
-	Uint32(*GameFunctor)(Uint32, void*) = [](Uint32 Interval, void* Params)
+	Uint32(*GameLoopFunctor)(Uint32, void*) = [](Uint32 Interval, void* Params)
 	{
 		static_cast<GameInstance*>(Params)->Update();
-		// do not want to repeat this first invoke, so we run 0
+		// interval at which the above call should be made
 		return Interval;
 	};
 
 	// initialize sdl timer callback
-	SDLManagerPtrArg->GetTimer().Start(Delay, GameFunctor, const_cast<GameInstance*>(this));
+	SDLManagerPtrArg->GetTimer().Start(Delay, GameLoopFunctor, const_cast<GameInstance*>(this));
 }
 
 void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const
