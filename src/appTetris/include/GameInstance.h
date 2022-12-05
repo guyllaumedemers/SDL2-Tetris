@@ -32,6 +32,7 @@ public:
 	GameInstance& operator=(GameInstance&&) = delete;
 	void Initialize(class SDLManager* const SDLManagerPtrArg) const;
 	void Update(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg) const;
+	void Update() const;
 	void Clear() const;
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	// --- Getter/Setter

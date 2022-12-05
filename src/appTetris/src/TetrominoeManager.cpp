@@ -166,11 +166,6 @@ void TetrominoeManager::Update(TileMap* const TileMapPtrArg, int8_t DirX, int8_t
 	const bool&& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(TileMapPtrArg->GetTiles(), DirX, DirY, Rows, Cols);
 	if (IsMoveOverlappingExistingTile)
 	{
-		{
-			// Should check if the player is pressing spacebar for rotating before locking the piece
-			TetrominoePtr->SetIsLocked();
-			GenerateRandomTetrominoeEvent();
-		}
 		return;
 	}
 
