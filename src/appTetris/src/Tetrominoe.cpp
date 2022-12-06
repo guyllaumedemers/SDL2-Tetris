@@ -169,10 +169,27 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
+			Tile& PreviousTile = Tiles.at(TetrominoeEntryIndex);
+
+			PreviousTile.Attribute = TileAttributeEnum::Empty;
+			PreviousTile.Wildcard = std::string("Undefined");
+
 			const uint8_t&& Col = static_cast<uint8_t>(TetrominoeEntryIndex % Cols);
 			const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / Cols);
 
 			TetrominoeEntryIndex = (Col * Cols) + Row;
+		}
+
+		const std::string&& Wildcard = GetTetrominoeWildcard();
+
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		{
+			{
+				Tile& NextTile = Tiles.at(TetrominoeEntryIndex);
+
+				NextTile.Attribute = TileAttributeEnum::Filled;
+				NextTile.Wildcard = Wildcard;
+			}
 		}
 	}
 	catch (const std::out_of_range& e)
