@@ -127,7 +127,13 @@ void GameManager::Subscribe()
 
 	InputManagerUniquePtr->DelSpaceKeyPressedEvent = [&]()
 	{
- 		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->GetTetrominoeManager().get();
+		if (!GameInstanceUniquePtr)
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: GAME_INSTANCE_PTR INVALID IN SPACEKEY_PRESS_EVENT!");
+			return;
+		}
+
+		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->GetTetrominoeManager().get();
 		TileMap* const TileMapPtr = GameInstanceUniquePtr->GetTileMap().get();
 
 		if (!TetrominoeManagerPtr || !TileMapPtr)
@@ -136,7 +142,7 @@ void GameManager::Subscribe()
 			return;
 		}
 
-		TetrominoeManagerPtr->Flip(TileMapPtr->GetRows(), TileMapPtr->GetCols());
+		TetrominoeManagerPtr->Flip(TileMapPtr->GetTiles(), TileMapPtr->GetRows(), TileMapPtr->GetCols());
 	};
 
 	GameInstanceUniquePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)

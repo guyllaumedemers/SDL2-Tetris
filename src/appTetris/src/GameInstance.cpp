@@ -74,7 +74,7 @@ void GameInstance::Update() const
 
 	// update tetrominoes
 	TetrominoeManagerUniquePtr->Update(
-		TileMapUniquePtr.get(),
+		TileMapUniquePtr->GetTiles(),
 		Idle,
 		OneDown,
 		TileMapUniquePtr->GetRows(),
@@ -101,7 +101,7 @@ void GameInstance::PollKeyEvent(int8_t DirX, int8_t DirY) const
 	}
 
 	TetrominoeManagerUniquePtr->Update(
-		TileMapUniquePtr.get(),
+		TileMapUniquePtr->GetTiles(),
 		DirX,
 		DirY,
 		TileMapUniquePtr->GetRows(),

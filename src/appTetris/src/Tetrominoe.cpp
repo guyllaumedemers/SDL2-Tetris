@@ -156,7 +156,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 	}
 }
 
-void Tetrominoe::FlipMatrix(uint8_t Rows, uint8_t Cols)
+void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
 {
 	if (IsLocked())
 	{
@@ -181,14 +181,14 @@ void Tetrominoe::FlipMatrix(uint8_t Rows, uint8_t Cols)
 	}
 }
 
-void Tetrominoe::Realign(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
+void Tetrominoe::Realign(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
 {
 	static constexpr int8_t&& Zero = 0;
 	static constexpr int8_t&& OneDown = -1;
 
 	while (IsMoveInBound(Zero, OneDown, Rows, Cols) && !IsMoveOverlappingExistingTile(Tiles, Zero, OneDown, Rows, Cols))
 	{
-		Update(const_cast<std::vector<Tile>&>(Tiles), Zero, OneDown, Rows, Cols);
+		Update(Tiles, Zero, OneDown, Rows, Cols);
 	}
 }
 

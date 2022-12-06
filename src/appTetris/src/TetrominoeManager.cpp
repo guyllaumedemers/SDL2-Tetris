@@ -39,16 +39,8 @@ std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint
 	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(UniformDistribution(RandomGenerator)), Rows, Cols);
 }
 
-void TetrominoeManager::ClearTetrominoesOnRow(TileMap* const TileMapPtrArg, size_t TetrominoeIndex)
+void TetrominoeManager::ClearTetrominoesOnRow(uint8_t Rows, uint8_t Cols, size_t TetrominoeIndex)
 {
-	if (!TileMapPtrArg)
-	{
-		return;
-	}
-
-	const uint8_t& Rows = TileMapPtrArg->GetRows();
-	const uint8_t& Cols = TileMapPtrArg->GetCols();
-
 	const uint8_t&& TargetRow = static_cast<uint8_t>(TetrominoeIndex / Cols);
 	const uint8_t&& Zero = 0;
 	const uint8_t&& One = 1;
@@ -81,16 +73,8 @@ void TetrominoeManager::ClearTetrominoesOnRow(TileMap* const TileMapPtrArg, size
 	}
 }
 
-void TetrominoeManager::RealignTetrominoes(TileMap* const TileMapPtrArg) const
+void TetrominoeManager::RealignTetrominoes(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols) const
 {
-	if (!TileMapPtrArg)
-	{
-		return;
-	}
-
-	const uint8_t& Rows = TileMapPtrArg->GetRows();
-	const uint8_t& Cols = TileMapPtrArg->GetCols();
-
 	for (const auto& TetrominoeSharedPtr : TetrominoePool)
 	{
 		Tetrominoe* const TetrominoePtr = TetrominoeSharedPtr.get();
@@ -99,7 +83,7 @@ void TetrominoeManager::RealignTetrominoes(TileMap* const TileMapPtrArg) const
 			continue;
 		}
 
-		TetrominoePtr->Realign(TileMapPtrArg->GetTiles(), Rows, Cols);
+		TetrominoePtr->Realign(const_cast<std::vector<Tile>&>(Tiles), Rows, Cols);
 	}
 }
 
@@ -124,6 +108,9 @@ void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
 			return;
 		}
 
+		const uint8_t& Rows = TileMapPtrArg->GetRows();
+		const uint8_t& Cols = TileMapPtrArg->GetCols();
+
 		for (const auto& TetrominoeEntryIndex : TetrominoePtrArg->GetTetrominoeIndices())
 		{
 			const bool&& bIsRowComplete = TileMapPtrArg->CheckRowCompletion(TetrominoeEntryIndex);
@@ -132,20 +119,15 @@ void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
 				continue;
 			}
 
-			ClearTetrominoesOnRow(TileMapPtrArg, TetrominoeEntryIndex);
+			ClearTetrominoesOnRow(Rows, Cols, TetrominoeEntryIndex);
 		}
 
-		RealignTetrominoes(TileMapPtrArg);
+		RealignTetrominoes(TileMapPtrArg->GetTiles(), Rows, Cols);
 	};
 }
 
-void TetrominoeManager::Update(TileMap* const TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
+void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
 {
-	if (!TileMapPtrArg)
-	{
-		return;
-	}
-
 	Tetrominoe* const TetrominoePtr = ActiveTetrominoe.get();
 	if (!TetrominoePtr)
 	{
@@ -163,13 +145,23 @@ void TetrominoeManager::Update(TileMap* const TileMapPtrArg, int8_t DirX, int8_t
 		return;
 	}
 
-	const bool&& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(TileMapPtrArg->GetTiles(), DirX, DirY, Rows, Cols);
+	const bool&& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(Tiles, DirX, DirY, Rows, Cols);
 	if (IsMoveOverlappingExistingTile)
 	{
 		return;
 	}
 
-	TetrominoePtr->Update(const_cast<std::vector<Tile>&>(TileMapPtrArg->GetTiles()), DirX, DirY, Rows, Cols);
+	TetrominoePtr->Update(const_cast<std::vector<Tile>&>(Tiles), DirX, DirY, Rows, Cols);
+}
+
+void TetrominoeManager::Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols) const
+{
+	if (!ActiveTetrominoe)
+	{
+		return;
+	}
+
+	ActiveTetrominoe->FlipMatrix(const_cast<std::vector<Tile>&>(Tiles), Rows, Cols);
 }
 
 void TetrominoeManager::Clear()
@@ -183,14 +175,4 @@ void TetrominoeManager::Clear()
 	}
 
 	ActiveTetrominoe.reset();
-}
-
-void TetrominoeManager::Flip(uint8_t Rows, uint8_t Cols) const
-{
-	if (!ActiveTetrominoe)
-	{
-		return;
-	}
-
-	ActiveTetrominoe->FlipMatrix(Rows, Cols);
 }

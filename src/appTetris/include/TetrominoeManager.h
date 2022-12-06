@@ -31,8 +31,8 @@ class TetrominoeManager final
 	void Add(uint8_t Rows, uint8_t Cols);
 	void Remove();
 	std::unique_ptr<Tetrominoe> GenerateRandomTetromioeShape(uint8_t Rows, uint8_t Cols) const;
-	void ClearTetrominoesOnRow(class TileMap* const TileMapPtrArg, size_t TetrominoeIndex);
-	void RealignTetrominoes(class TileMap* const TileMapPtrArg) const;
+	void ClearTetrominoesOnRow(uint8_t Rows, uint8_t Cols, size_t TetrominoeIndex);
+	void RealignTetrominoes(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols) const;
 public:
 	TetrominoeManager(const TetrominoeManager&) = delete;
 	TetrominoeManager(TetrominoeManager&&) = delete;
@@ -41,9 +41,9 @@ public:
 	TetrominoeManager& operator=(const TetrominoeManager&) = delete;
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
 	void Initialize(class TileMap* const TileMapPtrArg);
-	void Update(class TileMap* const TileMapPtrArg, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
+	void Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
+	void Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols) const;
 	void Clear();
-	void Flip(uint8_t Rows, uint8_t Cols) const;
 	// --- Getter/Setter
 	const std::vector<std::shared_ptr<Tetrominoe>>& GetTetrominoes() const { return TetrominoePool; }
 	const std::shared_ptr<Tetrominoe>& GetActiveTetrominoe() const { return ActiveTetrominoe; }
