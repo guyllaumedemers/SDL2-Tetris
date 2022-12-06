@@ -88,7 +88,7 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 		return !IsMoveOverlappingExistingTile;
 	}
 
-	const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
+	const int8_t&& JumpValue = static_cast<int8_t>(DirX + (std::abs(DirY) * Cols));
 
 	try
 	{
@@ -123,12 +123,12 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 		return;
 	}
 
-	const uint8_t&& JumpValue = static_cast<uint8_t>(DirX + (std::abs(DirY) * Cols));
+	const int8_t&& JumpValue = static_cast<int8_t>(DirX + (std::abs(DirY) * Cols));
 	const std::string&& Wildcard = GetTetrominoeWildcard();
 
 	try
 	{
-		for (auto& TetrominoeEntryIndex : std::views::reverse(TetrominoeEntryIndices))
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
 			{
 				Tile& PreviousTile = Tiles.at(TetrominoeEntryIndex);
@@ -138,7 +138,10 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 			}
 
 			TetrominoeEntryIndex += JumpValue;
+		}
 
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		{
 			{
 				Tile& NextTile = Tiles.at(TetrominoeEntryIndex);
 

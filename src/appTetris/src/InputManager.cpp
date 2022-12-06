@@ -14,7 +14,7 @@ int InputManager::RunEvent(SDL_Event& Event) const
 		switch (Event.key.keysym.scancode)
 		{
 		case SDL_SCANCODE_UP:
-			DirectionalKeyPressedEvent(Idle, Plus);
+			DirectionalKeyPressedEvent(Idle, Idle);
 			break;
 		case SDL_SCANCODE_DOWN:
 			DirectionalKeyPressedEvent(Idle, Minus);
