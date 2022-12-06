@@ -40,7 +40,7 @@ public:
 	~TetrominoeManager() = default;
 	TetrominoeManager& operator=(const TetrominoeManager&) = delete;
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
-	void Initialize(class TileMap* const TileMapPtrArg);
+	void Initialize(const std::vector<Tile>& Tiles, const uint8_t& Rows, const uint8_t& Cols, std::function<bool(uint16_t)> RowCompletionCallback);
 	void Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	void Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols) const;
 	void Clear();

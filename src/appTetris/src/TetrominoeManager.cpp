@@ -87,33 +87,23 @@ void TetrominoeManager::RealignTetrominoes(const std::vector<Tile>& Tiles, uint8
 	}
 }
 
-void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
+void TetrominoeManager::Initialize(const std::vector<Tile>& Tiles, const uint8_t& Rows, const uint8_t& Cols, std::function<bool(uint16_t)> RowCompletionCallback)
 {
 	GenerateRandomTetrominoeEvent = [&]()
 	{
-		if (!TileMapPtrArg)
-		{
-			return;
-		}
-
-		const uint8_t& Rows = TileMapPtrArg->GetRows();
-		const uint8_t& Cols = TileMapPtrArg->GetCols();
 		Add(Rows, Cols);
 	};
 
 	CheckRowCompletionEvent = [&](Tetrominoe* const TetrominoePtrArg)
 	{
-		if (!TileMapPtrArg || !TetrominoePtrArg)
+		if (!TetrominoePtrArg)
 		{
 			return;
 		}
 
-		const uint8_t& Rows = TileMapPtrArg->GetRows();
-		const uint8_t& Cols = TileMapPtrArg->GetCols();
-
 		for (const auto& TetrominoeEntryIndex : TetrominoePtrArg->GetTetrominoeIndices())
 		{
-			const bool&& bIsRowComplete = TileMapPtrArg->CheckRowCompletion(TetrominoeEntryIndex);
+			const bool&& bIsRowComplete = RowCompletionCallback(TetrominoeEntryIndex);
 			if (!bIsRowComplete)
 			{
 				continue;
@@ -122,7 +112,7 @@ void TetrominoeManager::Initialize(TileMap* const TileMapPtrArg)
 			ClearTetrominoesOnRow(Rows, Cols, TetrominoeEntryIndex);
 		}
 
-		RealignTetrominoes(TileMapPtrArg->GetTiles(), Rows, Cols);
+		RealignTetrominoes(Tiles, Rows, Cols);
 	};
 }
 

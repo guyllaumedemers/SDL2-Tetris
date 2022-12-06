@@ -20,7 +20,13 @@ void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
 
 	// initialize events in tetrominoe manager
 	TetrominoeManagerUniquePtr->Initialize(
-		TileMapUniquePtr.get()
+		TileMapUniquePtr->GetTiles(),
+		TileMapUniquePtr->GetRows(),
+		TileMapUniquePtr->GetCols(),
+		[&](uint16_t TetrominoeEntryIndex)
+		{
+			return (TileMapUniquePtr != nullptr) ? TileMapUniquePtr->CheckRowCompletion(TetrominoeEntryIndex) : NULL;
+		}
 	);
 
 	const uint32_t&& Delay = static_cast<uint32_t>(0.35f * 1000);
@@ -28,8 +34,12 @@ void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
 	// create functor
 	Uint32(*InitializationFunctor)(Uint32, void*) = [](Uint32 Interval, void* Params)
 	{
-		static_cast<TetrominoeManager*>(Params)->GenerateRandomTetrominoeEvent();
-		// do not want to repeat this first invoke, so we run 0
+		auto* const TetrominoeManagerPtr = static_cast<TetrominoeManager*>(Params);
+		if (!TetrominoeManagerPtr)
+		{
+			return Interval;
+		}
+		TetrominoeManagerPtr->GenerateRandomTetrominoeEvent();
 		return static_cast<Uint32>(NULL);
 	};
 
@@ -39,8 +49,12 @@ void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
 	// create functor
 	Uint32(*GameLoopFunctor)(Uint32, void*) = [](Uint32 Interval, void* Params)
 	{
-		static_cast<GameInstance*>(Params)->Update();
-		// interval at which the above call should be made
+		auto* const GameInstancePtr = static_cast<GameInstance*>(Params);
+		if (!GameInstancePtr)
+		{
+			exit(EXIT_FAILURE);
+		}
+		GameInstancePtr->Update();
 		return Interval;
 	};
 
