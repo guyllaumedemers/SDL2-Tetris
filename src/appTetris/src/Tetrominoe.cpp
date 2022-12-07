@@ -197,6 +197,50 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 		//	3, 7,11,15
 		//	4, 8,12,16
 
+		uint8_t&& MinRow = 255;
+		uint8_t&& MinCol = 255;
+
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		{
+			const uint8_t&& Col = static_cast<uint8_t>(TetrominoeEntryIndex % Cols);
+			const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / Cols);
+
+			if (Col < MinCol) MinCol = Col;
+			if (Row < MinRow) MinRow = Row;
+		}
+
+		const uint16_t&& Pivot = (MinRow * Cols) + MinCol;
+
+		const size_t&& NMatrix = TetrominoeEntryIndices.size();
+		const size_t&& Zero = 0;
+		const int8_t&& MinusOne = -1;
+
+		std::vector<int16_t> Matrix(16, -1);
+
+		for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)
+		{
+			const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
+			const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
+
+			uint16_t&& ColValue = static_cast<uint16_t>(Pivot + Col + (Row * Cols));
+			uint16_t&& RowValue = static_cast<uint16_t>(Pivot + Row + (Col * Cols));
+
+			const bool&& IsColValueInArray = std::find(TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(),
+				ColValue) != TetrominoeEntryIndices.end();
+
+			const bool&& IsRowValueInArray = std::find(TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(),
+				RowValue) != TetrominoeEntryIndices.end();
+
+			// Col Permutation
+			Matrix.at(Col + (Row * NMatrix)) = IsRowValueInArray ? static_cast<int16_t>(RowValue) : static_cast<int16_t>(MinusOne);
+
+			// Row Permutation
+			Matrix.at(Row + (Col * NMatrix)) = IsColValueInArray ? static_cast<int16_t>(ColValue) : static_cast<int16_t>(MinusOne);
+		}
+
+		// ^^^^^^^unfinished ^^^^^^
+
+		// missing row flip and havent properly tested any of the logic
 	}
 	catch (const std::out_of_range& e)
 	{
