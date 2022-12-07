@@ -165,7 +165,38 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 	try
 	{
-		// matrix flip isnt right. need to rethink on it.
+		// squared matrix 3 x 3
+
+		//	1, 2, 3				7, 4, 1
+		//  4, 5, 6		=>		8, 5, 2
+		//	7, 8, 9				9, 6, 3
+
+		// initial permutation require to flip Rows & Columns
+
+		//	1, 4, 7				and then...	Row flip			7, 4, 1
+		//	2, 5, 8		=>								=>		8, 5, 2
+		//	3, 6, 9												9, 6, 3
+
+		// what happen in a 2 x 3 matrix?
+
+		//	1, 2				5, 3, 1
+		//	3, 4		=>		6, 4, 2
+		//	5, 6
+
+		// does squared matrix permutation be applied here? else can I fake a 4 x 4 matrix?
+
+		//	1, 2, 3, 4			13, 9, 5, 1				
+		//	5, 6, 7, 8	=>		14,10, 6, 2				
+		//	9,10,11,12			15,11, 7, 3
+		// 13,14,15,16			16,12, 8, 4
+
+		// initial permutation require to flip Rows & Columns
+
+		//	1, 5, 9,13
+		//	2, 6,10,14
+		//	3, 7,11,15
+		//	4, 8,12,16
+
 	}
 	catch (const std::out_of_range& e)
 	{
