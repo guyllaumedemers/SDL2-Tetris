@@ -255,6 +255,7 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 		}
 
 		// check the flip new boundaries
+
 		const uint8_t&& DeltaRow = (MaxRow - MinRow);
 		const uint8_t&& DeltaCol = (MaxCol - MinCol);
 
