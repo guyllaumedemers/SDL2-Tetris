@@ -247,10 +247,11 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)
 		{
-			const int16_t& Index = Matrix.at(N);
-			if ((Begin < NMatrix) && (Index != MinusOne))
+			if ((Begin < NMatrix) && (Matrix.at(N) != MinusOne))
 			{
-				TetrominoeEntryIndices.at(Begin++) = Index;
+				const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
+				const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
+				TetrominoeEntryIndices.at(Begin++) = static_cast<uint16_t>(Pivot + Col + (Row * Cols));
 			}
 		}
 	}
