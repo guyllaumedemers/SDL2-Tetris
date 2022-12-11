@@ -254,11 +254,13 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			Tile.Wildcard = std::string("Undefined");
 		}
 
-		// update array indices
+		// check the flip new boundaries
+		const uint8_t&& DeltaRow = (MaxRow - MinRow);
+		const uint8_t&& DeltaCol = (MaxCol - MinCol);
 
-		const uint8_t&& TotalRow = (MaxRow - MinRow);
-		const uint8_t&& TotalCol = (MaxCol - MinCol);
-		const int16_t&& FlipRealignment = (TotalRow < TotalCol) ? static_cast<int16_t>(((TotalRow * Cols) + TotalCol) * MinusOne) : NULL;
+		int16_t&& ReAlignmentValue = static_cast<uint16_t>(((DeltaCol * Cols) + DeltaRow) * MinusOne);
+
+		// update array indices
 
 		size_t&& Begin = 0;
 
@@ -268,7 +270,10 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			{
 				const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
 				const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
-				TetrominoeEntryIndices.at(Begin++) = static_cast<uint16_t>((Pivot + Col + (Row * Cols)) + FlipRealignment);
+
+				// realign
+
+				TetrominoeEntryIndices.at(Begin++) = static_cast<uint16_t>((Pivot + Col + (Row * Cols)) + ReAlignmentValue);
 			}
 		}
 	}
