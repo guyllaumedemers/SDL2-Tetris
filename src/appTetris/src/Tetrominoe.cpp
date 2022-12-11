@@ -241,6 +241,15 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			Back = Temp;
 		}
 
+		// clear tiles entry for the active indices
+
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		{
+			Tile& Tile = Tiles.at(TetrominoeEntryIndex);
+			Tile.Attribute = TileAttributeEnum::Empty;
+			Tile.Wildcard = std::string("Undefined");
+		}
+
 		// update array indices
 
 		size_t&& Begin = 0;
