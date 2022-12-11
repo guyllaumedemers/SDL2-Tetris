@@ -29,7 +29,7 @@ void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
 		}
 	);
 
-	const uint32_t&& Delay = static_cast<uint32_t>(0.35f * 1000);
+	const uint32_t&& Delay = static_cast<uint32_t>(0.45f * 1000);
 
 	// create functor
 	Uint32(*InitializationFunctor)(Uint32, void*) = [](Uint32 Interval, void* Params)

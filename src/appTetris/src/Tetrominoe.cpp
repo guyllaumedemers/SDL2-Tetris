@@ -169,6 +169,8 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		uint8_t&& MinRow = 255;
 		uint8_t&& MinCol = 255;
+		uint8_t&& MaxRow = 0;
+		uint8_t&& MaxCol = 0;
 
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
@@ -176,7 +178,9 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / Cols);
 
 			if (Col < MinCol) MinCol = Col;
+			if (Col > MaxCol) MaxCol = Col;
 			if (Row < MinRow) MinRow = Row;
+			if (Row > MaxRow) MaxRow = Row;
 		}
 
 		const uint16_t&& Pivot = (MinRow * Cols) + MinCol;
@@ -252,6 +256,10 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		// update array indices
 
+		const uint8_t&& TotalRow = (MaxRow - MinRow);
+		const uint8_t&& TotalCol = (MaxCol - MinCol);
+		const int8_t&& FlipRealignment = (TotalRow < TotalCol) ? static_cast<int8_t>(((TotalRow * Cols) + TotalCol) * MinusOne) : NULL;
+
 		size_t&& Begin = 0;
 
 		for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)
@@ -260,7 +268,7 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			{
 				const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
 				const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
-				TetrominoeEntryIndices.at(Begin++) = static_cast<uint16_t>(Pivot + Col + (Row * Cols));
+				TetrominoeEntryIndices.at(Begin++) = static_cast<uint16_t>(Pivot + Col + (Row * Cols)) + FlipRealignment;
 			}
 		}
 	}
