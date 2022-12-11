@@ -228,7 +228,7 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 			const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
 			const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
-			const uint8_t&& ColPrime = static_cast<uint8_t>((NMatrix - One - (N % NMatrix)) + (Row * NMatrix));
+			const uint8_t&& ColPrime = static_cast<uint8_t>(NMatrix - One - (N % NMatrix));
 
 			// Temp
 			int16_t Temp = Matrix.at((Row * NMatrix) + Col);
