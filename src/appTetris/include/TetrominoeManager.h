@@ -21,12 +21,18 @@
 #include <memory>
 #endif
 
+#ifndef INCLUDED_THREAD_MUTEX
+#define INCLUDED_THREAD_MUTEX
+#include <mutex>
+#endif
+
 #include "Tetrominoe.h"
 
 class TetrominoeManager final
 {
 	std::vector<std::shared_ptr<Tetrominoe>> TetrominoePool = std::vector<std::shared_ptr<Tetrominoe>>();
 	std::shared_ptr<Tetrominoe> ActiveTetrominoe = nullptr;
+	std::mutex ActiveTetrominoeMutex;
 
 	void Add(uint8_t Rows, uint8_t Cols);
 	void Remove();
@@ -41,8 +47,8 @@ public:
 	TetrominoeManager& operator=(const TetrominoeManager&) = delete;
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
 	void Initialize(const std::vector<Tile>& Tiles, const uint8_t& Rows, const uint8_t& Cols, std::function<bool(uint16_t)> RowCompletionCallback);
-	void Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
-	void Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols) const;
+	void Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
+	void Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	void Clear();
 	// --- Getter/Setter
 	const std::vector<std::shared_ptr<Tetrominoe>>& GetTetrominoes() const { return TetrominoePool; }

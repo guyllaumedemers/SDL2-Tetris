@@ -115,8 +115,10 @@ void TetrominoeManager::Initialize(const std::vector<Tile>& Tiles, const uint8_t
 	};
 }
 
-void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
+void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {
+	std::lock_guard<std::mutex> lock(ActiveTetrominoeMutex);
+
 	Tetrominoe* const TetrominoePtr = ActiveTetrominoe.get();
 	if (!TetrominoePtr)
 	{
@@ -143,8 +145,10 @@ void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8
 	TetrominoePtr->Update(const_cast<std::vector<Tile>&>(Tiles), DirX, DirY, Rows, Cols);
 }
 
-void TetrominoeManager::Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols) const
+void TetrominoeManager::Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
 {
+	std::lock_guard<std::mutex> lock(ActiveTetrominoeMutex);
+
 	if (!ActiveTetrominoe)
 	{
 		return;
