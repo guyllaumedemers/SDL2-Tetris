@@ -230,14 +230,15 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
 			const uint8_t&& ColPrime = static_cast<uint8_t>(NMatrix - One - (N % NMatrix));
 
-			// Temp
-			int16_t Temp = Matrix.at((Row * NMatrix) + Col);
-
 			// Front
-			Matrix.at((Row * NMatrix) + Col) = Matrix.at((Row * NMatrix) + ColPrime);
+			int16_t& Front = Matrix.at((Row * NMatrix) + Col);
 
 			// Back
-			Matrix.at((Row * NMatrix) + ColPrime) = Temp;
+			int16_t& Back = Matrix.at((Row * NMatrix) + ColPrime);
+
+			const int16_t Temp = Front;
+			Front = Back;
+			Back = Temp;
 		}
 
 		// update array indices
