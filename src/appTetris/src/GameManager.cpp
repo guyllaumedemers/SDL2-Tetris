@@ -45,6 +45,8 @@ void GameManager::Update()
 			exit(EXIT_FAILURE);
 		}
 
+		SDLManagerUniquePtr->CreateTimeStamp();
+
 		SDL_Event Event;
 		if (SDL_PollEvent(&Event) > NULL)
 		{
@@ -82,7 +84,7 @@ void GameManager::Update()
 				GameInstanceUniquePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
 			});
 
-		SDLManagerUniquePtr->LimitFrameRate(FRAME_RATE);
+		SDLManagerUniquePtr->LimitFrameRate(FRAME_RATE, SDLManagerUniquePtr->GetDeltaTime());
 	}
 }
 

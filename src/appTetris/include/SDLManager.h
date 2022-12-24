@@ -63,7 +63,8 @@ public:
 	void Update(class TextureManager* const TextureManagerPtr, std::function<void(class TextureManager* const, SDLManager* const)> UpdateFncPtrArg);
 	void Quit() const;
 	void SetWindowContextSize(uint16_t Width, uint16_t Height) const;
-	void LimitFrameRate(float Fps);
+	void CreateTimeStamp();
+	void LimitFrameRate(float Fps, double Time);
 	double GetDeltaTime();
 	// --- Getter/Setter
 	const std::unique_ptr<SDL_Renderer, FreeSDLRenderer>& GetRenderer() const { return SDLRendererUniquePtr; }

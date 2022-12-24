@@ -74,11 +74,14 @@ void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height) const
 	SDL_SetWindowSize(SDLWindowUniquePtr.get(), Width, Height);
 }
 
-void SDLManager::LimitFrameRate(float Fps)
+void SDLManager::CreateTimeStamp()
+{
+	Clock.Now = static_cast<double>(SDL_GetTicks64());
+}
+
+void SDLManager::LimitFrameRate(float Fps, double Time)
 {
 	static const double&& MSPerFrame = static_cast<double>((1.f / Fps));
-	double&& Time = 0.f;
-
 	while (Time < MSPerFrame)
 	{
 		Time += GetDeltaTime();
@@ -89,8 +92,8 @@ double SDLManager::GetDeltaTime()
 {
 	static constexpr double&& MSPerSecond = static_cast<double>(1000.f);
 
+	Clock.Last = Clock.Now;
 	Clock.Now = static_cast<double>(SDL_GetTicks64());
 	Clock.DeltaTime = (Clock.Now - Clock.Last) / MSPerSecond;
-	Clock.Last = Clock.Now;
 	return Clock.DeltaTime;
 }
