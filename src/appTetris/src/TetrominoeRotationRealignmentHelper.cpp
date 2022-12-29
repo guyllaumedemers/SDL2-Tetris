@@ -11,6 +11,11 @@
 #include <SDL_log.h>
 #endif
 
+#ifndef INCLUDED_ALGORITHM
+#define INCLUDED_ALGORITHM
+#include <algorithm>
+#endif
+
 // --- Static Fields
 std::unique_ptr<TetrominoeRotationRealignmentHelper> TetrominoeRotationRealignmentHelper::Singleton = nullptr;
 // ---
@@ -75,7 +80,7 @@ const TetrominoeRotationRealignments& TetrominoeRotationRealignmentHelper::TryRo
 			return TetrominoeRotationRealignments();
 		}
 
-		auto Iterator = std::find(RotationRealignmentMap.begin(), RotationRealignmentMap.end(), (JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : (I & TetrominoePtrArg->GetTetrominoeShape() ? I : O));
+		auto Iterator = std::find(RotationRealignmentMap.begin(), RotationRealignmentMap.end(), (JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : ((I & TetrominoePtrArg->GetTetrominoeShape()) ? I : O));
 		if (Iterator != RotationRealignmentMap.end())
 		{
 			return Iterator->second.at(TetrominoePtrArg->GetTetrominoeRotationIndex());

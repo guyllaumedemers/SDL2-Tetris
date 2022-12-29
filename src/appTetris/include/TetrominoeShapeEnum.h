@@ -6,7 +6,7 @@
 #include <cstdint>
 #endif
 
-enum TetrominoeShapeEnum : uint8_t
+enum class TetrominoeShapeEnum : uint8_t
 {
 	None = 0,
 	TShape = 1,

@@ -11,13 +11,12 @@
 #include <SDL_log.h>
 #endif
 
-// --- Bitmask Fields
-TetrominoeShapeEnum TetrominoeWallKickHelper::JLTSZ = TetrominoeShapeEnum::None;
-TetrominoeShapeEnum TetrominoeWallKickHelper::I = TetrominoeShapeEnum::None;
-// ---
+#ifndef INCLUDED_ALGORITHM
+#define INCLUDED_ALGORITHM
+#include <algorithm>
+#endif
 
 // --- Static Fields
-std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>, std::hash<TetrominoeShapeEnum>> TetrominoeWallKickHelper::WallKickRealignmentMap;
 std::unique_ptr<TetrominoeWallKickHelper> TetrominoeWallKickHelper::Singleton = nullptr;
 // ---
 

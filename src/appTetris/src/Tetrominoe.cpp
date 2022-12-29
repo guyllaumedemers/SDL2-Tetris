@@ -16,13 +16,13 @@
 #include <SDL_log.h>
 #endif
 
+#ifndef INCLUDED_ALGORITHM
+#define INCLUDED_ALGORITHM
+#include <algorithm>
+#endif
+
 Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t Cols)
 {
-	if (!TetrominoeEnum /*TetrominoeShapeEnum::None == 0*/)
-	{
-		return;
-	}
-
 	static constexpr uint8_t&& Zero = 0;
 	static constexpr uint8_t&& One = 1;
 	static constexpr uint8_t&& Two = 2;
@@ -30,28 +30,28 @@ Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t
 
 	switch (TetrominoeEnum)
 	{
-	case None:
+	case TetrominoeShapeEnum::None:
 		TetrominoeEntryIndices = { Zero, Zero, Zero, Zero };
 		break;
-	case TShape:
+	case TetrominoeShapeEnum::TShape:
 		TetrominoeEntryIndices = { Zero, One, Two, static_cast<uint8_t>(One + (One * Cols)) };
 		break;
-	case LShape:
+	case TetrominoeShapeEnum::LShape:
 		TetrominoeEntryIndices = { Zero, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(Two * Cols), static_cast<uint8_t>(One + (Two * Cols)) };
 		break;
-	case ZShape:
+	case TetrominoeShapeEnum::ZShape:
 		TetrominoeEntryIndices = { Zero, One, static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two + (One * Cols)) };
 		break;
-	case OShape:
+	case TetrominoeShapeEnum::OShape:
 		TetrominoeEntryIndices = { Zero, One, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(One + (One * Cols)) };
 		break;
-	case IShape:
+	case TetrominoeShapeEnum::IShape:
 		TetrominoeEntryIndices = { Zero, One, Two, Three };
 		break;
-	case JShape:
+	case TetrominoeShapeEnum::JShape:
 		TetrominoeEntryIndices = { One, static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two * Cols), static_cast<uint8_t>(One + (Two * Cols)) };
 		break;
-	case SShape:
+	case TetrominoeShapeEnum::SShape:
 		TetrominoeEntryIndices = { One, Two, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(One + (One * Cols)) };
 		break;
 	default:
