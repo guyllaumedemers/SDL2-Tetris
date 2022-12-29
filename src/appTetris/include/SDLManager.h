@@ -64,7 +64,7 @@ public:
 	void Quit() const;
 	void SetWindowContextSize(uint16_t Width, uint16_t Height) const;
 	void CreateTimeStamp();
-	void LimitFrameRate(float Fps, double Time);
+	void LimitFrameRate(double Fps, double Time);
 	double GetDeltaTime();
 	// --- Getter/Setter
 	const std::unique_ptr<SDL_Renderer, FreeSDLRenderer>& GetRenderer() const { return SDLRendererUniquePtr; }

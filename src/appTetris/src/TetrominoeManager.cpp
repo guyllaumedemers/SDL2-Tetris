@@ -1,5 +1,10 @@
 #include "../include/TetrominoeManager.h"
 
+#ifndef INCLUDED_EXCEPTION
+#define INCLUDED_EXCEPTION
+#include <stdexcept>
+#endif
+
 #ifndef INCLUDED_RANDOM
 #define INCLUDED_RANDOM
 #include <random>
@@ -102,8 +107,8 @@ void TetrominoeManager::Initialize(const std::vector<Tile>& Tiles, const uint8_t
 
 		for (const auto& TetrominoeEntryIndex : TetrominoePtrArg->GetTetrominoeIndices())
 		{
-			const bool&& bIsRowComplete = RowCompletionCallback(TetrominoeEntryIndex);
-			if (!bIsRowComplete)
+			const bool&& IsRowComplete = RowCompletionCallback(TetrominoeEntryIndex);
+			if (!IsRowComplete)
 			{
 				continue;
 			}
@@ -130,8 +135,8 @@ void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8
 		return;
 	}
 
-	const bool&& IsMoveInBound = TetrominoePtr->IsMoveInBound(DirX, DirY, Rows, Cols);
-	if (!IsMoveInBound)
+	const bool&& IsMoveInbound = TetrominoePtr->IsMoveInBound(DirX, DirY, Rows, Cols);
+	if (!IsMoveInbound)
 	{
 		return;
 	}

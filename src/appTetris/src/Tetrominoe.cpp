@@ -58,6 +58,7 @@ Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t
 		break;
 	}
 	TetrominoeShape = TetrominoeEnum;
+	RotationIndex = 0;
 }
 
 bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
@@ -191,7 +192,7 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 		const size_t&& Two = 2;
 		const int8_t&& MinusOne = -1;
 
-		std::vector<int16_t> Matrix(16, -1);
+		std::vector<int16_t> Matrix(NMatrix * NMatrix, MinusOne);
 
 		// flip matrix col, row
 

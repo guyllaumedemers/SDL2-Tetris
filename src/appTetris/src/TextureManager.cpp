@@ -2,6 +2,11 @@
 #include "../include/TextureLoader.h"
 #include "../include/SDLManager.h"
 
+#ifndef INCLUDED_EXCEPTION
+#define INCLUDED_EXCEPTION
+#include <stdexcept>
+#endif
+
 #ifndef INCLUDED_SDL_IMAGE
 #define INCLUDED_SDL_IMAGE
 #include <SDL_image.h>

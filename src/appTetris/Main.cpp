@@ -1,5 +1,12 @@
 #include "include/GameManager.h"
-// https://stackoverflow.com/questions/13865842/does-static-constexpr-variable-inside-a-function-make-sense
+// https://tetris.wiki/Tetris_Guideline
+// https://tetris.wiki/Sega_Rotation
+// https://tetris.wiki/Arika_Rotation_System
+// https://tetris.wiki/Super_Rotation_System
+// https://tetris.wiki/Rotate#IRS
+// https://tetris.wiki/DAS
+// https://tetris.wiki/Lock_delay
+// https://tetris.wiki/Drop
 
 int main(int argc, char** argv)
 {

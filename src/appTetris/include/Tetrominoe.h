@@ -16,26 +16,13 @@
 #include <unordered_map>
 #endif
 
-#ifndef INCLUDED_TETROMINOE_ENUM
-#define INCLUDED_TETROMINOE_ENUM
-enum TetrominoeShapeEnum
-{
-	None = 0,
-	TShape = 1,
-	LShape = 2,
-	ZShape = 3,
-	OShape = 4,
-	IShape = 5,
-	JShape = 6,
-	SShape = 7
-};
-#endif
-
 #include "Tile.h"
+#include "TetrominoeShapeEnum.h"
 
 class Tetrominoe final
 {
 	static constexpr uint16_t&& SpawnPosition = 15;
+	static inline uint8_t&& RotationIndex = 0;
 
 	TetrominoeShapeEnum TetrominoeShape = TetrominoeShapeEnum::None;
 	std::vector<uint16_t> TetrominoeEntryIndices = std::vector<uint16_t>();
@@ -60,6 +47,8 @@ public:
 	std::string GetTetrominoeWildcard() const;
 	const bool& IsLocked() const { return bIsLocked; }
 	void SetIsLocked() { bIsLocked = true; }
+	const uint8_t& GetTetrominoeRotationIndex() const { return RotationIndex; }
+	void SetTetrominoeRotationIndex(uint8_t Index) { RotationIndex = Index; }
 	// ---
 };
 #endif

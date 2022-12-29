@@ -79,9 +79,10 @@ void SDLManager::CreateTimeStamp()
 	Clock.Now = static_cast<double>(SDL_GetTicks64());
 }
 
-void SDLManager::LimitFrameRate(float Fps, double Time)
+void SDLManager::LimitFrameRate(double Fps, double Time)
 {
 	static const double&& MSPerFrame = static_cast<double>((1.f / Fps));
+
 	while (Time < MSPerFrame)
 	{
 		Time += GetDeltaTime();

@@ -1,6 +1,11 @@
 #include "../include/TextureLoader.h"
 #include "../include/StringExtension.h"
 
+#ifndef INCLUDED_EXCEPTION
+#define INCLUDED_EXCEPTION
+#include <stdexcept>
+#endif
+
 #ifndef INCLUDED_STD_FILESYSTEM
 #define INCLUDED_STD_FILESYSTEM
 #include <filesystem>
