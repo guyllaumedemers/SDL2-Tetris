@@ -6,21 +6,6 @@
 #include <cstdint>
 #endif
 
-#ifndef INCLUDED_CSTD_LIB
-#define INCLUDED_CSTD_LIB
-#include <cstdlib>
-#endif
-
-#ifndef INCLUDED_FUNCTIONAL
-#define INCLUDED_FUNCTIONAL
-#include <functional>
-#endif
-
-#ifndef INCLUDED_TYPE_TRAIT
-#define INCLUDED_TYPE_TRAIT
-#include <type_traits>
-#endif
-
 #ifndef INCLUDED_COLLECTION_UNORDERED_MAP
 #define INCLUDED_COLLECTION_UNORDERED_MAP
 #include <unordered_map>
@@ -70,36 +55,10 @@ struct TetrominoeWallKicks final
 #endif
 
 #include "TetrominoeShapeEnum.h"
+#include "TraitHelper.h"
 
 class TetrominoeWallKickHelper final
 {
-	struct EnumHash
-	{
-		template<typename T>
-		std::size_t operator()(const T& Val) const
-		{
-			return (std::size_t)(const_cast<T>(Val));
-		}
-	};
-
-	template<typename TKey>
-	using ConditionalHash = std::conditional<std::is_enum<TKey>::value, EnumHash, std::hash<TKey>>::type;
-
-	struct EnumEquality
-	{
-		template<typename T>
-		constexpr bool operator()(const T& lhs, const T& rhs) const
-		{
-			return (bool)((int)(const_cast<T>(lhs)) & (int)(const_cast<T>(rhs)));
-		}
-	};
-
-	template<typename TKey>
-	using ConditionalEquality = std::conditional<std::is_enum<TKey>::value, EnumEquality, std::equal_to<TKey>>::type;
-
-	template<typename TKey, typename TVal>
-	using UnorderedMap = std::unordered_map<TKey, TVal, ConditionalHash<TKey>, ConditionalEquality<TKey>>;
-
 	UnorderedMap<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>> WallKickRealignmentMap = UnorderedMap<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>>();
 	static std::shared_ptr<TetrominoeWallKickHelper> Singleton;
 	TetrominoeShapeEnum JLTSZ = TetrominoeShapeEnum::None;
