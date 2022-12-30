@@ -31,7 +31,7 @@ struct TetrominoeWallKicks final
 		int8_t x = 0;
 		int8_t y = 0;
 
-		inline bool operator==(const WallKickRealignment& rhs)
+		bool operator==(const WallKickRealignment& rhs) const
 		{
 			return
 				(x == rhs.x) &&
@@ -41,7 +41,7 @@ struct TetrominoeWallKicks final
 
 	std::vector<WallKickRealignment> WallKickRealignmentData = std::vector<WallKickRealignment>();
 
-	inline bool operator==(const TetrominoeWallKicks& rhs)
+	bool operator==(const TetrominoeWallKicks& rhs) const
 	{
 		return
 			(WallKickRealignmentData == rhs.WallKickRealignmentData);

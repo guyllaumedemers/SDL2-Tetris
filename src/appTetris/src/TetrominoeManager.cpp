@@ -37,10 +37,14 @@ void TetrominoeManager::Remove()
 
 std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint8_t Rows, uint8_t Cols) const
 {
+	static constexpr int&& One = 1;
+	static constexpr int&& Two = 2;
+	const int&& B1 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::TShape)) + One);
+	const int&& B2 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::SShape)) + One);
 	std::random_device Seed;
 	std::mt19937 RandomGenerator(Seed());
-	std::uniform_int_distribution<int> UniformDistribution(static_cast<int>(TetrominoeShapeEnum::TShape), static_cast<int>(TetrominoeShapeEnum::SShape));
-	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(UniformDistribution(RandomGenerator)), Rows, Cols);
+	std::uniform_int_distribution<int> UniformDistribution(B1, B2);
+	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(static_cast<int>(std::pow(Two, UniformDistribution(RandomGenerator) - One))), Rows, Cols);
 }
 
 void TetrominoeManager::ClearTetrominoesOnRow(uint8_t Rows, uint8_t Cols, size_t TetrominoeIndex)
