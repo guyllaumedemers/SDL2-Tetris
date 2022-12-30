@@ -6,11 +6,6 @@
 #include <cstdint>
 #endif
 
-#ifndef INCLUDED_COLLECTION_UNORDERED_MAP
-#define INCLUDED_COLLECTION_UNORDERED_MAP
-#include <unordered_map>
-#endif
-
 #ifndef INCLUDED_MEMORY
 #define INCLUDED_MEMORY
 #include <memory>
