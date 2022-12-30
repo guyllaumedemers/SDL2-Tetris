@@ -6,9 +6,19 @@
 #include <cstdint>
 #endif
 
+#ifndef INCLUDED_CSTD_LIB
+#define INCLUDED_CSTD_LIB
+#include <cstdlib>
+#endif
+
 #ifndef INCLUDED_FUNCTIONAL
 #define INCLUDED_FUNCTIONAL
 #include <functional>
+#endif
+
+#ifndef INCLUDED_TYPE_TRAIT
+#define INCLUDED_TYPE_TRAIT
+#include <type_traits>
 #endif
 
 #ifndef INCLUDED_COLLECTION_UNORDERED_MAP
@@ -66,26 +76,26 @@ class TetrominoeWallKickHelper final
 	struct EnumHash
 	{
 		template<typename T>
-		std::size_t operator()(const T& Val) const noexcept
+		std::size_t operator()(const T& Val) const
 		{
-			return static_cast<std::size_t>(Val);
+			return (std::size_t)(const_cast<T>(Val));
 		}
 	};
 
 	template<typename TKey>
-	using ConditionalHash = std::conditional_t<std::is_enum<TKey>::value, EnumHash, std::hash<TKey>>;
+	using ConditionalHash = std::conditional<std::is_enum<TKey>::value, EnumHash, std::hash<TKey>>::type;
 
 	struct EnumEquality
 	{
 		template<typename T>
-		bool operator()(const T& lhs, const T& rhs) const noexcept
+		constexpr bool operator()(const T& lhs, const T& rhs) const
 		{
-			return static_cast<bool>(static_cast<int>(const_cast<T>(lhs)) & static_cast<int>(const_cast<T>(rhs)));
+			return (bool)((int)(const_cast<T>(lhs)) & (int)(const_cast<T>(rhs)));
 		}
 	};
 
 	template<typename TKey>
-	using ConditionalEquality = std::conditional_t<std::is_enum<TKey>::value, EnumEquality, std::equal_to<TKey>>;
+	using ConditionalEquality = std::conditional<std::is_enum<TKey>::value, EnumEquality, std::equal_to<TKey>>::type;
 
 	template<typename TKey, typename TVal>
 	using UnorderedMap = std::unordered_map<TKey, TVal, ConditionalHash<TKey>, ConditionalEquality<TKey>>;

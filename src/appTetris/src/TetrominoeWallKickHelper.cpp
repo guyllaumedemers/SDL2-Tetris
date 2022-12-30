@@ -11,11 +11,6 @@
 #include <SDL_log.h>
 #endif
 
-#ifndef INCLUDED_ALGORITHM
-#define INCLUDED_ALGORITHM
-#include <algorithm>
-#endif
-
 // --- Static Fields
 std::shared_ptr<TetrominoeWallKickHelper> TetrominoeWallKickHelper::Singleton = nullptr;
 // ---
@@ -30,6 +25,30 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 	JLTSZ |= TetrominoeShapeEnum::ZShape;
 	// ---
 	I |= TetrominoeShapeEnum::IShape;
+
+	WallKickRealignmentMap.insert(
+		{
+				JLTSZ,
+				std::vector<TetrominoeWallKicks>
+				{
+					TetrominoeWallKicks(),
+					TetrominoeWallKicks(),
+					TetrominoeWallKicks(),
+					TetrominoeWallKicks()
+				}
+		});
+
+	WallKickRealignmentMap.insert(
+		{
+				I,
+				std::vector<TetrominoeWallKicks>
+				{
+					TetrominoeWallKicks(),
+					TetrominoeWallKicks(),
+					TetrominoeWallKicks(),
+					TetrominoeWallKicks()
+				}
+		});
 };
 
 #pragma warning (push)
