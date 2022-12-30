@@ -39,7 +39,7 @@ std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint
 {
 	std::random_device Seed;
 	std::mt19937 RandomGenerator(Seed());
-	std::uniform_int_distribution<int> UniformDistribution(TetrominoeShapeEnum::TShape, TetrominoeShapeEnum::SShape);
+	std::uniform_int_distribution<int> UniformDistribution(static_cast<int>(TetrominoeShapeEnum::TShape), static_cast<int>(TetrominoeShapeEnum::SShape));
 	return std::make_unique<Tetrominoe>(static_cast<TetrominoeShapeEnum>(UniformDistribution(RandomGenerator)), Rows, Cols);
 }
 

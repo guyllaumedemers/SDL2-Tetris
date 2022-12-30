@@ -17,7 +17,7 @@
 #endif
 
 // --- Static Fields
-std::unique_ptr<TetrominoeRotationRealignmentHelper> TetrominoeRotationRealignmentHelper::Singleton = nullptr;
+std::shared_ptr<TetrominoeRotationRealignmentHelper> TetrominoeRotationRealignmentHelper::Singleton = nullptr;
 // ---
 
 TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
@@ -31,44 +31,14 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	// ---
 	I |= TetrominoeShapeEnum::IShape;
 	O |= TetrominoeShapeEnum::OShape;
-
-	RotationRealignmentMap = std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeRotationRealignments>, std::hash<TetrominoeShapeEnum>>
-	{
-		std::make_pair<TetrominoeShapeEnum, std::vector<TetrominoeRotationRealignments>>(
-			JLTSZ,
-			std::vector<TetrominoeRotationRealignments>
-			{
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments()
-			}),
-
-		std::make_pair<TetrominoeShapeEnum, std::vector<TetrominoeRotationRealignments>>(
-			I,
-			std::vector<TetrominoeRotationRealignments>
-			{
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments()
-			}),
-
-		std::make_pair<TetrominoeShapeEnum, std::vector<TetrominoeRotationRealignments>>(
-			O,
-			std::vector<TetrominoeRotationRealignments>
-			{
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments(),
-				TetrominoeRotationRealignments()
-			})
-	};
 }
+
+#pragma warning (push)
+#pragma warning (disable : 4172)
 
 const TetrominoeRotationRealignments& TetrominoeRotationRealignmentHelper::TryRotationRealignment(Tetrominoe* TetrominoePtrArg)
 {
-	if (RotationRealignmentMap.empty())
+	/*if (RotationRealignmentMap.empty())
 	{
 		return TetrominoeRotationRealignments();
 	}
@@ -80,7 +50,7 @@ const TetrominoeRotationRealignments& TetrominoeRotationRealignmentHelper::TryRo
 			return TetrominoeRotationRealignments();
 		}
 
-		auto Iterator = std::find(RotationRealignmentMap.begin(), RotationRealignmentMap.end(), (JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : ((I & TetrominoePtrArg->GetTetrominoeShape()) ? I : O));
+		auto Iterator = std::find(RotationRealignmentMap.begin(), RotationRealignmentMap.end(), static_cast<bool>(JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : (static_cast<bool>(I & TetrominoePtrArg->GetTetrominoeShape()) ? I : O));
 		if (Iterator != RotationRealignmentMap.end())
 		{
 			return Iterator->second.at(TetrominoePtrArg->GetTetrominoeRotationIndex());
@@ -89,11 +59,21 @@ const TetrominoeRotationRealignments& TetrominoeRotationRealignmentHelper::TryRo
 	catch (const std::out_of_range& e)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY REALIGNMENTOUTCOME AT ROTATION INDEX FUNCTION! %s", e.what());
-	}
+	}*/
 	return TetrominoeRotationRealignments();
 }
 
+#pragma warning (pop)
+
 TetrominoeRotationRealignmentHelper* TetrominoeRotationRealignmentHelper::Get()
 {
-	return (!Singleton) ? (Singleton = std::make_unique<TetrominoeRotationRealignmentHelper>()).get() : Singleton.get();
+	/// <summary>
+	/// cannot use make_shared or make_unique with private constructor level
+	/// </summary>
+	/// <returns></returns>
+	if (!Singleton)
+	{
+		Singleton.reset(new TetrominoeRotationRealignmentHelper());
+	}
+	return Singleton.get();
 }

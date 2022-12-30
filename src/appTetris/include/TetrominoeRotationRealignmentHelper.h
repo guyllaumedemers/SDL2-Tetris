@@ -45,14 +45,14 @@ struct TetrominoeRotationRealignments final
 
 class TetrominoeRotationRealignmentHelper final
 {
-	std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeRotationRealignments>, std::hash<TetrominoeShapeEnum>> RotationRealignmentMap = std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeRotationRealignments>, std::hash<TetrominoeShapeEnum>>();
-	static std::unique_ptr<TetrominoeRotationRealignmentHelper> Singleton;
+	//std::map<TetrominoeShapeEnum, std::vector<TetrominoeRotationRealignments>> RotationRealignmentMap = std::map<TetrominoeShapeEnum, std::vector<TetrominoeRotationRealignments>>();
+	static std::shared_ptr<TetrominoeRotationRealignmentHelper> Singleton;
 	TetrominoeShapeEnum JLTSZ = TetrominoeShapeEnum::None;
 	TetrominoeShapeEnum I = TetrominoeShapeEnum::None;
 	TetrominoeShapeEnum O = TetrominoeShapeEnum::None;
 
-public:
 	TetrominoeRotationRealignmentHelper();
+public:
 	// --- Getter/Setter
 	static TetrominoeRotationRealignmentHelper* Get();
 	const TetrominoeRotationRealignments& TryRotationRealignment(class Tetrominoe* TetrominoePtrArg);

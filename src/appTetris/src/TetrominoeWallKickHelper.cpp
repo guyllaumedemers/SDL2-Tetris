@@ -17,7 +17,7 @@
 #endif
 
 // --- Static Fields
-std::unique_ptr<TetrominoeWallKickHelper> TetrominoeWallKickHelper::Singleton = nullptr;
+std::shared_ptr<TetrominoeWallKickHelper> TetrominoeWallKickHelper::Singleton = nullptr;
 // ---
 
 TetrominoeWallKickHelper::TetrominoeWallKickHelper()
@@ -30,30 +30,10 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 	JLTSZ |= TetrominoeShapeEnum::ZShape;
 	// ---
 	I |= TetrominoeShapeEnum::IShape;
-
-	WallKickRealignmentMap = std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>, std::hash<TetrominoeShapeEnum>>
-	{
-		std::make_pair<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>>(
-			JLTSZ,
-			std::vector<TetrominoeWallKicks>
-			{
-				TetrominoeWallKicks(),
-				TetrominoeWallKicks(),
-				TetrominoeWallKicks(),
-				TetrominoeWallKicks()
-			}),
-
-		std::make_pair<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>>(
-			I,
-			std::vector<TetrominoeWallKicks>
-			{
-				TetrominoeWallKicks(),
-				TetrominoeWallKicks(),
-				TetrominoeWallKicks(),
-				TetrominoeWallKicks()
-			}),
-	};
 };
+
+#pragma warning (push)
+#pragma warning (disable : 4172)
 
 const TetrominoeWallKicks& TetrominoeWallKickHelper::TryWallKickRealignment(Tetrominoe* TetrominoePtrArg)
 {
@@ -69,7 +49,7 @@ const TetrominoeWallKicks& TetrominoeWallKickHelper::TryWallKickRealignment(Tetr
 			return TetrominoeWallKicks();
 		}
 
-		auto Iterator = std::find(WallKickRealignmentMap.begin(), WallKickRealignmentMap.end(), (JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : I);
+		auto Iterator = std::find(WallKickRealignmentMap.begin(), WallKickRealignmentMap.end(), static_cast<bool>(JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : I);
 		if (Iterator != WallKickRealignmentMap.end())
 		{
 			return Iterator->second.at(TetrominoePtrArg->GetTetrominoeRotationIndex());
@@ -82,7 +62,17 @@ const TetrominoeWallKicks& TetrominoeWallKickHelper::TryWallKickRealignment(Tetr
 	return TetrominoeWallKicks();
 }
 
+#pragma warning (pop)
+
 TetrominoeWallKickHelper* TetrominoeWallKickHelper::Get()
 {
-	return (!Singleton) ? (Singleton = std::make_unique<TetrominoeWallKickHelper>()).get() : Singleton.get();
+	/// <summary>
+	/// cannot use make_shared or make_unique with private constructor level
+	/// </summary>
+	/// <returns></returns>
+	if (!Singleton)
+	{
+		Singleton.reset(new TetrominoeWallKickHelper());
+	}
+	return Singleton.get();
 }

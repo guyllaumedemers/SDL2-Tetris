@@ -45,13 +45,13 @@ struct TetrominoeWallKicks final
 
 class TetrominoeWallKickHelper final
 {
-	std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>, std::hash<TetrominoeShapeEnum>> WallKickRealignmentMap = std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>, std::hash<TetrominoeShapeEnum>>();
-	static std::unique_ptr<TetrominoeWallKickHelper> Singleton;
+	std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>> WallKickRealignmentMap = std::unordered_map<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>>();
+	static std::shared_ptr<TetrominoeWallKickHelper> Singleton;
 	TetrominoeShapeEnum JLTSZ = TetrominoeShapeEnum::None;
 	TetrominoeShapeEnum I = TetrominoeShapeEnum::None;
 
-public:
 	TetrominoeWallKickHelper();
+public:
 	// --- Getter/Setter
 	static TetrominoeWallKickHelper* Get();
 	const TetrominoeWallKicks& TryWallKickRealignment(class Tetrominoe* TetrominoePtrArg);
