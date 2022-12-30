@@ -49,7 +49,7 @@ const TetrominoeWallKicks& TetrominoeWallKickHelper::TryWallKickRealignment(Tetr
 			return TetrominoeWallKicks();
 		}
 
-		auto Iterator = std::find(WallKickRealignmentMap.begin(), WallKickRealignmentMap.end(), static_cast<bool>(JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : I);
+		auto Iterator = WallKickRealignmentMap.find(static_cast<bool>(JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : I);
 		if (Iterator != WallKickRealignmentMap.end())
 		{
 			return Iterator->second.at(TetrominoePtrArg->GetTetrominoeRotationIndex());
