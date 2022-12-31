@@ -45,6 +45,8 @@ struct WallKickAlignmentContainer final
 				(x == rhs.x) &&
 				(y == rhs.y);
 		}
+
+		constexpr bool IsValid() const { return ((x >= INT8_MIN) && (x < INT8_MAX)) && ((y >= INT8_MIN) && (y < INT8_MAX)); }
 	};
 
 	/// <summary>
@@ -73,10 +75,11 @@ struct WallKickAlignmentContainer final
 
 	inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(uint8_t Index) const
 	{
+		static constexpr WallKickAlignment&& EmptyAlignment = WallKickAlignment();
+
 		if (WallKickRealignmentData.empty())
 		{
-			const WallKickAlignment InvalidRealignment;
-			return InvalidRealignment;
+			return EmptyAlignment;
 		}
 
 		try
@@ -88,8 +91,7 @@ struct WallKickAlignmentContainer final
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_WALL_KICK_REALIGNMENT AT ROTATION INDEX FUNCTION! %s", e.what());
 		}
 
-		const WallKickAlignment InvalidRealignment;
-		return InvalidRealignment;
+		return EmptyAlignment;
 	}
 
 #pragma warning (pop)

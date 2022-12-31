@@ -104,9 +104,10 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 
 const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickAlignmentContainer(Tetrominoe* TetrominoePtrArg) const
 {
+	static const WallKickAlignmentContainer EmptyContainer = WallKickAlignmentContainer();
+
 	if (WallKickRealignmentMap.empty())
 	{
-		const WallKickAlignmentContainer EmptyContainer;
 		return EmptyContainer;
 	}
 
@@ -114,7 +115,6 @@ const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickAlignment
 	{
 		if (!TetrominoePtrArg)
 		{
-			const WallKickAlignmentContainer EmptyContainer;
 			return EmptyContainer;
 		}
 
@@ -129,7 +129,6 @@ const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickAlignment
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY REALIGNMENTOUTCOME AT ROTATION INDEX FUNCTION! %s", e.what());
 	}
 
-	const WallKickAlignmentContainer EmptyContainer;
 	return EmptyContainer;
 }
 

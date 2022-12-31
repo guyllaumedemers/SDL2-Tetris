@@ -168,6 +168,10 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 	try
 	{
+		// --- typedef
+		using RotationRealignment = RotationalAlignmentContainer::RotationalAlignment;
+		// ---
+
 		// find pivot point of the matrix
 
 		uint8_t&& MinRow = 255;
@@ -263,7 +267,15 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 		// check the kick translation required
 
 		const RotationalAlignmentContainer& RotationalAlignmentContainer = TetrominoeRotationRealignmentHelper::Get()->TryRotationAlignmentContainer(this);
-		const RotationalAlignmentContainer::RotationalAlignment& RotationalAlignment = RotationalAlignmentContainer.TryGetRotationAlignmentAtIndex(GetTetrominoeRotationIndex());
+		const RotationRealignment& RotationalAlignment = RotationalAlignmentContainer.TryGetRotationAlignmentAtIndex(GetTetrominoeRotationIndex());
+
+		if (!RotationalAlignment.IsValid())
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: BAD ROTATION ALIGNMENT VALUE! CANNOT PERFORM FLIP");
+			return;
+		}
+
+		// calculate realignment value
 
 		int16_t&& ReAlignmentValue = ((RotationalAlignment.y * Cols) + RotationalAlignment.x);
 

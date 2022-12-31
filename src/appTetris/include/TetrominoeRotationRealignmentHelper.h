@@ -45,6 +45,8 @@ struct RotationalAlignmentContainer final
 				(x == rhs.x) &&
 				(y == rhs.y);
 		}
+
+		constexpr bool IsValid() const { return ((x >= INT8_MIN) && (x < INT8_MAX)) && ((y >= INT8_MIN) && (y < INT8_MAX)); }
 	};
 
 	/// <summary>
@@ -73,10 +75,11 @@ struct RotationalAlignmentContainer final
 
 	inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(uint8_t Index) const
 	{
+		static constexpr RotationalAlignment&& EmptyAlignment = RotationalAlignment();
+
 		if (RotationalRealignmentData.empty())
 		{
-			const RotationalAlignment InvalidRealignment;
-			return InvalidRealignment;
+			return EmptyAlignment;
 		}
 
 		try
@@ -88,8 +91,7 @@ struct RotationalAlignmentContainer final
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_ROTATIONAL_REALIGNMENT AT ROTATION INDEX FUNCTION! %s", e.what());
 		}
 
-		const RotationalAlignment InvalidRealignment;
-		return InvalidRealignment;
+		return EmptyAlignment;
 	}
 
 #pragma warning (pop)

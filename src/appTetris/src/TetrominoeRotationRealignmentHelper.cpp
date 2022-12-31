@@ -105,9 +105,10 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 
 const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRotationAlignmentContainer(Tetrominoe* TetrominoePtrArg) const
 {
+	static const RotationalAlignmentContainer&& EmptyContainer = RotationalAlignmentContainer();
+
 	if (RotationRealignmentMap.empty())
 	{
-		const RotationalAlignmentContainer EmptyContainer;
 		return EmptyContainer;
 	}
 
@@ -115,7 +116,6 @@ const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRota
 	{
 		if (!TetrominoePtrArg)
 		{
-			const RotationalAlignmentContainer EmptyContainer;
 			return EmptyContainer;
 		}
 
@@ -130,7 +130,6 @@ const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRota
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY REALIGNMENTOUTCOME AT ROTATION INDEX FUNCTION! %s", e.what());
 	}
 
-	const RotationalAlignmentContainer EmptyContainer;
 	return EmptyContainer;
 }
 
