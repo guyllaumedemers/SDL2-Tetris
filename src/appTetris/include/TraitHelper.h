@@ -34,7 +34,7 @@ struct EnumHash
 };
 
 template<typename TKey>
-using ConditionalHash = std::conditional<std::is_enum<TKey>::value, EnumHash, std::hash<TKey>>::type;
+using ConditionalHash = std::conditional_t<std::is_enum_v<TKey>, EnumHash, std::hash<TKey>>;
 
 /// <summary>
 /// Custom Equality lookup for using Enum as TKey with STL Hash Collection
@@ -49,7 +49,7 @@ struct EnumEquality
 };
 
 template<typename TKey>
-using ConditionalEquality = std::conditional<std::is_enum<TKey>::value, EnumEquality, std::equal_to<TKey>>::type;
+using ConditionalEquality = std::conditional_t<std::is_enum_v<TKey>, EnumEquality, std::equal_to<TKey>>;
 
 /// <summary>
 /// Custom UnorderedMap Collection with unique hash-equality lookup

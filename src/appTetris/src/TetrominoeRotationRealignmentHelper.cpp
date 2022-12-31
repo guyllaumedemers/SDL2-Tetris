@@ -1,4 +1,5 @@
 #include "../include/TetrominoeRotationRealignmentHelper.h"
+#include "../include/TetrominoeShapeEnum.h"
 #include "../include/Tetrominoe.h"
 
 #ifndef INCLUDED_EXCEPTION
@@ -11,56 +12,125 @@
 #include <SDL_log.h>
 #endif
 
-#ifndef INCLUDED_ALGORITHM
-#define INCLUDED_ALGORITHM
-#include <algorithm>
-#endif
-
 // --- Static Fields
 std::shared_ptr<TetrominoeRotationRealignmentHelper> TetrominoeRotationRealignmentHelper::Singleton = nullptr;
 // ---
 
 TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 {
-	// --- Group
-	JLTSZ |= TetrominoeShapeEnum::JShape;
-	JLTSZ |= TetrominoeShapeEnum::LShape;
-	JLTSZ |= TetrominoeShapeEnum::TShape;
-	JLTSZ |= TetrominoeShapeEnum::SShape;
-	JLTSZ |= TetrominoeShapeEnum::ZShape;
+	// --- typedef
+	using RotationRealignment = RotationalAlignmentContainer::RotationalAlignment;
 	// ---
-	I |= TetrominoeShapeEnum::IShape;
-	O |= TetrominoeShapeEnum::OShape;
+
+	RotationRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::TShape,
+				RotationalAlignmentContainer(
+					RotationRealignment{0,0},
+					RotationRealignment{1,0},
+					RotationRealignment{3,0},
+					RotationRealignment{4,0}
+				)
+		});
+
+	RotationRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::LShape,
+				RotationalAlignmentContainer(
+					RotationRealignment{0,0},
+					RotationRealignment{1,0},
+					RotationRealignment{3,0},
+					RotationRealignment{4,0}
+				)
+		});
+
+	RotationRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::ZShape,
+				RotationalAlignmentContainer(
+					RotationRealignment{0,0},
+					RotationRealignment{1,0},
+					RotationRealignment{3,0},
+					RotationRealignment{4,0}
+				)
+		});
+
+	RotationRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::OShape,
+				RotationalAlignmentContainer(
+					RotationRealignment{0,0},
+					RotationRealignment{1,0},
+					RotationRealignment{3,0},
+					RotationRealignment{4,0}
+				)
+		});
+
+	RotationRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::IShape,
+				RotationalAlignmentContainer(
+					RotationRealignment{0,0},
+					RotationRealignment{1,0},
+					RotationRealignment{3,0},
+					RotationRealignment{4,0}
+				)
+		});
+
+	RotationRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::JShape,
+				RotationalAlignmentContainer(
+					RotationRealignment{0,0},
+					RotationRealignment{1,0},
+					RotationRealignment{3,0},
+					RotationRealignment{4,0}
+				)
+		});
+
+	RotationRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::SShape,
+				RotationalAlignmentContainer(
+					RotationRealignment{0,0},
+					RotationRealignment{1,0},
+					RotationRealignment{3,0},
+					RotationRealignment{4,0}
+				)
+		});
 }
 
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-const TetrominoeRotationRealignments& TetrominoeRotationRealignmentHelper::TryRotationRealignment(Tetrominoe* TetrominoePtrArg)
+const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRotationRealignment(Tetrominoe* TetrominoePtrArg)
 {
-	/*if (RotationRealignmentMap.empty())
+	if (RotationRealignmentMap.size() > 0)
 	{
-		return TetrominoeRotationRealignments();
+		RotationalAlignmentContainer EmptyContainer;
+		return EmptyContainer;
 	}
 
 	try
 	{
 		if (!TetrominoePtrArg)
 		{
-			return TetrominoeRotationRealignments();
+			RotationalAlignmentContainer EmptyContainer;
+			return EmptyContainer;
 		}
 
-		auto Iterator = std::find(RotationRealignmentMap.begin(), RotationRealignmentMap.end(), static_cast<bool>(JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : (static_cast<bool>(I & TetrominoePtrArg->GetTetrominoeShape()) ? I : O));
+		auto Iterator = RotationRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
 		if (Iterator != RotationRealignmentMap.end())
 		{
-			return Iterator->second.at(TetrominoePtrArg->GetTetrominoeRotationIndex());
+			return Iterator->second.TryGetRotationAlignmentAtIndex(TetrominoePtrArg->GetTetrominoeRotationIndex());
 		}
 	}
 	catch (const std::out_of_range& e)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY REALIGNMENTOUTCOME AT ROTATION INDEX FUNCTION! %s", e.what());
-	}*/
-	return TetrominoeRotationRealignments();
+	}
+	RotationalAlignmentContainer EmptyContainer;
+	return EmptyContainer;
 }
 
 #pragma warning (pop)

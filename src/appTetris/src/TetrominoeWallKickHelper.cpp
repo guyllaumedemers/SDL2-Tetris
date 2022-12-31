@@ -17,68 +17,119 @@ std::shared_ptr<TetrominoeWallKickHelper> TetrominoeWallKickHelper::Singleton = 
 
 TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 {
-	// --- Group
-	JLTSZ |= TetrominoeShapeEnum::JShape;
-	JLTSZ |= TetrominoeShapeEnum::LShape;
-	JLTSZ |= TetrominoeShapeEnum::TShape;
-	JLTSZ |= TetrominoeShapeEnum::SShape;
-	JLTSZ |= TetrominoeShapeEnum::ZShape;
+	// --- typedef
+	using WallKickAlignment = WallKickAlignmentContainer::WallKickAlignment;
 	// ---
-	I |= TetrominoeShapeEnum::IShape;
 
 	WallKickRealignmentMap.insert(
 		{
-				JLTSZ,
-				std::vector<TetrominoeWallKicks>
-				{
-					TetrominoeWallKicks(),
-					TetrominoeWallKicks(),
-					TetrominoeWallKicks(),
-					TetrominoeWallKicks()
-				}
+				TetrominoeShapeEnum::TShape,
+				WallKickAlignmentContainer(
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0}
+				)
 		});
 
 	WallKickRealignmentMap.insert(
 		{
-				I,
-				std::vector<TetrominoeWallKicks>
-				{
-					TetrominoeWallKicks(),
-					TetrominoeWallKicks(),
-					TetrominoeWallKicks(),
-					TetrominoeWallKicks()
-				}
+				TetrominoeShapeEnum::LShape,
+				WallKickAlignmentContainer(
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0}
+				)
+		});
+
+	WallKickRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::ZShape,
+				WallKickAlignmentContainer(
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0}
+				)
+		});
+
+	WallKickRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::OShape,
+				WallKickAlignmentContainer(
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0}
+				)
+		});
+
+	WallKickRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::IShape,
+				WallKickAlignmentContainer(
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0}
+				)
+		});
+
+	WallKickRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::JShape,
+				WallKickAlignmentContainer(
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0}
+				)
+		});
+
+	WallKickRealignmentMap.insert(
+		{
+				TetrominoeShapeEnum::SShape,
+				WallKickAlignmentContainer(
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0},
+					WallKickAlignment{0,0}
+				)
 		});
 };
 
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-const TetrominoeWallKicks& TetrominoeWallKickHelper::TryWallKickRealignment(Tetrominoe* TetrominoePtrArg)
+const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickRealignment(Tetrominoe* TetrominoePtrArg)
 {
-	if (WallKickRealignmentMap.empty())
+	if (WallKickRealignmentMap.size() > 0)
 	{
-		return TetrominoeWallKicks();
+		WallKickAlignmentContainer EmptyContainer;
+		return EmptyContainer;
 	}
 
 	try
 	{
 		if (!TetrominoePtrArg)
 		{
-			return TetrominoeWallKicks();
+			WallKickAlignmentContainer EmptyContainer;
+			return EmptyContainer;
 		}
 
-		auto Iterator = WallKickRealignmentMap.find(static_cast<bool>(JLTSZ & TetrominoePtrArg->GetTetrominoeShape()) ? JLTSZ : I);
+		auto Iterator = WallKickRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
 		if (Iterator != WallKickRealignmentMap.end())
 		{
-			return Iterator->second.at(TetrominoePtrArg->GetTetrominoeRotationIndex());
+			return Iterator->second.TryGetWallKickAlignmentAtIndex(TetrominoePtrArg->GetTetrominoeRotationIndex());
 		}
 	}
 	catch (const std::out_of_range& e)
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY REALIGNMENTOUTCOME AT ROTATION INDEX FUNCTION! %s", e.what());
 	}
-	return TetrominoeWallKicks();
+	WallKickAlignmentContainer EmptyContainer;
+	return EmptyContainer;
 }
 
 #pragma warning (pop)

@@ -1,5 +1,7 @@
 #include "../include/Tetrominoe.h"
 #include "../include/Tile.h"
+#include "../include/TetrominoeWallKickHelper.h"
+#include "../include/TetrominoeRotationRealignmentHelper.h"
 
 #ifndef INCLUDED_EXCEPTION
 #define INCLUDED_EXCEPTION

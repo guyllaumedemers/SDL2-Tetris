@@ -18,34 +18,92 @@
 
 #ifndef INCLUDED_TETROMINOE_WALL_KICK_DATA
 #define INCLUDED_TETROMINOE_WALL_KICK_DATA
-/// <summary>
-/// Collection Wall Kick Realignments
-/// </summary>
-struct TetrominoeWallKicks final
+
+#ifndef INCLUDED_VA_ARGS
+#define INCLUDED_VA_ARGS
+#include <cstdarg>
+#endif
+
+#ifndef INCLUDED_EXCEPTION
+#define INCLUDED_EXCEPTION
+#include <stdexcept>
+#endif
+
+#ifndef INCLUDED_SDL_LOG
+#define INCLUDED_SDL_LOG
+#include <SDL_log.h>
+#endif
+
+struct WallKickAlignmentContainer final
 {
 	/// <summary>
 	/// Single Wall Kick Realignment
 	/// </summary>
-	struct WallKickRealignment final
+	struct WallKickAlignment final
 	{
-		int8_t x = 0;
-		int8_t y = 0;
+		int8_t x = INT8_MAX;
+		int8_t y = INT8_MAX;
 
-		bool operator==(const WallKickRealignment& rhs) const
+		bool operator==(const WallKickAlignment& rhs) const
 		{
 			return
 				(x == rhs.x) &&
 				(y == rhs.y);
 		}
+
+		inline bool IsValid() const { return ((x != INT8_MAX) && (y != INT8_MAX)); }
 	};
 
-	std::vector<WallKickRealignment> WallKickRealignmentData = std::vector<WallKickRealignment>();
+	/// <summary>
+	/// Wall Kicks possible following rotation of tetrominoe which overlap on occupied tile
+	/// </summary>
+	std::vector<WallKickAlignment> WallKickRealignmentData = std::vector<WallKickAlignment>();
 
-	bool operator==(const TetrominoeWallKicks& rhs) const
+	WallKickAlignmentContainer(WallKickAlignment Alignments...)
+	{
+		std::va_list Args;
+		va_start(Args, Alignments);
+		WallKickAlignment Alignment = va_arg(Args, WallKickAlignment);
+		while (Alignment.IsValid())
+		{
+			WallKickRealignmentData.push_back(Alignment);
+			Alignment = va_arg(Args, WallKickAlignment);
+		}
+		va_end(Args);
+	}
+
+	WallKickAlignmentContainer() {}
+
+	bool operator==(const WallKickAlignmentContainer& rhs) const
 	{
 		return
 			(WallKickRealignmentData == rhs.WallKickRealignmentData);
 	}
+
+#pragma warning (push)
+#pragma warning (disable : 4172)
+
+	inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(uint8_t Index)
+	{
+		if (WallKickRealignmentData.size() > 0)
+		{
+			WallKickAlignment InvalidRealignment;
+			return InvalidRealignment;
+		}
+
+		try
+		{
+			return WallKickRealignmentData.at(Index);
+		}
+		catch (const std::out_of_range& e)
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_WALL_KICK_REALIGNMENT AT ROTATION INDEX FUNCTION! %s", e.what());
+		}
+		WallKickAlignment InvalidRealignment;
+		return InvalidRealignment;
+	}
+
+#pragma warning (pop)
 };
 #endif
 
@@ -54,16 +112,14 @@ struct TetrominoeWallKicks final
 
 class TetrominoeWallKickHelper final
 {
-	UnorderedMap<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>> WallKickRealignmentMap = UnorderedMap<TetrominoeShapeEnum, std::vector<TetrominoeWallKicks>>();
+	UnorderedMap<TetrominoeShapeEnum, WallKickAlignmentContainer> WallKickRealignmentMap = UnorderedMap<TetrominoeShapeEnum, WallKickAlignmentContainer>();
 	static std::shared_ptr<TetrominoeWallKickHelper> Singleton;
-	TetrominoeShapeEnum JLTSZ = TetrominoeShapeEnum::None;
-	TetrominoeShapeEnum I = TetrominoeShapeEnum::None;
 
 	TetrominoeWallKickHelper();
 public:
 	// --- Getter/Setter
 	static TetrominoeWallKickHelper* Get();
-	const TetrominoeWallKicks& TryWallKickRealignment(class Tetrominoe* TetrominoePtrArg);
+	const WallKickAlignmentContainer& TryWallKickRealignment(class Tetrominoe* TetrominoePtrArg);
 	// ---
 };
 #endif
