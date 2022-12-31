@@ -61,8 +61,6 @@ Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t
 	}
 	TetrominoeShape = TetrominoeEnum;
 	RotationIndex = 0;
-
-	TetrominoeRotationRealignmentHelper::Get();
 }
 
 bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
@@ -174,8 +172,6 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		uint8_t&& MinRow = 255;
 		uint8_t&& MinCol = 255;
-		uint8_t&& MaxRow = 0;
-		uint8_t&& MaxCol = 0;
 
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
@@ -183,9 +179,7 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / Cols);
 
 			if (Col < MinCol) MinCol = Col;
-			if (Col > MaxCol) MaxCol = Col;
 			if (Row < MinRow) MinRow = Row;
-			if (Row > MaxRow) MaxRow = Row;
 		}
 
 		const uint16_t&& Pivot = (MinRow * Cols) + MinCol;
@@ -259,12 +253,19 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			Tile.Wildcard = std::string("Undefined");
 		}
 
-		// check the flip new boundaries
+		// increase Rotational Index
 
-		const uint8_t&& DeltaRow = (MaxRow - MinRow);
-		const uint8_t&& DeltaCol = (MaxCol - MinCol);
+		{
+			const size_t&& Four = 4;
+			SetTetrominoeRotationIndex((GetTetrominoeRotationIndex() + One) % Four);
+		}
 
-		int16_t&& ReAlignmentValue = static_cast<uint16_t>(((DeltaCol * Cols) + DeltaRow) * MinusOne);
+		// check the kick translation required
+
+		const RotationalAlignmentContainer& RotationalAlignmentContainer = TetrominoeRotationRealignmentHelper::Get()->TryRotationAlignmentContainer(this);
+		const RotationalAlignmentContainer::RotationalAlignment& RotationalAlignment = RotationalAlignmentContainer.TryGetRotationAlignmentAtIndex(GetTetrominoeRotationIndex());
+
+		int16_t&& ReAlignmentValue = ((RotationalAlignment.y * Cols) + RotationalAlignment.x);
 
 		// update array indices
 

@@ -73,9 +73,7 @@ struct RotationalAlignmentContainer final
 
 	inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(uint8_t Index) const
 	{
-		static constexpr uint8_t&& Zero = 0;
-
-		if (RotationalRealignmentData.size() > Zero)
+		if (RotationalRealignmentData.empty())
 		{
 			const RotationalAlignment InvalidRealignment;
 			return InvalidRealignment;

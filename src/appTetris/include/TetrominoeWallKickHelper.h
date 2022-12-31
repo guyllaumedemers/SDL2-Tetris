@@ -73,9 +73,7 @@ struct WallKickAlignmentContainer final
 
 	inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(uint8_t Index) const
 	{
-		static constexpr uint8_t&& Zero = 0;
-
-		if (WallKickRealignmentData.size() > Zero)
+		if (WallKickRealignmentData.empty())
 		{
 			const WallKickAlignment InvalidRealignment;
 			return InvalidRealignment;

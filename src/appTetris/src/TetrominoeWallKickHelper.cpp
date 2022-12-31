@@ -104,9 +104,7 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 
 const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickAlignmentContainer(Tetrominoe* TetrominoePtrArg) const
 {
-	static constexpr uint8_t&& Zero = 0;
-
-	if (WallKickRealignmentMap.size() > Zero)
+	if (WallKickRealignmentMap.empty())
 	{
 		const WallKickAlignmentContainer EmptyContainer;
 		return EmptyContainer;

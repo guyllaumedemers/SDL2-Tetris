@@ -27,9 +27,9 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 				TetrominoeShapeEnum::TShape,
 				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
-					RotationRealignment{1,0},
-					RotationRealignment{3,0},
-					RotationRealignment{4,0}
+					RotationRealignment{0,0},
+					RotationRealignment{0,0},
+					RotationRealignment{0,0}
 				}
 		});
 
@@ -38,9 +38,9 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 				TetrominoeShapeEnum::LShape,
 				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
-					RotationRealignment{1,0},
-					RotationRealignment{3,0},
-					RotationRealignment{4,0}
+					RotationRealignment{0,0},
+					RotationRealignment{0,0},
+					RotationRealignment{0,0}
 				}
 		});
 
@@ -49,9 +49,9 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 				TetrominoeShapeEnum::ZShape,
 				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
-					RotationRealignment{1,0},
-					RotationRealignment{3,0},
-					RotationRealignment{4,0}
+					RotationRealignment{0,0},
+					RotationRealignment{0,0},
+					RotationRealignment{0,0}
 				}
 		});
 
@@ -60,9 +60,9 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 				TetrominoeShapeEnum::OShape,
 				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
-					RotationRealignment{1,0},
-					RotationRealignment{3,0},
-					RotationRealignment{4,0}
+					RotationRealignment{0,0},
+					RotationRealignment{0,0},
+					RotationRealignment{0,0}
 				}
 		});
 
@@ -71,9 +71,9 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 				TetrominoeShapeEnum::IShape,
 				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
-					RotationRealignment{1,0},
-					RotationRealignment{3,0},
-					RotationRealignment{4,0}
+					RotationRealignment{0,0},
+					RotationRealignment{0,0},
+					RotationRealignment{0,0}
 				}
 		});
 
@@ -82,9 +82,9 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 				TetrominoeShapeEnum::JShape,
 				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
-					RotationRealignment{1,0},
-					RotationRealignment{3,0},
-					RotationRealignment{4,0}
+					RotationRealignment{0,0},
+					RotationRealignment{0,0},
+					RotationRealignment{0,0}
 				}
 		});
 
@@ -93,9 +93,9 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 				TetrominoeShapeEnum::SShape,
 				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
-					RotationRealignment{1,0},
-					RotationRealignment{3,0},
-					RotationRealignment{4,0}
+					RotationRealignment{0,0},
+					RotationRealignment{0,0},
+					RotationRealignment{0,0}
 				}
 		});
 }
@@ -105,9 +105,7 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 
 const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRotationAlignmentContainer(Tetrominoe* TetrominoePtrArg) const
 {
-	static constexpr uint8_t&& Zero = 0;
-
-	if (RotationRealignmentMap.size() > Zero)
+	if (RotationRealignmentMap.empty())
 	{
 		const RotationalAlignmentContainer EmptyContainer;
 		return EmptyContainer;
