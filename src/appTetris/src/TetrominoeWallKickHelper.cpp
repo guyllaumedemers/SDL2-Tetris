@@ -102,7 +102,7 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickRealignment(Tetrominoe* TetrominoePtrArg) const
+const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickAlignmentContainer(Tetrominoe* TetrominoePtrArg) const
 {
 	static constexpr uint8_t&& Zero = 0;
 

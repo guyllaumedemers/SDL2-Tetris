@@ -110,7 +110,7 @@ class TetrominoeWallKickHelper final
 public:
 	// --- Getter/Setter
 	static TetrominoeWallKickHelper* Get();
-	const WallKickAlignmentContainer& TryWallKickRealignment(class Tetrominoe* TetrominoePtrArg) const;
+	const WallKickAlignmentContainer& TryWallKickAlignmentContainer(class Tetrominoe* TetrominoePtrArg) const;
 	// ---
 };
 #endif

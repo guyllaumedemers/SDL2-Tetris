@@ -103,7 +103,7 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRotationRealignment(Tetrominoe* TetrominoePtrArg) const
+const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRotationAlignmentContainer(Tetrominoe* TetrominoePtrArg) const
 {
 	static constexpr uint8_t&& Zero = 0;
 

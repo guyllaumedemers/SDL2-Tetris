@@ -110,7 +110,7 @@ class TetrominoeRotationRealignmentHelper final
 public:
 	// --- Getter/Setter
 	static TetrominoeRotationRealignmentHelper* Get();
-	const RotationalAlignmentContainer& TryRotationRealignment(class Tetrominoe* TetrominoePtrArg) const;
+	const RotationalAlignmentContainer& TryRotationAlignmentContainer(class Tetrominoe* TetrominoePtrArg) const;
 	// ---
 };
 #endif
