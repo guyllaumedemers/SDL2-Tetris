@@ -45,8 +45,6 @@ struct WallKickAlignmentContainer final
 				(x == rhs.x) &&
 				(y == rhs.y);
 		}
-
-		inline bool IsValid() const { return ((x != INT8_MAX && x >= 0) && (y != INT8_MAX && y >= 0)); }
 	};
 
 	/// <summary>
@@ -73,9 +71,11 @@ struct WallKickAlignmentContainer final
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-	inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(uint8_t Index)
+	inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(uint8_t Index) const
 	{
-		if (WallKickRealignmentData.size() > 0)
+		static constexpr uint8_t&& Zero = 0;
+
+		if (WallKickRealignmentData.size() > Zero)
 		{
 			WallKickAlignment InvalidRealignment;
 			return InvalidRealignment;

@@ -45,8 +45,6 @@ struct RotationalAlignmentContainer final
 				(x == rhs.x) &&
 				(y == rhs.y);
 		}
-
-		inline bool IsValid() const { return ((x != INT8_MAX && x >= 0) && (y != INT8_MAX && y >= 0)); }
 	};
 
 	/// <summary>
@@ -75,7 +73,9 @@ struct RotationalAlignmentContainer final
 
 	inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(uint8_t Index)
 	{
-		if (RotationalRealignmentData.size() > 0)
+		static constexpr uint8_t&& Zero = 0;
+
+		if (RotationalRealignmentData.size() > Zero)
 		{
 			RotationalAlignment InvalidRealignment;
 			return InvalidRealignment;
