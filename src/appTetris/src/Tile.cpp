@@ -39,7 +39,7 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 	// set rendering target to individual tile
 	SDL_SetRenderTarget(SDLRendererPtr, SDLTextureTargetPtr);
 
-	static constexpr uint8_t&& Alpha = 255;
+	static constexpr uint8_t&& Alpha = UINT8_MAX;
 	static const std::unordered_map<TileAttributeEnum, std::string>&& TexturePair =
 	{
 		std::make_pair(TileAttributeEnum::Empty, std::string("Black")),

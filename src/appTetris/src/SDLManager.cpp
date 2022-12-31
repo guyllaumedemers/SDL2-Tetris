@@ -50,7 +50,7 @@ void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::functio
 	}
 
 	SDL_Renderer* const SDLRendererPtr = SDLRendererUniquePtr.get();
-	static constexpr uint8_t&& Alpha = 255;
+	static constexpr uint8_t&& Alpha = UINT8_MAX;
 
 	SDL_SetRenderDrawColor(SDLRendererPtr, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(SDLRendererPtr);

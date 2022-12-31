@@ -174,8 +174,8 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		// find pivot point of the matrix
 
-		uint8_t&& MinRow = 255;
-		uint8_t&& MinCol = 255;
+		uint8_t&& MinRow = UINT8_MAX;
+		uint8_t&& MinCol = UINT8_MAX;
 
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
@@ -188,11 +188,11 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		const uint16_t&& Pivot = (MinRow * Cols) + MinCol;
 
-		const size_t&& NMatrix = TetrominoeEntryIndices.size();
-		const size_t&& Zero = 0;
-		const size_t&& One = 1;
-		const size_t&& Two = 2;
-		const int8_t&& MinusOne = -1;
+		static const size_t&& NMatrix = TetrominoeEntryIndices.size();
+		static constexpr size_t&& Zero = 0;
+		static constexpr size_t&& One = 1;
+		static constexpr size_t&& Two = 2;
+		static constexpr int8_t&& MinusOne = -1;
 
 		std::vector<int16_t> Matrix(NMatrix * NMatrix, MinusOne);
 
@@ -243,26 +243,28 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 			// Back
 			int16_t& Back = Matrix.at((Row * NMatrix) + ColPrime);
 
+			// Swap
 			const int16_t Temp = Front;
 			Front = Back;
 			Back = Temp;
 		}
+
+		static constexpr TileAttributeEnum&& EmptyEnum = TileAttributeEnum::Empty;
+		static const std::string&& UndefinedString = std::string("Undefined");
 
 		// clear tiles entry for the active indices
 
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
 			Tile& Tile = Tiles.at(TetrominoeEntryIndex);
-			Tile.Attribute = TileAttributeEnum::Empty;
-			Tile.Wildcard = std::string("Undefined");
+			Tile.Attribute = EmptyEnum;
+			Tile.Wildcard = UndefinedString;
 		}
 
 		// increase Rotational Index
 
-		{
-			const size_t&& Four = 4;
-			SetTetrominoeRotationIndex((GetTetrominoeRotationIndex() + One) % Four);
-		}
+		static constexpr size_t&& Four = 4;
+		SetTetrominoeRotationIndex((GetTetrominoeRotationIndex() + One) % Four);
 
 		// check the kick translation required
 

@@ -39,8 +39,8 @@ std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint
 {
 	static constexpr int&& One = 1;
 	static constexpr int&& Two = 2;
-	const int&& B1 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::TShape)) + One);
-	const int&& B2 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::SShape)) + One);
+	static const int&& B1 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::TShape)) + One);
+	static const int&& B2 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::SShape)) + One);
 	std::random_device Seed;
 	std::mt19937 RandomGenerator(Seed());
 	std::uniform_int_distribution<int> UniformDistribution(B1, B2);
@@ -49,9 +49,9 @@ std::unique_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioeShape(uint
 
 void TetrominoeManager::ClearTetrominoesOnRow(uint8_t Rows, uint8_t Cols, size_t TetrominoeIndex)
 {
+	static constexpr uint8_t&& Zero = 0;
+	static constexpr uint8_t&& One = 1;
 	const uint8_t&& TargetRow = static_cast<uint8_t>(TetrominoeIndex / Cols);
-	const uint8_t&& Zero = 0;
-	const uint8_t&& One = 1;
 
 	try
 	{

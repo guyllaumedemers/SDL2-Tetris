@@ -25,8 +25,8 @@ void TileMap::Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(ui
 	sRows = Rows;
 	sCols = Cols;
 
-	const uint8_t&& Zero = 0;
-	const uint8_t&& One = 1;
+	static constexpr uint8_t&& Zero = 0;
+	static constexpr uint8_t&& One = 1;
 
 	for (size_t Index = 0; Index != static_cast<size_t>(Rows * Cols); ++Index)
 	{
