@@ -24,78 +24,78 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::TShape,
-				WallKickAlignmentContainer(
+				WallKickAlignmentContainer{
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0}
-				)
+				}
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::LShape,
-				WallKickAlignmentContainer(
+				WallKickAlignmentContainer{
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0}
-				)
+				}
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::ZShape,
-				WallKickAlignmentContainer(
+				WallKickAlignmentContainer{
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0}
-				)
+					}
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::OShape,
-				WallKickAlignmentContainer(
+				WallKickAlignmentContainer{
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0}
-				)
+				}
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::IShape,
-				WallKickAlignmentContainer(
+				WallKickAlignmentContainer{
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0}
-				)
+				}
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::JShape,
-				WallKickAlignmentContainer(
+				WallKickAlignmentContainer{
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0}
-				)
+				}
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::SShape,
-				WallKickAlignmentContainer(
+				WallKickAlignmentContainer{
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0}
-				)
+				}
 		});
 };
 
@@ -121,7 +121,7 @@ const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickRealignme
 		auto Iterator = WallKickRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
 		if (Iterator != WallKickRealignmentMap.end())
 		{
-			return Iterator->second.TryGetWallKickAlignmentAtIndex(TetrominoePtrArg->GetTetrominoeRotationIndex());
+			return Iterator->second;
 		}
 	}
 	catch (const std::out_of_range& e)

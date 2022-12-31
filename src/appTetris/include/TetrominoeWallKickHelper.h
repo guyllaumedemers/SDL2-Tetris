@@ -19,11 +19,6 @@
 #include <vector>
 #endif
 
-#ifndef INCLUDED_VA_ARGS
-#define INCLUDED_VA_ARGS
-#include <cstdarg>
-#endif
-
 #ifndef INCLUDED_EXCEPTION
 #define INCLUDED_EXCEPTION
 #include <stdexcept>
@@ -51,7 +46,7 @@ struct WallKickAlignmentContainer final
 				(y == rhs.y);
 		}
 
-		inline bool IsValid() const { return ((x != INT8_MAX) && (y != INT8_MAX)); }
+		inline bool IsValid() const { return ((x != INT8_MAX && x >= 0) && (y != INT8_MAX && y >= 0)); }
 	};
 
 	/// <summary>
@@ -59,17 +54,12 @@ struct WallKickAlignmentContainer final
 	/// </summary>
 	std::vector<WallKickAlignment> WallKickRealignmentData = std::vector<WallKickAlignment>();
 
-	WallKickAlignmentContainer(WallKickAlignment Alignments...)
+	WallKickAlignmentContainer(std::initializer_list<WallKickAlignment> Alignments)
 	{
-		std::va_list Args;
-		va_start(Args, Alignments);
-		WallKickAlignment Alignment = va_arg(Args, WallKickAlignment);
-		while (Alignment.IsValid())
+		for (const auto& Alignment : Alignments)
 		{
 			WallKickRealignmentData.push_back(Alignment);
-			Alignment = va_arg(Args, WallKickAlignment);
 		}
-		va_end(Args);
 	}
 
 	WallKickAlignmentContainer() {}

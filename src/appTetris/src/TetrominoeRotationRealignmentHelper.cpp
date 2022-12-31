@@ -25,78 +25,78 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	RotationRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::TShape,
-				RotationalAlignmentContainer(
+				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
 					RotationRealignment{1,0},
 					RotationRealignment{3,0},
 					RotationRealignment{4,0}
-				)
+				}
 		});
 
 	RotationRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::LShape,
-				RotationalAlignmentContainer(
+				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
 					RotationRealignment{1,0},
 					RotationRealignment{3,0},
 					RotationRealignment{4,0}
-				)
+				}
 		});
 
 	RotationRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::ZShape,
-				RotationalAlignmentContainer(
+				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
 					RotationRealignment{1,0},
 					RotationRealignment{3,0},
 					RotationRealignment{4,0}
-				)
+				}
 		});
 
 	RotationRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::OShape,
-				RotationalAlignmentContainer(
+				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
 					RotationRealignment{1,0},
 					RotationRealignment{3,0},
 					RotationRealignment{4,0}
-				)
+				}
 		});
 
 	RotationRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::IShape,
-				RotationalAlignmentContainer(
+				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
 					RotationRealignment{1,0},
 					RotationRealignment{3,0},
 					RotationRealignment{4,0}
-				)
+				}
 		});
 
 	RotationRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::JShape,
-				RotationalAlignmentContainer(
+				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
 					RotationRealignment{1,0},
 					RotationRealignment{3,0},
 					RotationRealignment{4,0}
-				)
+				}
 		});
 
 	RotationRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::SShape,
-				RotationalAlignmentContainer(
+				RotationalAlignmentContainer{
 					RotationRealignment{0,0},
 					RotationRealignment{1,0},
 					RotationRealignment{3,0},
 					RotationRealignment{4,0}
-				)
+				}
 		});
 }
 
@@ -122,7 +122,7 @@ const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRota
 		auto Iterator = RotationRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
 		if (Iterator != RotationRealignmentMap.end())
 		{
-			return Iterator->second.TryGetRotationAlignmentAtIndex(TetrominoePtrArg->GetTetrominoeRotationIndex());
+			return Iterator->second;
 		}
 	}
 	catch (const std::out_of_range& e)

@@ -61,6 +61,8 @@ Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t
 	}
 	TetrominoeShape = TetrominoeEnum;
 	RotationIndex = 0;
+
+	TetrominoeRotationRealignmentHelper::Get();
 }
 
 bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const

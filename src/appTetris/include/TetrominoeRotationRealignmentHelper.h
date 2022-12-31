@@ -19,11 +19,6 @@
 #include <vector>
 #endif
 
-#ifndef INCLUDED_VA_ARGS
-#define INCLUDED_VA_ARGS
-#include <cstdarg>
-#endif
-
 #ifndef INCLUDED_EXCEPTION
 #define INCLUDED_EXCEPTION
 #include <stdexcept>
@@ -51,7 +46,7 @@ struct RotationalAlignmentContainer final
 				(y == rhs.y);
 		}
 
-		inline bool IsValid() const { return ((x != INT8_MAX) && (y != INT8_MAX)); }
+		inline bool IsValid() const { return ((x != INT8_MAX && x >= 0) && (y != INT8_MAX && y >= 0)); }
 	};
 
 	/// <summary>
@@ -59,17 +54,12 @@ struct RotationalAlignmentContainer final
 	/// </summary>
 	std::vector<RotationalAlignment> RotationalRealignmentData = std::vector<RotationalAlignment>();
 
-	RotationalAlignmentContainer(RotationalAlignment Alignments...)
+	RotationalAlignmentContainer(std::initializer_list<RotationalAlignment> Alignments)
 	{
-		std::va_list Args;
-		va_start(Args, Alignments);
-		RotationalAlignment Alignment = va_arg(Args, RotationalAlignment);
-		while (Alignment.IsValid())
+		for (const auto& Alignment : Alignments)
 		{
 			RotationalRealignmentData.push_back(Alignment);
-			Alignment = va_arg(Args, RotationalAlignment);
 		}
-		va_end(Args);
 	}
 
 	RotationalAlignmentContainer() {}
