@@ -71,13 +71,13 @@ struct RotationalAlignmentContainer final
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-	inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(uint8_t Index)
+	inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(uint8_t Index) const
 	{
 		static constexpr uint8_t&& Zero = 0;
 
 		if (RotationalRealignmentData.size() > Zero)
 		{
-			RotationalAlignment InvalidRealignment;
+			const RotationalAlignment InvalidRealignment;
 			return InvalidRealignment;
 		}
 
@@ -89,7 +89,8 @@ struct RotationalAlignmentContainer final
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_ROTATIONAL_REALIGNMENT AT ROTATION INDEX FUNCTION! %s", e.what());
 		}
-		RotationalAlignment InvalidRealignment;
+
+		const RotationalAlignment InvalidRealignment;
 		return InvalidRealignment;
 	}
 
@@ -109,7 +110,7 @@ class TetrominoeRotationRealignmentHelper final
 public:
 	// --- Getter/Setter
 	static TetrominoeRotationRealignmentHelper* Get();
-	const RotationalAlignmentContainer& TryRotationRealignment(class Tetrominoe* TetrominoePtrArg);
+	const RotationalAlignmentContainer& TryRotationRealignment(class Tetrominoe* TetrominoePtrArg) const;
 	// ---
 };
 #endif

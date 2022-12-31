@@ -77,7 +77,7 @@ struct WallKickAlignmentContainer final
 
 		if (WallKickRealignmentData.size() > Zero)
 		{
-			WallKickAlignment InvalidRealignment;
+			const WallKickAlignment InvalidRealignment;
 			return InvalidRealignment;
 		}
 
@@ -89,7 +89,8 @@ struct WallKickAlignmentContainer final
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_WALL_KICK_REALIGNMENT AT ROTATION INDEX FUNCTION! %s", e.what());
 		}
-		WallKickAlignment InvalidRealignment;
+
+		const WallKickAlignment InvalidRealignment;
 		return InvalidRealignment;
 	}
 
@@ -109,7 +110,7 @@ class TetrominoeWallKickHelper final
 public:
 	// --- Getter/Setter
 	static TetrominoeWallKickHelper* Get();
-	const WallKickAlignmentContainer& TryWallKickRealignment(class Tetrominoe* TetrominoePtrArg);
+	const WallKickAlignmentContainer& TryWallKickRealignment(class Tetrominoe* TetrominoePtrArg) const;
 	// ---
 };
 #endif

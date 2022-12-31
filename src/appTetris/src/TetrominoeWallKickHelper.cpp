@@ -51,7 +51,7 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0},
 					WallKickAlignment{0,0}
-					}
+				}
 		});
 
 	WallKickRealignmentMap.insert(
@@ -102,11 +102,13 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickRealignment(Tetrominoe* TetrominoePtrArg)
+const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickRealignment(Tetrominoe* TetrominoePtrArg) const
 {
-	if (WallKickRealignmentMap.size() > 0)
+	static constexpr uint8_t&& Zero = 0;
+
+	if (WallKickRealignmentMap.size() > Zero)
 	{
-		WallKickAlignmentContainer EmptyContainer;
+		const WallKickAlignmentContainer EmptyContainer;
 		return EmptyContainer;
 	}
 
@@ -114,11 +116,11 @@ const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickRealignme
 	{
 		if (!TetrominoePtrArg)
 		{
-			WallKickAlignmentContainer EmptyContainer;
+			const WallKickAlignmentContainer EmptyContainer;
 			return EmptyContainer;
 		}
 
-		auto Iterator = WallKickRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
+		const auto Iterator = WallKickRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
 		if (Iterator != WallKickRealignmentMap.end())
 		{
 			return Iterator->second;
@@ -128,7 +130,8 @@ const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryWallKickRealignme
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY REALIGNMENTOUTCOME AT ROTATION INDEX FUNCTION! %s", e.what());
 	}
-	WallKickAlignmentContainer EmptyContainer;
+
+	const WallKickAlignmentContainer EmptyContainer;
 	return EmptyContainer;
 }
 

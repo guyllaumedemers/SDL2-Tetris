@@ -103,11 +103,13 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRotationRealignment(Tetrominoe* TetrominoePtrArg)
+const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRotationRealignment(Tetrominoe* TetrominoePtrArg) const
 {
-	if (RotationRealignmentMap.size() > 0)
+	static constexpr uint8_t&& Zero = 0;
+
+	if (RotationRealignmentMap.size() > Zero)
 	{
-		RotationalAlignmentContainer EmptyContainer;
+		const RotationalAlignmentContainer EmptyContainer;
 		return EmptyContainer;
 	}
 
@@ -115,11 +117,11 @@ const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRota
 	{
 		if (!TetrominoePtrArg)
 		{
-			RotationalAlignmentContainer EmptyContainer;
+			const RotationalAlignmentContainer EmptyContainer;
 			return EmptyContainer;
 		}
 
-		auto Iterator = RotationRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
+		const auto Iterator = RotationRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
 		if (Iterator != RotationRealignmentMap.end())
 		{
 			return Iterator->second;
@@ -129,7 +131,8 @@ const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryRota
 	{
 		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY REALIGNMENTOUTCOME AT ROTATION INDEX FUNCTION! %s", e.what());
 	}
-	RotationalAlignmentContainer EmptyContainer;
+
+	const RotationalAlignmentContainer EmptyContainer;
 	return EmptyContainer;
 }
 
