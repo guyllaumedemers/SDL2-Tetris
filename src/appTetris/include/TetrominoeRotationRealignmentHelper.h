@@ -76,6 +76,7 @@ struct RotationalAlignmentContainer final
 	inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(uint8_t Index) const
 	{
 		static constexpr RotationalAlignment&& EmptyAlignment = RotationalAlignment();
+		static uint8_t&& RealignmentOutcomes = RotationalRealignmentData.size();
 
 		if (RotationalRealignmentData.empty())
 		{
@@ -84,7 +85,7 @@ struct RotationalAlignmentContainer final
 
 		try
 		{
-			return RotationalRealignmentData.at(Index);
+			return RotationalRealignmentData.at(Index % RealignmentOutcomes);
 		}
 		catch (const std::out_of_range& e)
 		{
