@@ -25,6 +25,7 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	static constexpr int8_t&& One = 1;
 	static constexpr int8_t&& Two = 2;
 	static constexpr int8_t&& MinusOne = -1;
+	static constexpr int8_t&& MinusTwo = -2;
 
 	/// <summary>
 	/// Shared Rotational Offset => limit code duplication using static fields but would have
@@ -32,13 +33,11 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	/// lookup as reference, we could have run a bitwise AND operator on it. Would have reduce the number of key
 	/// entries from 7 to 3.
 	/// </summary>
-	static const RotationalAlignmentContainer&& JLSTZ_Rot =
-		RotationalAlignmentContainer{
-			RotationRealignment{Zero,Zero},
-			RotationRealignment{One,Zero},
-			RotationRealignment{One,MinusOne},
-			RotationRealignment{Zero,Two},
-			RotationRealignment{One,Two}
+	static const RotationalAlignmentContainer&& JLSTZ_Rot = RotationalAlignmentContainer{
+		RotationRealignment{MinusTwo,Zero},
+		RotationRealignment{MinusOne,Zero},
+		RotationRealignment{MinusTwo,Zero},
+		RotationRealignment{MinusOne,Zero}
 	};
 
 	static const RotationalAlignmentContainer&& O_Rot = RotationalAlignmentContainer{
