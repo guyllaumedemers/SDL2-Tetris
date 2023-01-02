@@ -26,6 +26,7 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	static constexpr int8_t&& Two = 2;
 	static constexpr int8_t&& MinusOne = -1;
 	static constexpr int8_t&& MinusTwo = -2;
+	static constexpr int8_t&& MinusThree = -3;
 
 	/// <summary>
 	/// Shared Rotational Offset => limit code duplication using static fields but would have
@@ -41,17 +42,17 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	};
 
 	static const RotationalAlignmentContainer&& O_Rot = RotationalAlignmentContainer{
-		RotationRealignment{Zero,Zero},
-		RotationRealignment{Zero,Zero},
-		RotationRealignment{Zero,Zero},
-		RotationRealignment{Zero,Zero}
+		RotationRealignment{MinusTwo,Zero},
+		RotationRealignment{MinusTwo,Zero},
+		RotationRealignment{MinusTwo,Zero},
+		RotationRealignment{MinusTwo,Zero}
 	};
 
 	static const RotationalAlignmentContainer&& I_Rot = RotationalAlignmentContainer{
 		RotationRealignment{Zero,Zero},
+		RotationRealignment{MinusThree,MinusOne},
 		RotationRealignment{Zero,Zero},
-		RotationRealignment{Zero,Zero},
-		RotationRealignment{Zero,Zero}
+		RotationRealignment{MinusThree,MinusOne}
 	};
 
 	/// <summary>
