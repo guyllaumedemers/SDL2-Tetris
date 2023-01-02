@@ -1,5 +1,4 @@
 #include "../include/TetrominoeRotationRealignmentHelper.h"
-#include "../include/TetrominoeShapeEnum.h"
 #include "../include/Tetrominoe.h"
 
 #ifndef INCLUDED_EXCEPTION
@@ -22,80 +21,57 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	using RotationRealignment = RotationalAlignmentContainer::RotationalAlignment;
 	// ---
 
+	static constexpr int8_t&& Zero = 0;
+	static constexpr int8_t&& One = 1;
+	static constexpr int8_t&& Two = 2;
+	static constexpr int8_t&& MinusOne = -1;
+
+	/// <summary>
+	/// Shared Rotational Offset
+	/// </summary>
+	static const TetrominoeShapeEnum JLSTZ =
+		(TetrominoeShapeEnum::JShape | TetrominoeShapeEnum::LShape | TetrominoeShapeEnum::SShape | TetrominoeShapeEnum::TShape | TetrominoeShapeEnum::ZShape);
+
+	static const TetrominoeShapeEnum O =
+		(TetrominoeShapeEnum::OShape);
+
+	static const TetrominoeShapeEnum I =
+		(TetrominoeShapeEnum::IShape);
+
+	/// <summary>
+	/// Clockwise ONLY
+	/// </summary>
 	RotationRealignmentMap.insert(
 		{
-				TetrominoeShapeEnum::TShape,
+				JLSTZ,
 				RotationalAlignmentContainer{
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0}
+					RotationRealignment{Zero,Zero},
+					RotationRealignment{One,Zero},
+					RotationRealignment{One,MinusOne},
+					RotationRealignment{Zero,Two},
+					RotationRealignment{One,Two}
 				}
 		});
 
 	RotationRealignmentMap.insert(
 		{
-				TetrominoeShapeEnum::LShape,
+				O,
 				RotationalAlignmentContainer{
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0}
+					RotationRealignment{Zero,Zero},
+					RotationRealignment{Zero,Zero},
+					RotationRealignment{Zero,Zero},
+					RotationRealignment{Zero,Zero}
 				}
 		});
 
 	RotationRealignmentMap.insert(
 		{
-				TetrominoeShapeEnum::ZShape,
+				I,
 				RotationalAlignmentContainer{
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0}
-				}
-		});
-
-	RotationRealignmentMap.insert(
-		{
-				TetrominoeShapeEnum::OShape,
-				RotationalAlignmentContainer{
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0}
-				}
-		});
-
-	RotationRealignmentMap.insert(
-		{
-				TetrominoeShapeEnum::IShape,
-				RotationalAlignmentContainer{
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0}
-				}
-		});
-
-	RotationRealignmentMap.insert(
-		{
-				TetrominoeShapeEnum::JShape,
-				RotationalAlignmentContainer{
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0}
-				}
-		});
-
-	RotationRealignmentMap.insert(
-		{
-				TetrominoeShapeEnum::SShape,
-				RotationalAlignmentContainer{
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0},
-					RotationRealignment{0,0}
+					RotationRealignment{Zero,Zero},
+					RotationRealignment{Zero,Zero},
+					RotationRealignment{Zero,Zero},
+					RotationRealignment{Zero,Zero}
 				}
 		});
 }

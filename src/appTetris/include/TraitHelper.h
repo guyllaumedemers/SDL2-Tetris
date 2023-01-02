@@ -21,6 +21,8 @@
 #include <type_traits>
 #endif
 
+#include <iostream>
+
 /// <summary>
 /// Custom Hash lookup for using Enum as TKey with STL Hash Collection
 /// </summary>
@@ -29,7 +31,9 @@ struct EnumHash
 	template<typename T>
 	std::size_t operator()(const T& Val) const
 	{
-		return (std::size_t)(const_cast<T>(Val));
+		bool Result = (std::size_t)(const_cast<T>(Val));
+		std::cout << "Hash: " << Result << std::endl;
+		return Result;
 	}
 };
 
@@ -44,6 +48,9 @@ struct EnumEquality
 	template<typename T>
 	constexpr bool operator()(const T& lhs, const T& rhs) const
 	{
+		auto lhsHash = (std::size_t)(const_cast<T>(lhs));
+		auto rhsHash = (std::size_t)(const_cast<T>(rhs));
+		std::cout << "Equal1: " << lhsHash << " Equal2: " << rhsHash << std::endl;
 		return (bool)((int)(const_cast<T>(lhs)) & (int)(const_cast<T>(rhs)));
 	}
 };

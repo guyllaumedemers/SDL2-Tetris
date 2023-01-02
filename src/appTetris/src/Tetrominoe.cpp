@@ -36,10 +36,10 @@ Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t
 		TetrominoeEntryIndices = { Zero, Zero, Zero, Zero };
 		break;
 	case TetrominoeShapeEnum::TShape:
-		TetrominoeEntryIndices = { Zero, One, Two, static_cast<uint8_t>(One + (One * Cols)) };
+		TetrominoeEntryIndices = { static_cast<uint8_t>(One), static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two + (One * Cols)) };
 		break;
 	case TetrominoeShapeEnum::LShape:
-		TetrominoeEntryIndices = { Zero, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(Two * Cols), static_cast<uint8_t>(One + (Two * Cols)) };
+		TetrominoeEntryIndices = { Two, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two + (One * Cols)) };
 		break;
 	case TetrominoeShapeEnum::ZShape:
 		TetrominoeEntryIndices = { Zero, One, static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two + (One * Cols)) };
@@ -51,7 +51,7 @@ Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t
 		TetrominoeEntryIndices = { Zero, One, Two, Three };
 		break;
 	case TetrominoeShapeEnum::JShape:
-		TetrominoeEntryIndices = { One, static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two * Cols), static_cast<uint8_t>(One + (Two * Cols)) };
+		TetrominoeEntryIndices = { Zero, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(One + (One * Cols)), static_cast<uint8_t>(Two + (One * Cols)) };
 		break;
 	case TetrominoeShapeEnum::SShape:
 		TetrominoeEntryIndices = { One, Two, static_cast<uint8_t>(One * Cols), static_cast<uint8_t>(One + (One * Cols)) };

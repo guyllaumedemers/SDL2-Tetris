@@ -103,7 +103,7 @@ struct RotationalAlignmentContainer final
 
 class TetrominoeRotationRealignmentHelper final
 {
-	UnorderedMap<TetrominoeShapeEnum, RotationalAlignmentContainer> RotationRealignmentMap = UnorderedMap<TetrominoeShapeEnum, RotationalAlignmentContainer>();
+	UnorderedMap<const TetrominoeShapeEnum, RotationalAlignmentContainer> RotationRealignmentMap = UnorderedMap<const TetrominoeShapeEnum, RotationalAlignmentContainer>();
 	static std::shared_ptr<TetrominoeRotationRealignmentHelper> Singleton;
 
 	TetrominoeRotationRealignmentHelper();
