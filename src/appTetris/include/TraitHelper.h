@@ -22,6 +22,7 @@
 #endif
 
 #include <iostream>
+#include "TetrominoeShapeEnum.h"
 
 /// <summary>
 /// Custom Hash lookup for using Enum as TKey with STL Hash Collection
@@ -31,9 +32,7 @@ struct EnumHash
 	template<typename T>
 	std::size_t operator()(const T& Val) const
 	{
-		bool Result = (std::size_t)(const_cast<T>(Val));
-		std::cout << "Hash: " << Result << std::endl;
-		return Result;
+		return (std::size_t)(const_cast<T>(Val));
 	}
 };
 
@@ -48,9 +47,6 @@ struct EnumEquality
 	template<typename T>
 	constexpr bool operator()(const T& lhs, const T& rhs) const
 	{
-		auto lhsHash = (std::size_t)(const_cast<T>(lhs));
-		auto rhsHash = (std::size_t)(const_cast<T>(rhs));
-		std::cout << "Equal1: " << lhsHash << " Equal2: " << rhsHash << std::endl;
 		return (bool)((int)(const_cast<T>(lhs)) & (int)(const_cast<T>(rhs)));
 	}
 };
