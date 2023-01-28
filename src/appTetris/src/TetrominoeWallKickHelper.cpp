@@ -21,81 +21,87 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 	using WallKickAlignment = WallKickAlignmentContainer::WallKickAlignment;
 	// ---
 
+	static constexpr int8_t&& Zero = 0;
+	static constexpr int8_t&& One = 1;
+	static constexpr int8_t&& Two = 2;
+	static constexpr int8_t&& MinusOne = -1;
+	static constexpr int8_t&& MinusTwo = -2;
+	static constexpr int8_t&& MinusThree = -3;
+
+	static const WallKickAlignmentContainer&& JLSTZ_Wallkick = WallKickAlignmentContainer
+	{
+		WallKickAlignment{Zero,Zero},
+		WallKickAlignment{MinusOne,Zero},
+		WallKickAlignment{MinusOne,One},
+		WallKickAlignment{Zero,MinusTwo},
+		WallKickAlignment{MinusOne,MinusTwo},
+		WallKickAlignment{One,Zero},
+		WallKickAlignment{One,MinusOne},
+		WallKickAlignment{Zero,Two},
+		WallKickAlignment{One,Two},
+		WallKickAlignment{One,One},
+		WallKickAlignment{One,MinusTwo},
+		WallKickAlignment{MinusOne,MinusOne},
+		WallKickAlignment{MinusOne,Two},
+	};
+
+	static const WallKickAlignmentContainer&& I_Wallkick = WallKickAlignmentContainer
+	{
+		WallKickAlignment{Zero,Zero},
+		WallKickAlignment{MinusTwo,Zero},
+		WallKickAlignment{One,Zero},
+		WallKickAlignment{MinusTwo,MinusOne},
+		WallKickAlignment{One,Two},
+		WallKickAlignment{Two,Zero},
+		WallKickAlignment{MinusOne,Zero},
+		WallKickAlignment{Two,One},
+		WallKickAlignment{MinusOne,MinusTwo},
+		WallKickAlignment{MinusOne,Two},
+		WallKickAlignment{Two,MinusOne},
+		WallKickAlignment{One,MinusTwo},
+		WallKickAlignment{MinusTwo,One},
+	};
+
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::TShape,
-				WallKickAlignmentContainer{
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0}
-				}
+				JLSTZ_Wallkick
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::LShape,
-				WallKickAlignmentContainer{
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0}
-				}
+				JLSTZ_Wallkick
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::ZShape,
-				WallKickAlignmentContainer{
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0}
-				}
+				JLSTZ_Wallkick
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::OShape,
-				WallKickAlignmentContainer{
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0}
-				}
+				WallKickAlignmentContainer{}
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::IShape,
-				WallKickAlignmentContainer{
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0}
-				}
+				I_Wallkick
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::JShape,
-				WallKickAlignmentContainer{
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0}
-				}
+				JLSTZ_Wallkick
 		});
 
 	WallKickRealignmentMap.insert(
 		{
 				TetrominoeShapeEnum::SShape,
-				WallKickAlignmentContainer{
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0},
-					WallKickAlignment{0,0}
-				}
+				JLSTZ_Wallkick
 		});
 };
 
