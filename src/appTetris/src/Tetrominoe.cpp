@@ -361,12 +361,9 @@ int8_t Tetrominoe::GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>&
 			const bool&& CanPerformFloorKick =
 				static_cast<bool>(GetTetrominoeShape() & ~TetrominoeShapeEnum::OShape);
 
-			const bool&& JLSTZ_Floorkick =
-				static_cast<bool>(GetTetrominoeShape() & ~TetrominoeShapeEnum::IShape);
-
 			if (CanPerformFloorKick)
 			{
-				return JLSTZ_Floorkick ? (MinusOne * Cols) : (MinusTwo * Cols);
+				return static_cast<bool>(GetTetrominoeShape() & ~TetrominoeShapeEnum::IShape) ? (MinusOne * Cols) : (MinusTwo * Cols);
 			}
 		}
 	}
