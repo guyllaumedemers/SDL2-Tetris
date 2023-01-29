@@ -283,15 +283,16 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		// check wallkick requirements
 
-		const WallKickAlignmentContainer& WallkickContainer = TetrominoeWallKickHelper::Get()->TryWallKickAlignmentContainer(this);
+		const WallKickAlignmentContainer& WallkickContainer = TetrominoeWallKickHelper::Get()->TryGetWallKickAlignmentContainer(this);
 
 		// --- typedef
 		using WallKickAlignment = WallKickAlignmentContainer::WallKickAlignment;
 		// ---
 
+		const std::vector<WallKickAlignment>& WallkickAlignmentAtRotationIndex = WallkickContainer.TryGetWallkickAlignmentAtRotationIndex(GetTetrominoeRotationIndex());
 		size_t&& WallkickIndex = 0;
 
-		for (const WallKickAlignment& WallkickAlignment : WallkickContainer.WallKickRealignmentData)
+		for (const WallKickAlignment& WallkickAlignment : WallkickAlignmentAtRotationIndex)
 		{
 			// check test case success
 
@@ -342,7 +343,7 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		// update array indices
 
-		const WallKickAlignment& WallkickAlignment = WallkickContainer.TryGetWallKickAlignmentAtIndex(WallkickIndex);
+		const WallKickAlignment& WallkickAlignment = WallkickAlignmentAtRotationIndex.at(WallkickIndex);
 		size_t&& Begin = 0;
 
 		for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)

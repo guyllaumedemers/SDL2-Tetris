@@ -29,6 +29,8 @@
 #include <SDL_log.h>
 #endif
 
+#include "TraitHelper.h"
+
 struct WallKickAlignmentContainer final
 {
 	/// <summary>
@@ -52,14 +54,11 @@ struct WallKickAlignmentContainer final
 	/// <summary>
 	/// Wall Kicks possible following rotation of tetrominoe which overlap on occupied tile
 	/// </summary>
-	std::vector<WallKickAlignment> WallKickRealignmentData = std::vector<WallKickAlignment>();
+	UnorderedMap<uint8_t, std::vector<WallKickAlignment>> WallKickRealignmentData = UnorderedMap<uint8_t, std::vector<WallKickAlignment>>();
 
-	WallKickAlignmentContainer(std::initializer_list<WallKickAlignment> Alignments)
+	WallKickAlignmentContainer(const UnorderedMap<uint8_t, std::vector<WallKickAlignment>>& WallkickMap)
 	{
-		for (const auto& Alignment : Alignments)
-		{
-			WallKickRealignmentData.push_back(Alignment);
-		}
+		WallKickRealignmentData = WallkickMap;
 	}
 
 	WallKickAlignmentContainer() {}
@@ -73,7 +72,28 @@ struct WallKickAlignmentContainer final
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-	inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(uint8_t Index) const
+	inline const std::vector<WallKickAlignment>& TryGetWallkickAlignmentAtRotationIndex(uint8_t RotationIndex) const
+	{
+		static const std::vector<WallKickAlignment>& EmptyAlignmentContainer = std::vector<WallKickAlignment>();
+
+		if (WallKickRealignmentData.empty())
+		{
+			return EmptyAlignmentContainer;
+		}
+
+		try
+		{
+			return WallKickRealignmentData.at(RotationIndex);
+		}
+		catch (const std::out_of_range& e)
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_WALL_KICK_REALIGNMENT_CONTAINER AT ROTATION INDEX FUNCTION! %s", e.what());
+		}
+
+		return EmptyAlignmentContainer;
+	}
+
+	inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(uint8_t RotationIndex, uint8_t WallkickIndex) const
 	{
 		static constexpr WallKickAlignment&& EmptyAlignment = WallKickAlignment();
 
@@ -84,7 +104,7 @@ struct WallKickAlignmentContainer final
 
 		try
 		{
-			return WallKickRealignmentData.at(Index);
+			return TryGetWallkickAlignmentAtRotationIndex(RotationIndex).at(WallkickIndex);
 		}
 		catch (const std::out_of_range& e)
 		{
@@ -99,7 +119,6 @@ struct WallKickAlignmentContainer final
 #endif
 
 #include "TetrominoeShapeEnum.h"
-#include "TraitHelper.h"
 
 class TetrominoeWallKickHelper final
 {
@@ -110,7 +129,7 @@ class TetrominoeWallKickHelper final
 public:
 	// --- Getter/Setter
 	static TetrominoeWallKickHelper* Get();
-	const WallKickAlignmentContainer& TryWallKickAlignmentContainer(class Tetrominoe* TetrominoePtrArg) const;
+	const WallKickAlignmentContainer& TryGetWallKickAlignmentContainer(class Tetrominoe* TetrominoePtrArg) const;
 	// ---
 };
 #endif
