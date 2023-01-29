@@ -344,6 +344,10 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 		// update array indices
 
 		const WallKickAlignment& WallkickAlignment = WallkickAlignmentAtRotationIndex.at(WallkickIndex);
+
+		// calculate realignment with wallkick
+
+		const uint8_t&& WallkickReAlignmentValue = static_cast<uint8_t>(WallkickAlignment.x + (WallkickAlignment.y * Cols));
 		size_t&& Begin = 0;
 
 		for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)
@@ -353,14 +357,23 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 				const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
 				const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
 
-				// calculate realignment with wallkick
+				// calculate realignment output
 
-				const uint8_t&& WallkickReAlignmentValue = static_cast<uint8_t>(WallkickAlignment.x + (WallkickAlignment.y * Cols));
+				const uint16_t&& RealignmentOutput = static_cast<uint16_t>((Pivot + Col + (Row * Cols)) + RotationReAlignmentValue + WallkickReAlignmentValue);
 
 				// realign
 
-				TetrominoeEntryIndices.at(Begin++) = static_cast<uint16_t>((Pivot + Col + (Row * Cols)) + RotationReAlignmentValue + WallkickReAlignmentValue);
+				TetrominoeEntryIndices.at(Begin++) = RealignmentOutput;
 			}
+		}
+
+		// set tiles entry for the active indices
+
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		{
+			Tile& Tile = Tiles.at(TetrominoeEntryIndex);
+			Tile.Attribute = TileAttributeEnum::Filled;
+			Tile.Wildcard = GetTetrominoeWildcard();
 		}
 	}
 	catch (const std::out_of_range& e)
