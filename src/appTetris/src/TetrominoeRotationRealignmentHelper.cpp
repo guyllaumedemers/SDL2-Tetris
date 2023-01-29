@@ -22,8 +22,6 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	// ---
 
 	static constexpr int8_t&& Zero = 0;
-	static constexpr int8_t&& One = 1;
-	static constexpr int8_t&& Two = 2;
 	static constexpr int8_t&& MinusOne = -1;
 	static constexpr int8_t&& MinusTwo = -2;
 	static constexpr int8_t&& MinusThree = -3;
@@ -36,8 +34,8 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	/// </summary>
 	static const RotationalAlignmentContainer&& JLSTZ_Rot = RotationalAlignmentContainer
 	{
-		RotationRealignment{MinusTwo,Zero},
-		RotationRealignment{MinusOne,Zero}
+		RotationRealignment{MinusOne,Zero},
+		RotationRealignment{MinusTwo,Zero}
 	};
 
 	static const RotationalAlignmentContainer&& O_Rot = RotationalAlignmentContainer

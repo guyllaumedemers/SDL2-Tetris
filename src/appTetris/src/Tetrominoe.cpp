@@ -198,7 +198,7 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 
 		// search wallkick alignment index
 
-		const uint8_t&& WallkickReAlignmentValue = GetWallkickAlignmentValueAtIndex(Tiles, Matrix, Pivot, RotationReAlignmentValue, FloorkickReAlignmentValue, NMatrix, Rows, Cols);
+		const int8_t&& WallkickReAlignmentValue = GetWallkickAlignmentValueAtIndex(Tiles, Matrix, Pivot, RotationReAlignmentValue, FloorkickReAlignmentValue, NMatrix, Rows, Cols);
 
 		// update tetrominoe entry indices with proper translated values
 
