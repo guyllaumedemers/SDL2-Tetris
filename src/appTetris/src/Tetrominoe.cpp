@@ -328,6 +328,7 @@ int8_t Tetrominoe::GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>&
 {
 	static constexpr int8_t&& Zero = 0;
 	static constexpr int8_t&& MinusOne = -1;
+	static constexpr int8_t&& MinusTwo = -2;
 
 	int8_t N = MinusOne;
 
@@ -357,7 +358,16 @@ int8_t Tetrominoe::GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>&
 
 		if (IsTileOverlapping)
 		{
-			return NULL; /*create mapping of values to return*/
+			const bool&& CanPerformFloorKick =
+				static_cast<bool>(GetTetrominoeShape() & ~TetrominoeShapeEnum::OShape);
+
+			const bool&& JLSTZ_Floorkick =
+				static_cast<bool>(GetTetrominoeShape() & ~TetrominoeShapeEnum::IShape);
+
+			if (CanPerformFloorKick)
+			{
+				return JLSTZ_Floorkick ? (MinusOne * Cols) : (MinusTwo * Cols);
+			}
 		}
 	}
 
