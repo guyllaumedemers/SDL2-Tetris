@@ -2,11 +2,6 @@
 #include "../include/TextureManager.h"
 #include "../include/SDLManager.h"
 
-#ifndef INCLUDED_SDL_LIB
-#define INCLUDED_SDL_LIB
-#include <SDL.h>
-#endif
-
 void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg, uint8_t Rows, uint8_t Cols) const
 {
 	if (!TextureManagerPtrArg || !SDLManagerPtrArg)

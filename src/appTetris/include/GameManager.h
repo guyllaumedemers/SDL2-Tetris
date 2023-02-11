@@ -11,15 +11,15 @@
 #endif
 
 #include "SDLManager.h"
-#include "InputManager.h"
 #include "GameInstance.h"
+#include "InputManager.h"
 #include "TextureManager.h"
 
 class GameManager final
 {
 	std::unique_ptr<SDLManager> SDLManagerUniquePtr = std::make_unique<SDLManager>();
-	std::unique_ptr<InputManager> InputManagerUniquePtr = std::make_unique<InputManager>();
 	std::unique_ptr<GameInstance> GameInstanceUniquePtr = std::make_unique<GameInstance>();
+	std::unique_ptr<InputManager> InputManagerUniquePtr = std::make_unique<InputManager>();
 	std::unique_ptr<TextureManager> TextureManagerUniquePtr = std::make_unique<TextureManager>();
 	bool bIsQuittingGame = false;
 public:

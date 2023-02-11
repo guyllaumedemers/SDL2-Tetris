@@ -135,16 +135,7 @@ void GameManager::Subscribe()
 			return;
 		}
 
-		TetrominoeManager* const TetrominoeManagerPtr = GameInstanceUniquePtr->GetTetrominoeManager().get();
-		TileMap* const TileMapPtr = GameInstanceUniquePtr->GetTileMap().get();
-
-		if (!TetrominoeManagerPtr || !TileMapPtr)
-		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOEMANAGER_PTR || TILEMAP_PTR ARE INVALID IN SPACE_PRESS_EVENT!");
-			return;
-		}
-
-		TetrominoeManagerPtr->Flip(TileMapPtr->GetTiles(), TileMapPtr->GetRows(), TileMapPtr->GetCols());
+		GameInstanceUniquePtr->PollSpaceKeyEvent();
 	};
 
 	GameInstanceUniquePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)

@@ -39,9 +39,9 @@ struct SDLClock final
 #define INCLUDED_SDL_TIMER
 struct SDLTimer final
 {
-	inline void Start(uint32_t CallbackDelay, SDL_TimerCallback CallbackEvent, void* Params)
+	inline void Start(Uint32 CallbackDelay, SDL_TimerCallback CallbackEvent, void* Params)
 	{
-		(CallbackDelay != 0.f && CallbackEvent != nullptr) ? SDL_AddTimer(CallbackDelay, CallbackEvent, Params) : NULL;
+		(CallbackEvent != nullptr) ? SDL_AddTimer(CallbackDelay, CallbackEvent, Params) : NULL;
 	};
 };
 #endif

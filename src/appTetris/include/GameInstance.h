@@ -16,13 +16,12 @@
 #include <cstdint>
 #endif
 
-#include "TileMap.h"
-#include "TetrominoeManager.h"
+#include "InputManager.h"
+#include "LevelManager.h"
 
 class GameInstance final
 {
-	std::unique_ptr<TileMap> TileMapUniquePtr = std::make_unique<TileMap>();
-	std::unique_ptr<TetrominoeManager> TetrominoeManagerUniquePtr = std::make_unique<TetrominoeManager>();
+	std::unique_ptr<LevelManager> LevelManagerUniquePtr = std::make_unique<LevelManager>();
 public:
 	GameInstance(const GameInstance&) = delete;
 	GameInstance(GameInstance&&) = delete;
@@ -32,12 +31,9 @@ public:
 	GameInstance& operator=(GameInstance&&) = delete;
 	void Initialize(class SDLManager* const SDLManagerPtrArg) const;
 	void Update(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg) const;
-	void Update() const;
 	void Clear() const;
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
-	// --- Getter/Setter
-	const std::unique_ptr<TileMap>& GetTileMap() const { return TileMapUniquePtr; }
-	const std::unique_ptr<TetrominoeManager>& GetTetrominoeManager() const { return TetrominoeManagerUniquePtr; }
+	void PollSpaceKeyEvent() const;
 	// --- Delegate
 	typedef std::function<void(uint16_t, uint16_t)> DelSetWindow;
 	DelSetWindow SetWindowEvent;
