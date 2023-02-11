@@ -16,7 +16,6 @@
 #include <cstdint>
 #endif
 
-#include "InputManager.h"
 #include "LevelManager.h"
 
 class GameInstance final
