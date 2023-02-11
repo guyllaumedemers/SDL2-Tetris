@@ -112,6 +112,7 @@ void LevelManager::Start(SDLManager* const SDLManagerPtrArg)
 		LevelManager* const LevelManagerPtr = static_cast<LevelManager*>(Param);
 		if (!LevelManagerPtr)
 		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN SDL_TIMER FUNCTOR CREATE_TETROMINOE!");
 			return Interval;
 		}
 
@@ -123,6 +124,7 @@ void LevelManager::Start(SDLManager* const SDLManagerPtrArg)
 		LevelManager* const LevelManagerPtr = static_cast<LevelManager*>(Param);
 		if (!LevelManagerPtr)
 		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN SDL_TIMER FUNCTOR PERIODIC_UPDATE!");
 			return Interval;
 		}
 
@@ -142,6 +144,7 @@ uint32_t LevelManager::CreateNewTetrominoe(uint32_t Interval, void* Params) cons
 {
 	if (!TetrominoeManagerUniquePtr)
 	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN LEVEL_MANAGER_INSTANCE CREATE_TETROMINOE!");
 		return Interval;
 	}
 
@@ -153,6 +156,7 @@ uint32_t LevelManager::PeriodicUpdate(uint32_t Interval, void* Params) const
 {
 	if (!TetrominoeManagerUniquePtr)
 	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN LEVEL_MANAGER_INSTANCE PERIODIC_UPDATE!");
 		return Interval;
 	}
 
