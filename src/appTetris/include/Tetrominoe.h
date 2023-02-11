@@ -49,7 +49,6 @@ public:
 	void SetIsLocked() { bIsLocked = true; }
 	const uint8_t& GetTetrominoeRotationIndex() const { return RotationIndex; }
 	void SetTetrominoeRotationIndex(uint8_t Index) { RotationIndex = Index; }
-	// ---
 private:
 	void InvalidateTetrominoeIndicies(std::vector<Tile>& Tiles);
 	void RevalidateTetrominoeIndicies(std::vector<Tile>& Tiles);

@@ -31,17 +31,26 @@ public:
 	LevelManager& operator=(const LevelManager&) = delete;
 	LevelManager& operator=(LevelManager&&) = delete;
 	void Initialize(class SDLManager* const SDLManagerPtrArg, std::function<void(uint16_t, uint16_t)> SetWindowEvent);
-	void Update(class TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const;
+	void Update(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg) const;
 	void Clear() const;
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	void PollSpaceKeyEvent() const;
 private:
-	void Reset(class SDLManager* const SDLManagerPtrArg);
-	void Start(class SDLManager* const SDLManagerPtrArg);
-	void Stop();
+	// --- Getter/Setter
+	const std::unique_ptr<TileMap>& GetTilemapManager() const { return TileMapUniquePtr; }
+	const std::unique_ptr<TetrominoeManager>& GetTetrominoeManager() const { return TetrominoeManagerUniquePtr; }
+	// --- Timers
+	int CreateTimer(class SDLManager* const SDLManagerPtrArg, uint32_t(*Functor)(uint32_t, void*), uint32_t TimerDelay, void* VoidPtrArg);
+	int DestroyTimer(class SDLManager* const SDLManagerPtrArg, int TimerID);
+	// --- Lock Delay system
+	void InitializeLockDelaySystem(class SDLManager* const SDLManagerPtrArg);
+	void ResetLockDelaySystem(class SDLManager* const SDLManagerPtrArg);
 	// --- Functor
-	uint32_t CreateNewTetrominoe(uint32_t Interval, void* Params) const;
-	uint32_t PeriodicUpdate(uint32_t Interval, void* Params) const;
-	void MakeTimer(class SDLManager* const SDLManagerPtrArg, uint32_t(*Functor)(uint32_t, void*), uint32_t TimerDelay, void* VoidPtrArg);
+	uint32_t CreateNewTetrominoe(uint32_t Interval, void* Param) const;
+	uint32_t PeriodicUpdate(uint32_t Interval, void* Param) const;
+	// --- Delegates
+	typedef std::function<void()> DelLockDelayCompleted;
+	DelLockDelayCompleted LockDelayCompletedEvent;
+	// ---
 };
 #endif

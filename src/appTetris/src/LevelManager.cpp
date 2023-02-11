@@ -8,12 +8,12 @@
 #endif
 
 #ifndef PERIODIC_UPDATE
-#define PERIODIC_UPDATE 10.0
+#define PERIODIC_UPDATE 60.0
 #endif
 
 void LevelManager::Initialize(SDLManager* const SDLManagerPtrArg, std::function<void(uint16_t, uint16_t)> SetWindowEvent)
 {
-	if (!SDLManagerPtrArg)
+	if (!SDLManagerPtrArg || !TileMapUniquePtr || !TetrominoeManagerUniquePtr)
 	{
 		return;
 	}
@@ -39,7 +39,11 @@ void LevelManager::Initialize(SDLManager* const SDLManagerPtrArg, std::function<
 		}
 	);
 
-	Reset(SDLManagerPtrArg);
+	// start tracking tetrominoe lock delay event
+	InitializeLockDelaySystem(SDLManagerPtrArg);
+
+	// reset level state
+	ResetLockDelaySystem(SDLManagerPtrArg);
 }
 
 void LevelManager::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const
@@ -94,17 +98,126 @@ void LevelManager::PollSpaceKeyEvent() const
 	TetrominoeManagerUniquePtr->Flip(TileMapUniquePtr->GetTiles(), TileMapUniquePtr->GetRows(), TileMapUniquePtr->GetCols());
 }
 
-void LevelManager::Reset(SDLManager* const SDLManagerPtrArg)
+uint32_t LevelManager::CreateNewTetrominoe(uint32_t Interval, void* Param) const
 {
-	Stop();
-	Start(SDLManagerPtrArg);
+	LevelManager* const LevelManagerPtr = static_cast<LevelManager*>(Param);
+	if (!LevelManagerPtr)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: LEVEL_MANAGER_PTR INVALID IN SDL_TIMER FUNCTOR PERIODIC_UPDATE!");
+		exit(EXIT_FAILURE);
+	}
+
+	TetrominoeManager* const TetrominoeManagerPtr = LevelManagerPtr->GetTetrominoeManager().get();
+	if (!TetrominoeManagerPtr)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN LEVEL_MANAGER_INSTANCE CREATE_TETROMINOE!");
+		exit(EXIT_FAILURE);
+	}
+
+	TetrominoeManagerPtr->GenerateRandomTetrominoeEvent();
+	return static_cast<uint32_t>(NULL);
 }
 
-void LevelManager::Start(SDLManager* const SDLManagerPtrArg)
+uint32_t LevelManager::PeriodicUpdate(uint32_t Interval, void* Param) const
+{
+	LevelManager* const LevelManagerPtr = static_cast<LevelManager*>(Param);
+	if (!LevelManagerPtr)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: LEVEL_MANAGER_PTR INVALID IN SDL_TIMER FUNCTOR PERIODIC_UPDATE!");
+		exit(EXIT_FAILURE);
+	}
+
+	TetrominoeManager* const TetrominoeManagerPtr = LevelManagerPtr->GetTetrominoeManager().get();
+	if (!TetrominoeManagerPtr)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN LEVEL_MANAGER_INSTANCE CREATE_TETROMINOE!");
+		exit(EXIT_FAILURE);
+	}
+
+	TileMap* const TilemapManagerPtr = LevelManagerPtr->GetTilemapManager().get();
+	if (!TilemapManagerPtr)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TILEMAP_MANAGER_PTR INVALID IN LEVEL_MANAGER_INSTANCE CREATE_TETROMINOE!");
+		exit(EXIT_FAILURE);
+	}
+
+	static constexpr int8_t&& OneDown = -1;
+	static constexpr int8_t&& Idle = 0;
+
+	// update tetrominoes
+	TetrominoeManagerPtr->Update(
+		TilemapManagerPtr->GetTiles(),
+		Idle,
+		OneDown,
+		TilemapManagerPtr->GetRows(),
+		TilemapManagerPtr->GetCols()
+	);
+
+	return Interval;
+}
+
+void LevelManager::InitializeLockDelaySystem(SDLManager* const SDLManagerPtrArg)
+{
+	if (!SDLManagerPtrArg || !TetrominoeManagerUniquePtr)
+	{
+		return;
+	}
+
+	// delegate callback to reset locking system that allow tetrominoes to move
+	LockDelayCompletedEvent = [&]()
+	{
+		GetTetrominoeManager().get()->LockActiveTetrominoeEvent();
+		ResetLockDelaySystem(SDLManagerPtrArg);
+	};
+
+	// delegate callback to track and update the state of the active tetrominoe and set its lock state when timer complete
+	TetrominoeManagerUniquePtr->ResetTetrominoeLockDelayTimerEvent = [&](int ActiveLockDelay)
+	{
+		static constexpr double&& Fps = (1.f / LOCK_DELAY);
+		static constexpr uint16_t&& Miliseconds = 1000;
+		static const Uint32&& DelayInMiliseconds = static_cast<Uint32>(std::floor(Fps * Miliseconds));
+
+		if (ActiveLockDelay != NULL)
+		{
+			bool IsDestroyed = DestroyTimer(SDLManagerPtrArg, ActiveLockDelay);
+			if (!IsDestroyed)
+			{
+				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TIMER LOCK DELAY DESTRUCTION FAILED!");
+				//exit(EXIT_FAILURE);
+			}
+		}
+
+		uint32_t(*ResetLockDelayFunctor)(uint32_t, void*) = [](uint32_t Interval, void* Param)
+		{
+			LevelManager* const LevelManagerPtr = static_cast<LevelManager*>(Param);
+			if (!LevelManagerPtr)
+			{
+				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: LEVEL_MANAGER_PTR ID INVALID IN RESET_LOCK_DELAY_EVENT!");
+				exit(EXIT_FAILURE);
+			}
+
+			LevelManagerPtr->LockDelayCompletedEvent();
+			return static_cast<uint32_t>(NULL);
+		};
+
+		return CreateTimer(SDLManagerPtrArg, ResetLockDelayFunctor, DelayInMiliseconds, const_cast<LevelManager*>(this));
+	};
+}
+
+void LevelManager::ResetLockDelaySystem(SDLManager* const SDLManagerPtrArg)
 {
 	static constexpr double&& Fps = (1.f / PERIODIC_UPDATE);
 	static constexpr uint16_t&& Miliseconds = 1000;
 	static const Uint32&& DelayInMiliseconds = static_cast<Uint32>(std::floor(Fps * Miliseconds));
+
+	// --- static TimerID
+	static int TimerID_A = (TimerID_A != NULL) ? TimerID_A : NULL;
+	static int TimerID_B = (TimerID_B != NULL) ? TimerID_B : NULL;
+	// ---
+
+	// reset timers
+	DestroyTimer(SDLManagerPtrArg, TimerID_A);
+	DestroyTimer(SDLManagerPtrArg, TimerID_B);
 
 	// create functors
 	Uint32(*CreateNewTetrominoeFunctor)(Uint32, void*) = [](Uint32 Interval, void* Param)
@@ -113,7 +226,7 @@ void LevelManager::Start(SDLManager* const SDLManagerPtrArg)
 		if (!LevelManagerPtr)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN SDL_TIMER FUNCTOR CREATE_TETROMINOE!");
-			return Interval;
+			exit(EXIT_FAILURE);
 		}
 
 		return LevelManagerPtr->CreateNewTetrominoe(Interval, Param);
@@ -125,57 +238,18 @@ void LevelManager::Start(SDLManager* const SDLManagerPtrArg)
 		if (!LevelManagerPtr)
 		{
 			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN SDL_TIMER FUNCTOR PERIODIC_UPDATE!");
-			return Interval;
+			exit(EXIT_FAILURE);
 		}
 
 		return LevelManagerPtr->PeriodicUpdate(Interval, Param);
 	};
 
 	// start timers
-	MakeTimer(SDLManagerPtrArg, CreateNewTetrominoeFunctor, DelayInMiliseconds, const_cast<LevelManager*>(this));
-	MakeTimer(SDLManagerPtrArg, PeriodicUpdateFunctor, DelayInMiliseconds, const_cast<LevelManager*>(this));
+	TimerID_A = CreateTimer(SDLManagerPtrArg, CreateNewTetrominoeFunctor, DelayInMiliseconds, const_cast<LevelManager*>(this));
+	TimerID_B = CreateTimer(SDLManagerPtrArg, PeriodicUpdateFunctor, DelayInMiliseconds, const_cast<LevelManager*>(this));
 }
 
-void LevelManager::Stop()
-{
-}
-
-uint32_t LevelManager::CreateNewTetrominoe(uint32_t Interval, void* Params) const
-{
-	if (!TetrominoeManagerUniquePtr)
-	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN LEVEL_MANAGER_INSTANCE CREATE_TETROMINOE!");
-		return Interval;
-	}
-
-	TetrominoeManagerUniquePtr->GenerateRandomTetrominoeEvent();
-	return static_cast<uint32_t>(NULL);
-}
-
-uint32_t LevelManager::PeriodicUpdate(uint32_t Interval, void* Params) const
-{
-	if (!TetrominoeManagerUniquePtr)
-	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_MANAGER_PTR INVALID IN LEVEL_MANAGER_INSTANCE PERIODIC_UPDATE!");
-		return Interval;
-	}
-
-	static constexpr int8_t&& OneDown = -1;
-	static constexpr int8_t&& Idle = 0;
-
-	// update tetrominoes
-	TetrominoeManagerUniquePtr->Update(
-		TileMapUniquePtr->GetTiles(),
-		Idle,
-		OneDown,
-		TileMapUniquePtr->GetRows(),
-		TileMapUniquePtr->GetCols()
-	);
-
-	return Interval;
-}
-
-void LevelManager::MakeTimer(SDLManager* const SDLManagerPtrArg, uint32_t(*Functor)(uint32_t, void*), uint32_t TimerDelay, void* VoidPtrArg)
+int LevelManager::CreateTimer(SDLManager* const SDLManagerPtrArg, uint32_t(*Functor)(uint32_t, void*), uint32_t TimerDelay, void* VoidPtrArg)
 {
 	if (!SDLManagerPtrArg)
 	{
@@ -183,9 +257,22 @@ void LevelManager::MakeTimer(SDLManager* const SDLManagerPtrArg, uint32_t(*Funct
 		exit(EXIT_FAILURE);
 	}
 
-	SDLManagerPtrArg->GetTimer().Start(
-		TimerDelay,
-		Functor,
-		VoidPtrArg
-	);
+	return SDLManagerPtrArg->GetTimer()
+		.Start(
+			TimerDelay,
+			Functor,
+			VoidPtrArg
+		);
+}
+
+int LevelManager::DestroyTimer(SDLManager* const SDLManagerPtrArg, int TimerID)
+{
+	if (!SDLManagerPtrArg)
+	{
+		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN GAME_MANAGER_INSTANCE START_TIMER!");
+		exit(EXIT_FAILURE);
+	}
+
+	return SDLManagerPtrArg->GetTimer()
+		.Stop(TimerID);
 }

@@ -33,12 +33,14 @@ class TetrominoeManager final
 	std::vector<std::shared_ptr<Tetrominoe>> TetrominoePool = std::vector<std::shared_ptr<Tetrominoe>>();
 	std::shared_ptr<Tetrominoe> ActiveTetrominoe = nullptr;
 	std::mutex ActiveTetrominoeMutex;
+	int LockDelayID = INT32_MIN;
 
 	void Add(uint8_t Rows, uint8_t Cols);
 	void Remove();
 	std::unique_ptr<Tetrominoe> GenerateRandomTetromioeShape(uint8_t Rows, uint8_t Cols) const;
 	void ClearTetrominoesOnRow(uint8_t Rows, uint8_t Cols, size_t TetrominoeIndex);
 	void RealignTetrominoes(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols) const;
+	void ResetLockDelay();
 public:
 	TetrominoeManager(const TetrominoeManager&) = delete;
 	TetrominoeManager(TetrominoeManager&&) = delete;
@@ -52,13 +54,18 @@ public:
 	void Clear();
 	// --- Getter/Setter
 	const std::vector<std::shared_ptr<Tetrominoe>>& GetTetrominoes() const { return TetrominoePool; }
-	const std::shared_ptr<Tetrominoe>& GetActiveTetrominoe() const { return ActiveTetrominoe; }
 	// --- Delegate
 	typedef std::function<void(Tetrominoe* const)> DelCheckRowCompletion;
 	DelCheckRowCompletion CheckRowCompletionEvent;
 
 	typedef std::function<void()> DelGenerateRandomTetrominoe;
 	DelGenerateRandomTetrominoe GenerateRandomTetrominoeEvent;
+
+	typedef std::function<void()> DelLockActiveTetrominoe;
+	DelLockActiveTetrominoe LockActiveTetrominoeEvent;
+
+	typedef std::function<int(int)> DelResetTetrominoeLockDelayTimer;
+	DelResetTetrominoeLockDelayTimer ResetTetrominoeLockDelayTimerEvent;
 	// ---
 };
 #endif

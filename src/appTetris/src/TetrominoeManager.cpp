@@ -28,6 +28,8 @@ void TetrominoeManager::Add(uint8_t Rows, uint8_t Cols)
 	ActiveTetrominoe->Align();
 	// append the pool
 	TetrominoePool.push_back(ActiveTetrominoe);
+	// start *this Tetrominoe Lock Delay
+	LockDelayID = ResetTetrominoeLockDelayTimerEvent(LockDelayID);
 }
 
 void TetrominoeManager::Remove()
@@ -95,6 +97,10 @@ void TetrominoeManager::RealignTetrominoes(const std::vector<Tile>& Tiles, uint8
 	}
 }
 
+void TetrominoeManager::ResetLockDelay()
+{
+}
+
 void TetrominoeManager::Initialize(const std::vector<Tile>& Tiles, const uint8_t& Rows, const uint8_t& Cols, std::function<bool(uint16_t)> RowCompletionCallback)
 {
 	GenerateRandomTetrominoeEvent = [&]()
@@ -106,7 +112,8 @@ void TetrominoeManager::Initialize(const std::vector<Tile>& Tiles, const uint8_t
 	{
 		if (!TetrominoePtrArg)
 		{
-			return;
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TETROMINOE_PTR INVALID IN CHECK_ROW_COMPLETION_EVENT!");
+			exit(EXIT_FAILURE);
 		}
 
 		for (const auto& TetrominoeEntryIndex : TetrominoePtrArg->GetTetrominoeIndices())
@@ -121,6 +128,17 @@ void TetrominoeManager::Initialize(const std::vector<Tile>& Tiles, const uint8_t
 		}
 
 		RealignTetrominoes(Tiles, Rows, Cols);
+	};
+
+	LockActiveTetrominoeEvent = [&]()
+	{
+		if (!ActiveTetrominoe)
+		{
+			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: ACTIVE_TETROMINOE_PTR INVALID IN LOCK_ACTIVE_TETROMINOE_EVENT!");
+			exit(EXIT_FAILURE);
+		}
+
+		ActiveTetrominoe->SetIsLocked();
 	};
 }
 
@@ -152,6 +170,8 @@ void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8
 	}
 
 	TetrominoePtr->Update(const_cast<std::vector<Tile>&>(Tiles), DirX, DirY, Rows, Cols);
+	// reset the lock delay timer
+	LockDelayID = ResetTetrominoeLockDelayTimerEvent(LockDelayID);
 }
 
 void TetrominoeManager::Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
@@ -164,6 +184,8 @@ void TetrominoeManager::Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8
 	}
 
 	ActiveTetrominoe->FlipMatrix(const_cast<std::vector<Tile>&>(Tiles), Rows, Cols);
+	// reset the lock delay timer
+	LockDelayID = ResetTetrominoeLockDelayTimerEvent(LockDelayID);
 }
 
 void TetrominoeManager::Clear()
