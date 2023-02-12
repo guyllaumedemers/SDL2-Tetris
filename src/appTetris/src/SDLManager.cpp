@@ -1,34 +1,50 @@
 #include "../include/SDLManager.h"
+#include "../include/SDLlogHelper.h"
+
+#ifndef SDL_LIB
+#define SDL_LIB
+#include <SDL.h>
+#endif
+
+void SDLManager::SDLClock::Initialize()
+{
+	Now = Last = static_cast<double>(SDL_GetTicks64());
+}
 
 void SDLManager::Initialize()
 {
-	if (SDL_Init(SDL_INIT_EVERYTHING) != 0 /*0 is Success here*/)
+	if (SDL_Init(SDL_INIT_EVERYTHING) != NULL /*See SDL_Init Return Value*/)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 INIT FAILED!");
+		SDLlogHelper::Print(PrefixErrorType::LibraryInitFailed, "SDLManager");
 		exit(EXIT_FAILURE);
 	}
 
-	SDLWindowUniquePtr = std::unique_ptr<SDL_Window, FreeSDLWindow>(SDL_CreateWindow("TETRIS",
-		SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED,
-		NULL, NULL,
-		NULL
-	));
+	SDLWindowUniquePtr = std::unique_ptr<SDL_Window, SDLWrapper::FreeSDLWindow>(
+		SDL_CreateWindow(
+			"TETRIS",
+			SDL_WINDOWPOS_CENTERED,
+			SDL_WINDOWPOS_CENTERED,
+			NULL,
+			NULL,
+			NULL
+		));
 
 	if (!SDLWindowUniquePtr)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 WINDOW CREATION FAILED!");
+		SDLlogHelper::Print(PrefixErrorType::LibraryInitFailed, "SDLManager");
 		exit(EXIT_FAILURE);
 	}
 
-	SDLRendererUniquePtr = std::unique_ptr<SDL_Renderer, FreeSDLRenderer>(SDL_CreateRenderer(
-		SDLWindowUniquePtr.get(),
-		-1,
-		SDL_RENDERER_ACCELERATED
-	));
+	SDLRendererUniquePtr = std::unique_ptr<SDL_Renderer, SDLWrapper::FreeSDLRenderer>(
+		SDL_CreateRenderer(
+			SDLWindowUniquePtr.get(),
+			-1,
+			SDL_RENDERER_ACCELERATED
+		));
 
 	if (!SDLRendererUniquePtr)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 RENDERER CREATION FAILED!");
+		SDLlogHelper::Print(PrefixErrorType::LibraryInitFailed, "SDLManager");
 		exit(EXIT_FAILURE);
 	}
 
@@ -39,13 +55,11 @@ void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::functio
 {
 	if (!SDLRendererUniquePtr)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL2 RENDERER UPDATE FAILED!");
 		return;
 	}
 
 	if (!TextureManagerPtrArg)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER INVALID!");
 		return;
 	}
 
@@ -60,7 +74,6 @@ void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::functio
 
 void SDLManager::Quit() const
 {
-	// quit sdl context, no need to call explicitly sdl_window_deleter & sdl_renderer_deleter
 	SDL_Quit();
 }
 

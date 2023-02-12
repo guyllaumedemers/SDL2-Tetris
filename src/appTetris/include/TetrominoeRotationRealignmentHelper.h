@@ -1,33 +1,27 @@
-#ifndef INCLUDED_TETROMINOE_ROTATION_HELPER
-#define INCLUDED_TETROMINOE_ROTATION_HELPER
+#ifndef ROTATIONHELPER_H
+#define ROTATIONHELPER_H
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
-#include <cstdint>
-#endif
-
-#ifndef INCLUDED_MEMORY
-#define INCLUDED_MEMORY
+#ifndef MEMORY_H
+#define MEMORY_H
 #include <memory>
 #endif
 
-#ifndef INCLUDED_TETROMINOE_ROTATION_DATA
-#define INCLUDED_TETROMINOE_ROTATION_DATA
-
-#ifndef INCLUDED_COLLECTION_VECTOR
-#define INCLUDED_COLLECTION_VECTOR
+#ifndef VECTOR_H
+#define VECTOR_H
 #include <vector>
 #endif
 
-#ifndef INCLUDED_EXCEPTION
-#define INCLUDED_EXCEPTION
+#ifndef STDEXCEPT_H
+#define STDEXCEPT_H
 #include <stdexcept>
 #endif
 
-#ifndef INCLUDED_SDL_LOG
-#define INCLUDED_SDL_LOG
-#include <SDL_log.h>
+#ifndef CSTDINT_H
+#define CSTDINT_H
+#include <cstdint>
 #endif
+
+#include "SDLlogHelper.h"
 
 struct RotationalAlignmentContainer final
 {
@@ -89,7 +83,7 @@ struct RotationalAlignmentContainer final
 		}
 		catch (const std::out_of_range& e)
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_ROTATIONAL_REALIGNMENT AT ROTATION INDEX FUNCTION! %s", e.what());
+			SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "RotationalAlignment", e);
 		}
 
 		return EmptyAlignment;
@@ -97,7 +91,6 @@ struct RotationalAlignmentContainer final
 
 #pragma warning (pop)
 };
-#endif
 
 #include "TetrominoeShapeEnum.h"
 #include "TraitHelper.h"
@@ -105,13 +98,16 @@ struct RotationalAlignmentContainer final
 class TetrominoeRotationRealignmentHelper final
 {
 	UnorderedMap<const TetrominoeShapeEnum, const RotationalAlignmentContainer&> RotationRealignmentMap = UnorderedMap<const TetrominoeShapeEnum, const RotationalAlignmentContainer&>();
-	static std::shared_ptr<TetrominoeRotationRealignmentHelper> Singleton;
-
-	TetrominoeRotationRealignmentHelper();
+	static std::unique_ptr<TetrominoeRotationRealignmentHelper> Singleton;
 public:
-	// --- Getter/Setter
+	TetrominoeRotationRealignmentHelper(const TetrominoeRotationRealignmentHelper&) = delete;
+	TetrominoeRotationRealignmentHelper(TetrominoeRotationRealignmentHelper&&) = delete;
+	TetrominoeRotationRealignmentHelper();
+	~TetrominoeRotationRealignmentHelper() = default;
+	TetrominoeRotationRealignmentHelper& operator==(const TetrominoeRotationRealignmentHelper&) = delete;
+	TetrominoeRotationRealignmentHelper& operator==(TetrominoeRotationRealignmentHelper&&) = delete;
+	// Getter/Setter
 	static TetrominoeRotationRealignmentHelper* Get();
 	const RotationalAlignmentContainer& TryGetRotationAlignmentContainer(class Tetrominoe* TetrominoePtrArg) const;
-	// ---
 };
 #endif

@@ -1,17 +1,43 @@
 #include "../include/GameManager.h"
+#include "../include/GameInstance.h"
+#include "../include/InputManager.h"
+#include "../include/TextureManager.h"
+#include "../include/SDLManager.h"
+#include "../include/SDLlogHelper.h"
 
-#ifndef INCLUDED_SDL_LOG
-#define INCLUDED_SDL_LOG
-#include <SDL_log.h>
+#ifndef SDL_LIB
+#define SDL_LIB
+#include <SDL.h>
 #endif
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
+#ifndef CSTDINT_H
+#define CSTDINT_H
 #include <cstdint>
 #endif
 
+#ifndef FRAME_RATE
+#define FRAME_RATE 60.0
+#endif
+
+GameManager::GameManager()
+{
+	GameInstanceSharedPtr = std::make_shared<GameInstance>();
+	InputManagerSharedPtr = std::make_shared<InputManager>();
+	TextureManagerSharedPtr = std::make_shared<TextureManager>();
+	SDLManagerSharedPtr = std::make_shared<SDLManager>();
+}
+
+GameManager::~GameManager()
+{
+	GameInstanceSharedPtr = nullptr;
+	InputManagerSharedPtr = nullptr;
+	TextureManagerSharedPtr = nullptr;
+	SDLManagerSharedPtr = nullptr;
+}
+
 int GameManager::Run()
 {
+	SDLlogHelper::Print(PrefixErrorType::InvalidPtr, std::string("Test"));
 	Initialize();
 	Update();
 	Quit();
@@ -20,18 +46,18 @@ int GameManager::Run()
 
 void GameManager::Initialize()
 {
-	if (!SDLManagerUniquePtr || !InputManagerUniquePtr || !GameInstanceUniquePtr)
+	if (!SDLManagerSharedPtr || !InputManagerSharedPtr || !GameInstanceSharedPtr)
 	{
 		return;
 	}
 	// subscribe to events
 	Subscribe();
 	// initialize context
-	SDLManagerUniquePtr->Initialize();
+	SDLManagerSharedPtr->Initialize();
 	// initialize textures
-	TextureManagerUniquePtr->Initialize(SDLManagerUniquePtr.get());
+	TextureManagerSharedPtr->Initialize(SDLManagerSharedPtr.get());
 	// initialize game loop
-	GameInstanceUniquePtr->Initialize(SDLManagerUniquePtr.get());
+	GameInstanceSharedPtr->Initialize();
 }
 
 void GameManager::Update()
@@ -39,126 +65,118 @@ void GameManager::Update()
 	bIsQuittingGame = false;
 	while (!bIsQuittingGame)
 	{
-		if (!SDLManagerUniquePtr)
+		if (!SDLManagerSharedPtr)
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN GAME_MANAGER UPDATE!");
+			SDLlogHelper::Print(PrefixErrorType::InvalidPtr, std::string("GameManager"));
 			exit(EXIT_FAILURE);
 		}
 
-		SDLManagerUniquePtr->CreateTimeStamp();
+		SDLManagerSharedPtr->CreateTimeStamp();
 
 		SDL_Event Event;
 		if (SDL_PollEvent(&Event) > NULL)
 		{
-			if (!InputManagerUniquePtr)
+			if (!InputManagerSharedPtr)
 			{
-				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: INPUT_MANAGER_PTR INVALID IN GAME_MANAGER UPDATE!");
+				SDLlogHelper::Print(PrefixErrorType::InvalidPtr, std::string("GameManager"));
 				exit(EXIT_FAILURE);
 			}
 
-			InputManagerUniquePtr->RunEvent(Event);
+			InputManagerSharedPtr->RunEvent(&Event);
 		}
 
-		SDLManagerUniquePtr->Update(
-			TextureManagerUniquePtr.get(),
+		SDLManagerSharedPtr->Update(
+			TextureManagerSharedPtr.get(),
 			[&](TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg)
 			{
 				if (!TextureManagerPtrArg)
 				{
-					SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
-					return;
+					SDLlogHelper::Print(PrefixErrorType::InvalidPtrInDelegate, std::string("GameManager"));
+					exit(EXIT_FAILURE);
 				}
 
-				if (!SDLManagerPtrArg)
-				{
-					SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_MANAGER_PTR INVALID IN SDL_MANAGER_UPDATE!");
-					return;
-				}
+		if (!SDLManagerPtrArg)
+		{
+			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInDelegate, std::string("GameManager"));
+			exit(EXIT_FAILURE);
+		}
 
-				if (!GameInstanceUniquePtr)
-				{
-					SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: GAMEINSTANCE_PTR INVALID IN SDL_MANAGER_UPDATE!");
-					return;
-				}
+		if (!GameInstanceSharedPtr)
+		{
+			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInDelegate, std::string("GameManager"));
+			exit(EXIT_FAILURE);
+		}
 
-				GameInstanceUniquePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
+		GameInstanceSharedPtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
 			});
 
-		SDLManagerUniquePtr->LimitFrameRate(FRAME_RATE, SDLManagerUniquePtr->GetDeltaTime());
+		//SDLManagerUniquePtr->LimitFrameRate(FRAME_RATE, SDLManagerUniquePtr->GetDeltaTime()); // that shit is weird. check it again
 	}
 }
 
 void GameManager::Quit() const
 {
-	if (!SDLManagerUniquePtr || !TextureManagerUniquePtr || !GameInstanceUniquePtr)
+	if (!SDLManagerSharedPtr || !TextureManagerSharedPtr || !GameInstanceSharedPtr)
 	{
 		return;
 	}
 	// unsubscribe to events
 	UnSubscribe();
 	// exit game
-	GameInstanceUniquePtr->Clear();
+	GameInstanceSharedPtr->Clear();
 	// flush textures
-	TextureManagerUniquePtr->Clear();
+	TextureManagerSharedPtr->Clear();
 	// clear context
-	SDLManagerUniquePtr->Quit();
+	SDLManagerSharedPtr->Quit();
 }
 
 void GameManager::Subscribe()
 {
-	if (!GameInstanceUniquePtr || !InputManagerUniquePtr)
+	if (!GameInstanceSharedPtr || !InputManagerSharedPtr)
 	{
 		return;
 	}
 
-	InputManagerUniquePtr->QuitGameEvent = [&](bool bHasQuitGame)
+	InputManagerSharedPtr->GetQuitGameDel() = [&](bool bHasQuitGame)
 	{
 		bIsQuittingGame = bHasQuitGame;
 	};
 
-	InputManagerUniquePtr->DirectionalKeyPressedEvent = [&](int8_t DirX, int8_t DirY)
+	InputManagerSharedPtr->GetDirectionalKeyPressedDel() = [&](int8_t DirX, int8_t DirY)
 	{
-		if (!GameInstanceUniquePtr)
+		if (!GameInstanceSharedPtr)
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: GAME_INSTANCE_PTR INVALID IN KEY_PRESS_EVENT!");
+			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInDelegate, std::string("GameManager"));
 			return;
 		}
 
-		GameInstanceUniquePtr->PollKeyEvent(DirX, DirY);
+		GameInstanceSharedPtr->PollKeyEvent(DirX, DirY);
 	};
 
-	InputManagerUniquePtr->DelSpaceKeyPressedEvent = [&]()
+	InputManagerSharedPtr->GetSpaceKeyPressedDel() = [&]()
 	{
-		if (!GameInstanceUniquePtr)
+		if (!GameInstanceSharedPtr)
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: GAME_INSTANCE_PTR INVALID IN SPACEKEY_PRESS_EVENT!");
+			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInDelegate, std::string("GameManager"));
 			return;
 		}
 
-		GameInstanceUniquePtr->PollSpaceKeyEvent();
+		GameInstanceSharedPtr->PollSpaceKeyEvent();
 	};
 
-	GameInstanceUniquePtr->SetWindowEvent = [&](uint16_t Width, uint16_t Height)
+	GameInstanceSharedPtr->SetWindowDelegate = [&](uint16_t Width, uint16_t Height)
 	{
-		if (!SDLManagerUniquePtr)
+		if (!SDLManagerSharedPtr)
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDLMANAGER_PTR IS INVALID IN SETWINDOW CALLBACK!");
+			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInDelegate, std::string("GameManager"));
 			return;
 		}
 
-		SDLManagerUniquePtr->SetWindowContextSize(Width, Height);
+		SDLManagerSharedPtr->SetWindowContextSize(Width, Height);
 	};
 }
 
 void GameManager::UnSubscribe() const
 {
-	if (!GameInstanceUniquePtr || !InputManagerUniquePtr)
-	{
-		return;
-	}
-
-	InputManagerUniquePtr->QuitGameEvent = nullptr;
-	InputManagerUniquePtr->DirectionalKeyPressedEvent = nullptr;
-	InputManagerUniquePtr->DelSpaceKeyPressedEvent = nullptr;
-	GameInstanceUniquePtr->SetWindowEvent = nullptr;
+	// leave empty since the Observer will clear its registries
 }

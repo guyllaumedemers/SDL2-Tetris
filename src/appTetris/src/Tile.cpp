@@ -1,6 +1,12 @@
 #include "../include/Tile.h"
 #include "../include/TextureManager.h"
 #include "../include/SDLManager.h"
+#include "../include/SDLlogHelper.h"
+
+#ifndef SDL_LIB
+#define SDL_LIB
+#include <SDL.h>
+#endif
 
 void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg, uint8_t Rows, uint8_t Cols) const
 {
@@ -12,14 +18,12 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 	SDL_Renderer* const SDLRendererPtr = SDLManagerPtrArg->GetRenderer().get();
 	if (!SDLRendererPtr)
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_RENDERER_PTR INVALID!");
 		return;
 	}
 
 	SDL_Texture* const SDLTextureTargetPtr = SDL_CreateTexture(SDLRendererPtr, SDL_PIXELFORMAT_RGBA8888, SDL_TEXTUREACCESS_TARGET, Tile::Size, Tile::Size);
 	if (!SDLTextureTargetPtr)
 	{
-		SDL_LogError(SDL_LOG_PRIORITY_CRITICAL, "ERROR: SDL_TEXTURE_TARGET_PTR INVALID!");
 		return;
 	}
 
@@ -48,16 +52,19 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 	const auto TexturePairFound = TexturePair.find(Attribute);
 	if (TexturePairFound == TexturePair.end())
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: ITERATOR_SEARCH INVALID!");
 		SDL_DestroyTexture(SDLTextureTargetPtr);
 		SDL_SetRenderTarget(SDLRendererPtr, NULL);
 		return;
 	}
 
-	SDL_Texture* const SDLTextureTilePtr = TextureManagerPtrArg->GetTextureByName(TexturePairFound->second._Equal(std::string("Wildcard")) ? Wildcard : TexturePairFound->second);
+	SDL_Texture* const SDLTextureTilePtr = TextureManagerPtrArg->GetTextureByName(TexturePairFound->second._Equal(
+		std::string("Wildcard"))
+		? Wildcard
+		: TexturePairFound->second
+	);
+
 	if (!SDLTextureTilePtr)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: SDL_TEXTURE_TILE_PTR INVALID!");
 		SDL_DestroyTexture(SDLTextureTargetPtr);
 		SDL_SetRenderTarget(SDLRendererPtr, NULL);
 		return;

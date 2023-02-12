@@ -1,23 +1,24 @@
 #include "../include/TextureLoader.h"
-#include "../include/StringExtension.h"
+#include "../include/ExtensionString.h"
+#include "../include/SDLlogHelper.h"
 
-#ifndef INCLUDED_EXCEPTION
-#define INCLUDED_EXCEPTION
-#include <stdexcept>
+#ifndef SDL_LIB
+#define SDL_LIB
+#include <SDL.h>
 #endif
 
-#ifndef INCLUDED_STD_FILESYSTEM
-#define INCLUDED_STD_FILESYSTEM
+#ifndef FILESYSTEM_H
+#define FILESYSTEM_H
 #include <filesystem>
 #endif
 
-std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> TextureLoader::GetTextures(std::function<SDL_Texture* (const std::string&, SDL_Renderer* const)> FuncPtrArg,
-	SDL_Renderer* RendererPtrArg)
+UnorderedMap<std::string, std::unique_ptr<SDL_Texture, SDLWrapper::FreeSDLTexture>> TextureLoader::GetTextures(
+	std::function<SDL_Texture* (const std::string&, SDL_Renderer* const)> FuncPtrArg, SDL_Renderer* RendererPtrArg)
 {
-	std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> TextureMap;
+	UnorderedMap<std::string, std::unique_ptr<SDL_Texture, SDLWrapper::FreeSDLTexture>> TextureMap;
 	if (!RendererPtrArg)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_LOADER INIT FAILED!");
+		SDLlogHelper::Print(PrefixErrorType::LibraryInitFailed, "TextureLoader");
 		return TextureMap;
 	}
 
@@ -42,14 +43,14 @@ std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Te
 			SDL_Texture* const TargetTexturePtr = FuncPtrArg(SFilePath, RendererPtrArg);
 			if (!TargetTexturePtr)
 			{
-				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_TARGET INVALID!");
+				SDLlogHelper::Print(PrefixErrorType::InvalidPtr, "TextureLoader");
 				continue;
 			}
 
-			std::vector<std::string>&& Tokens = StringExtension::Split(SFilePath, '/');
+			std::vector<std::string>&& Tokens = ExtensionString::Split(SFilePath, '/');
 			if (Tokens.empty())
 			{
-				SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: PATH_FORMAT DELIMITER INVALID!");
+				SDLlogHelper::Print(PrefixErrorType::InvalidPtr, "TextureLoader");
 				continue;
 			}
 
@@ -58,7 +59,7 @@ std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Te
 	}
 	catch (const std::exception& e)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TEXTURE_LOADER FAILED! %s", e.what());
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "TextureLoader", e);
 	}
 	return TextureMap;
 }

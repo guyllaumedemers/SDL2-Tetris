@@ -1,18 +1,8 @@
 #include "../include/TetrominoeRotationRealignmentHelper.h"
 #include "../include/Tetrominoe.h"
 
-#ifndef INCLUDED_EXCEPTION
-#define INCLUDED_EXCEPTION
-#include <stdexcept>
-#endif
-
-#ifndef INCLUDED_SDL_LOG
-#define INCLUDED_SDL_LOG
-#include <SDL_log.h>
-#endif
-
 // --- Static Fields
-std::shared_ptr<TetrominoeRotationRealignmentHelper> TetrominoeRotationRealignmentHelper::Singleton = nullptr;
+std::unique_ptr<TetrominoeRotationRealignmentHelper> TetrominoeRotationRealignmentHelper::Singleton = nullptr;
 // ---
 
 TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
@@ -122,7 +112,7 @@ const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryGetR
 	}
 	catch (const std::out_of_range& e)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY REALIGNMENTOUTCOME AT ROTATION INDEX FUNCTION! %s", e.what());
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "TetrominoeRotationRealignmentHelper", e);
 	}
 
 	return EmptyContainer;
@@ -138,7 +128,7 @@ TetrominoeRotationRealignmentHelper* TetrominoeRotationRealignmentHelper::Get()
 	/// <returns></returns>
 	if (!Singleton)
 	{
-		Singleton.reset(new TetrominoeRotationRealignmentHelper());
+		Singleton = std::make_unique<TetrominoeRotationRealignmentHelper>();
 	}
 	return Singleton.get();
 }

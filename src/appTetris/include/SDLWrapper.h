@@ -1,47 +1,30 @@
 #ifndef INCLUDED_SDL_WRAPPER
 #define INCLUDED_SDL_WRAPPER
 
-#ifndef INCLUDED_SDL_LIB
-#define INCLUDED_SDL_LIB
-#include <SDL.h>
-#endif
+// --- forward declaration
+struct SDL_Window;
+struct SDL_Renderer;
+struct SDL_Texture;
+// ---
 
-struct FreeSDLWindow final
+/// <summary>
+/// Wrapper Class for smart pointer destructor override
+/// </summary>
+namespace SDLWrapper
 {
-	inline void operator()(SDL_Window* Window) const
+	struct FreeSDLWindow final
 	{
-		if(!Window)
-		{
-			return;
-		}
+		void operator()(SDL_Window* Window) const;
+	};
 
-		SDL_DestroyWindow(Window);
-	}
-};
-
-struct FreeSDLRenderer final
-{
-	inline void operator()(SDL_Renderer* Renderer) const
+	struct FreeSDLRenderer final
 	{
-		if (!Renderer)
-		{
-			return;
-		}
+		void operator()(SDL_Renderer* Renderer) const;
+	};
 
-		SDL_DestroyRenderer(Renderer);
-	}
-};
-
-struct FreeSDLTexture final
-{
-	inline void operator()(SDL_Texture* Texture) const
+	struct FreeSDLTexture final
 	{
-		if (!Texture)
-		{
-			return;
-		}
-
-		SDL_DestroyTexture(Texture);
-	}
-};
+		void operator()(SDL_Texture* Texture) const;
+	};
+}
 #endif

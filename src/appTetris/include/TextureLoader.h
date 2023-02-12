@@ -1,32 +1,33 @@
-#ifndef INCLUDED_TEXTURE_LOADER
-#define INCLUDED_TEXTURE_LOADER
+#ifndef TEXTURELOADER_H
+#define TEXTURELOADER_H
 
-#ifndef INCLUDED_SDL_LIB
-#define INCLUDED_SDL_LIB
-#include <SDL.h>
-#endif
-
-#ifndef INCLUDED_STRING
-#define INCLUDED_STRING
-#include <string>
-#endif
-
-#ifndef INCLUDED_COLLECTION_UNORDERED_MAP
-#define INCLUDED_COLLECTION_UNORDERED_MAP
+#ifndef UMAP_H
+#define UMAP_H
 #include <unordered_map>
 #endif
 
-#ifndef INCLUDED_MEMORY
-#define INCLUDED_MEMORY
-#include <memory>
-#endif
-
-#ifndef INCLUDED_FUNCTIONAL
-#define INCLUDED_FUNCTIONAL
+#ifndef FUNCTIONAL_H
+#define FUNCTIONAL_H
 #include <functional>
 #endif
 
+#ifndef MEMORY_H
+#define MEMORY_H
+#include <memory>
+#endif
+
+#ifndef STRING_H
+#define STRING_H
+#include <string>
+#endif
+
+// --- forward declaration
+struct SDL_Texture;
+struct SDL_Renderer;
+// ---
+
 #include "SDLWrapper.h"
+#include "TraitHelper.h"
 
 class TextureLoader final
 {
@@ -38,7 +39,6 @@ public:
 	TextureLoader& operator=(const TextureLoader&) = delete;
 	TextureLoader& operator=(TextureLoader&&) = delete;
 	// --- Getter/Setter
-	static std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> GetTextures(std::function<SDL_Texture* (const std::string&, SDL_Renderer* const)> FuncPtr, SDL_Renderer* Renderer);
-	// ---
+	static UnorderedMap<std::string, std::unique_ptr<SDL_Texture, SDLWrapper::FreeSDLTexture>> GetTextures(std::function<SDL_Texture* (const std::string&, SDL_Renderer* const)> FuncPtr, SDL_Renderer* Renderer);
 };
 #endif

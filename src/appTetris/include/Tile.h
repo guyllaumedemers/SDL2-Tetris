@@ -1,18 +1,22 @@
-#ifndef INCLUDED_POD_TILE
-#define INCLUDED_POD_TILE
+#ifndef TILE_H
+#define TILE_H
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
-#include <cstdint>
-#endif
-
-#ifndef INCLUDED_STRING
-#define INCLUDED_STRING
+#ifndef STRING_H
+#define STRING_H
 #include <string>
 #endif
 
-#ifndef INCLUDED_TILE_ENUM
-#define INCLUDED_TILE_ENUM
+#ifndef CSTDINT_H
+#define CSTDINT_H
+#include <cstdint>
+#endif
+
+#ifndef STILE
+#define STILE 20
+#endif
+
+#ifndef TILE_ENUM
+#define TILE_ENUM
 enum TileAttributeEnum
 {
 	Empty = 0,
@@ -21,12 +25,21 @@ enum TileAttributeEnum
 };
 #endif
 
+// --- forward declaration
+class TextureManager;
+class SDLManager;
+// ---
+
 struct Tile final
 {
-	static constexpr uint8_t&& Size = 20;
+	static constexpr uint8_t&& Size = STILE;
 	TileAttributeEnum Attribute = TileAttributeEnum::Empty;
 	std::string Wildcard = std::string();
 	size_t IndexPosition = 0;
-	void Render(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols) const;
+public:
+	~Tile() = default;
+	Tile& operator==(const Tile&) = delete;
+	Tile& operator==(Tile&&) = delete;
+	void Render(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols) const;
 };
 #endif

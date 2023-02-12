@@ -1,20 +1,19 @@
-#ifndef INCLUDED_INPUT_MANAGER
-#define INCLUDED_INPUT_MANAGER
+#ifndef INPUTMANAGER_H
+#define INPUTMANAGER_H
 
-#ifndef INCLUDED_SDL_LIB
-#define INCLUDED_SDL_LIB
-#include <SDL.h>
+#ifndef FUNCTIONAL_H
+#define FUNCTIONAL_H
+#include <functional>
 #endif
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
+#ifndef CTSDINT_H
+#define CTSDINT_H
 #include <cstdint>
 #endif
 
-#ifndef INCLUDED_FUNCTIONAL
-#define INCLUDED_FUNCTIONAL
-#include <functional>
-#endif
+// --- forward declaration
+union SDL_Event;
+// ---
 
 class InputManager final
 {
@@ -22,19 +21,24 @@ public:
 	InputManager(const InputManager&) = delete;
 	InputManager(InputManager&&) = delete;
 	InputManager() = default;
-	~InputManager() = default;
+	~InputManager();
 	InputManager& operator=(const InputManager&) = delete;
 	InputManager& operator=(InputManager&&) = delete;
-	int RunEvent(SDL_Event& Event) const;
-	// --- Delegate
-	typedef std::function<void(int8_t, int8_t)> DelDirectionalKeyPressed;
-	DelDirectionalKeyPressed DirectionalKeyPressedEvent;
+	void RunEvent(SDL_Event* Event) const;
+private:
+	// Delegates
+	typedef std::function<void(int8_t, int8_t)> DirectionalKeyPressedEvent;
+	DirectionalKeyPressedEvent DirectionalKeyPressedDelegate;
 
-	typedef std::function<void()> DelSpaceKeyPressed;
-	DelSpaceKeyPressed DelSpaceKeyPressedEvent;
+	typedef std::function<void()> SpaceKeyPressedEvent;
+	SpaceKeyPressedEvent SpaceKeyPressedDelegtate;
 
-	typedef std::function<void(bool)> DelQuitGame;
-	DelQuitGame QuitGameEvent;
-	// --
+	typedef std::function<void(bool)> QuitGameEvent;
+	QuitGameEvent QuitGameDelegate;
+public:
+	// Getter/Setter
+	DirectionalKeyPressedEvent& GetDirectionalKeyPressedDel() { return DirectionalKeyPressedDelegate; }
+	SpaceKeyPressedEvent& GetSpaceKeyPressedDel() { return SpaceKeyPressedDelegtate; }
+	QuitGameEvent& GetQuitGameDel() { return QuitGameDelegate; }
 };
 #endif

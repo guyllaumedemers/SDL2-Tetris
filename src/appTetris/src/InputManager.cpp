@@ -1,32 +1,49 @@
 #include "../include/InputManager.h"
 
-int InputManager::RunEvent(SDL_Event& Event) const
+#ifndef SDL_LIB
+#define SDL_LIB
+#include <SDL.h>
+#endif
+
+InputManager::~InputManager()
 {
+	DirectionalKeyPressedDelegate = nullptr;
+	SpaceKeyPressedDelegtate = nullptr;
+	QuitGameDelegate = nullptr;
+}
+
+void InputManager::RunEvent(SDL_Event* Event) const
+{
+	if (!Event)
+	{
+		return;
+	}
+
 	static constexpr int8_t&& Minus = -1;
 	static constexpr int8_t&& Plus = 1;
 	static constexpr int8_t&& Idle = 0;
-	switch (Event.type)
+	switch (Event->type)
 	{
 	case SDL_QUIT:
-		QuitGameEvent(true);
+		QuitGameDelegate(true);
 		break;
 	case SDL_KEYDOWN:
-		switch (Event.key.keysym.scancode)
+		switch (Event->key.keysym.scancode)
 		{
 		case SDL_SCANCODE_UP:
-			DirectionalKeyPressedEvent(Idle, Idle);
+			DirectionalKeyPressedDelegate(Idle, Idle);
 			break;
 		case SDL_SCANCODE_DOWN:
-			DirectionalKeyPressedEvent(Idle, Minus);
+			DirectionalKeyPressedDelegate(Idle, Minus);
 			break;
 		case SDL_SCANCODE_LEFT:
-			DirectionalKeyPressedEvent(Minus, Idle);
+			DirectionalKeyPressedDelegate(Minus, Idle);
 			break;
 		case SDL_SCANCODE_RIGHT:
-			DirectionalKeyPressedEvent(Plus, Idle);
+			DirectionalKeyPressedDelegate(Plus, Idle);
 			break;
 		case SDL_SCANCODE_SPACE:
-			DelSpaceKeyPressedEvent();
+			SpaceKeyPressedDelegtate();
 			break;
 		default:
 			break;
@@ -35,5 +52,4 @@ int InputManager::RunEvent(SDL_Event& Event) const
 	default:
 		break;
 	}
-	return EXIT_SUCCESS;
 }

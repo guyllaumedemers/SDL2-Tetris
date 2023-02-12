@@ -1,31 +1,32 @@
-#ifndef INCLUDED_TEXTURE_MANAGER
-#define INCLUDED_TEXTURE_MANAGER
+#ifndef TEXTUREMANAGER_H
+#define TEXTUREMANAGER_H
 
-#ifndef INCLUDED_SDL_LIB
-#define INCLUDED_SDL_LIB
-#include <SDL.h>
-#endif
-
-#ifndef INCLUDED_STRING
-#define INCLUDED_STRING
-#include <string>
-#endif
-
-#ifndef INCLUDED_COLLECTION_UNORDERED_MAP
-#define INCLUDED_COLLECTION_UNORDERED_MAP
+#ifndef UMAP_H
+#define UMAP_H
 #include <unordered_map>
 #endif
 
-#ifndef INCLUDED_MEMORY
-#define INCLUDED_MEMORY
+#ifndef MEMORY_H
+#define MEMORY_H
 #include <memory>
 #endif
 
+#ifndef STRING_H
+#define STRING_H
+#include <string>
+#endif
+
+// --- forward declaration
+struct SDL_Texture;
+class SDLManager;
+// ---
+
 #include "SDLWrapper.h"
+#include "TraitHelper.h"
 
 class TextureManager
 {
-	std::unordered_map<std::string, std::unique_ptr<SDL_Texture, FreeSDLTexture>> Textures;
+	UnorderedMap<std::string, std::unique_ptr<SDL_Texture, SDLWrapper::FreeSDLTexture>> Textures;
 public:
 	TextureManager(const TextureManager&) = delete;
 	TextureManager(TextureManager&&) = delete;
@@ -33,8 +34,9 @@ public:
 	~TextureManager() = default;
 	TextureManager& operator=(const TextureManager&) = delete;
 	TextureManager& operator=(TextureManager&&) = delete;
-	void Initialize(class SDLManager* const SDLManagerPtr);
+	void Initialize(SDLManager* const SDLManagerPtr);
 	void Clear();
+public:
 	// --- Getter/Setter
 	SDL_Texture* const GetTextureByName(const std::string& TextureName) const;
 	// --- 

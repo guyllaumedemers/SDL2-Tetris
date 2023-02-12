@@ -1,41 +1,45 @@
-#ifndef INCLUDED_GAME_INSTANCE
-#define INCLUDED_GAME_INSTANCE
+#ifndef GAMEINSTANCE_H
+#define GAMEINSTANCE_H
 
-#ifndef INCLUDED_FUNCTIONAL
-#define INCLUDED_FUNCTIONAL
+#ifndef FUNCTIONAL_H
+#define FUNCTIONAL_H
 #include <functional>
 #endif
 
-#ifndef INCLUDED_MEMORY
-#define INCLUDED_MEMORY
+#ifndef MEMORY_H
+#define MEMORY_H
 #include <memory>
 #endif
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
+#ifndef CSTDINT_H
+#define CSTDINT_H
 #include <cstdint>
 #endif
 
-#include "LevelManager.h"
+// --- forward declaration
+class LevelManager;
+class TextureManager;
+class SDLManager;
+// ---
 
 class GameInstance final
 {
-	std::unique_ptr<LevelManager> LevelManagerUniquePtr = std::make_unique<LevelManager>();
+	std::shared_ptr<LevelManager> LevelManagerUniquePtr = nullptr;
 public:
 	GameInstance(const GameInstance&) = delete;
 	GameInstance(GameInstance&&) = delete;
-	GameInstance() = default;
-	~GameInstance() = default;
+	GameInstance();
+	~GameInstance();
 	GameInstance& operator=(const GameInstance&) = delete;
 	GameInstance& operator=(GameInstance&&) = delete;
-	void Initialize(class SDLManager* const SDLManagerPtrArg) const;
-	void Update(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg) const;
+	void Initialize() const;
+	void Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const;
 	void Clear() const;
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	void PollSpaceKeyEvent() const;
-	// --- Delegate
-	typedef std::function<void(uint16_t, uint16_t)> DelSetWindow;
-	DelSetWindow SetWindowEvent;
-	// ---
+public:
+	// Delegates
+	typedef std::function<void(uint16_t, uint16_t)> SetWindowEvent;
+	SetWindowEvent SetWindowDelegate;
 };
 #endif

@@ -1,20 +1,30 @@
-#ifndef INCLUDED_TILEMAP
-#define INCLUDED_TILEMAP
+#ifndef TILEMAP_H
+#define TILEMAP_H
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
-#include <cstdint>
+#ifndef FUNCTIONAL_H
+#define FUNCTIONAL_H
+#include <functional>
 #endif
 
-#ifndef INCLUDED_COLLECTION_VECTOR
-#define INCLUDED_COLLECTION_VECTOR
+#ifndef MEMORY_H
+#define MEMORY_H
+#include <memory>
+#endif
+
+#ifndef VECTOR_H
+#define VECTOR_H
 #include <vector>
 #endif
 
-#ifndef INCLUDED_FUNCTIONAL
-#define INCLUDED_FUNCTIONAL
-#include <functional>
+#ifndef CSTDINT_H
+#define CSTDINT_H
+#include <cstdint>
 #endif
+
+// --- forward declaration
+class TextureManager;
+class SDLManager;
+// ---
 
 #include "Tile.h"
 
@@ -32,13 +42,13 @@ public:
 	TileMap& operator=(const TileMap&) = delete;
 	TileMap& operator=(TileMap&&) = delete;
 	void Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(uint16_t, uint16_t)>& SetWindowFncPtrArg);
-	void Update(class TextureManager* const TextureManagerPtr, class SDLManager* const SDLManagerPtr) const;
+	void Update(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr) const;
 	void Clear();
 	bool CheckRowCompletion(uint16_t TetrominoeEntryIndex);
-	// --- Getter/Setter
+public:
+	// Getter/Setter
 	const std::vector<Tile>& GetTiles() const { return Tiles; }
 	const uint8_t& GetRows() const { return sRows; }
 	const uint8_t& GetCols() const { return sCols; }
-	// ---
 };
 #endif

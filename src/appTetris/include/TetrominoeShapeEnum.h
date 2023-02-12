@@ -1,10 +1,5 @@
-#ifndef INCLUDED_TETROMINOE_ENUM
-#define INCLUDED_TETROMINOE_ENUM
-
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
-#include <cstdint>
-#endif
+#ifndef TETROMINOE_ENUM
+#define TETROMINOE_ENUM
 
 enum class TetrominoeShapeEnum : uint8_t
 {

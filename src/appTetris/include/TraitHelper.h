@@ -1,28 +1,25 @@
-#ifndef INCLUDED_CUSTOM_TRAITS
-#define INCLUDED_CUSTOM_TRAITS
+#ifndef TRAITHELPER_H
+#define TRAITHELPER_H
 
-#ifndef INCLUDED_COLLECTION_UNORDERED_MAP
-#define INCLUDED_COLLECTION_UNORDERED_MAP
-#include <unordered_map>
-#endif
-
-#ifndef INCLUDED_CSTD_LIB
-#define INCLUDED_CSTD_LIB
-#include <cstdlib>
-#endif
-
-#ifndef INCLUDED_FUNCTIONAL
-#define INCLUDED_FUNCTIONAL
-#include <functional>
-#endif
-
-#ifndef INCLUDED_TYPE_TRAIT
-#define INCLUDED_TYPE_TRAIT
+#ifndef TYPETRAIT_H
+#define TYPETRAIT_H
 #include <type_traits>
 #endif
 
-#include <iostream>
-#include "TetrominoeShapeEnum.h"
+#ifndef UMAP_H
+#define UMAP_H
+#include <unordered_map>
+#endif
+
+#ifndef FUNCTIONAL_H
+#define FUNCTIONAL_H
+#include <functional>
+#endif
+
+#ifndef CSTDINT_H
+#define CSTDINT_H
+#include <cstdlib>
+#endif
 
 /// <summary>
 /// Custom Hash lookup for using Enum as TKey with STL Hash Collection

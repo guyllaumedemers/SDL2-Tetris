@@ -1,36 +1,35 @@
-#ifndef INCLUDED_GAME_MANAGER
-#define INCLUDED_GAME_MANAGER
+#ifndef GAMEMANAGER_H
+#define GAMEMANAGER_H
 
-#ifndef INCLUDED_MEMORY
-#define INCLUDED_MEMORY
+#ifndef MEMORY_H
+#define MEMORY_H
 #include <memory>
 #endif
 
-#ifndef FRAME_RATE
-#define FRAME_RATE 60.0
-#endif
-
-#include "SDLManager.h"
-#include "GameInstance.h"
-#include "InputManager.h"
-#include "TextureManager.h"
+// --- forward declaration
+class SDLManager;
+class GameInstance;
+class InputManager;
+class TextureManager;
+// ---
 
 class GameManager final
 {
-	std::unique_ptr<SDLManager> SDLManagerUniquePtr = std::make_unique<SDLManager>();
-	std::unique_ptr<GameInstance> GameInstanceUniquePtr = std::make_unique<GameInstance>();
-	std::unique_ptr<InputManager> InputManagerUniquePtr = std::make_unique<InputManager>();
-	std::unique_ptr<TextureManager> TextureManagerUniquePtr = std::make_unique<TextureManager>();
+	std::shared_ptr<GameInstance> GameInstanceSharedPtr = nullptr;
+	std::shared_ptr<InputManager> InputManagerSharedPtr = nullptr;
+	std::shared_ptr<TextureManager> TextureManagerSharedPtr = nullptr;
+	std::shared_ptr<SDLManager> SDLManagerSharedPtr = nullptr;
 	bool bIsQuittingGame = false;
 public:
 	GameManager(const GameManager&) = delete;
 	GameManager(GameManager&&) = delete;
-	GameManager() = default;
-	~GameManager() = default;
+	GameManager();
+	~GameManager();
 	GameManager& operator=(const GameManager&) = delete;
 	GameManager& operator=(GameManager&&) = delete;
 	int Run();
 private:
+	// Utils
 	void Initialize();
 	void Update();
 	void Quit() const;

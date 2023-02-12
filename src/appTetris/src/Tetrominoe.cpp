@@ -2,25 +2,21 @@
 #include "../include/Tile.h"
 #include "../include/TetrominoeWallKickHelper.h"
 #include "../include/TetrominoeRotationRealignmentHelper.h"
+#include "../include/SDLlogHelper.h"
 
-#ifndef INCLUDED_EXCEPTION
-#define INCLUDED_EXCEPTION
-#include <stdexcept>
+#ifndef ALGORITHM_H
+#define ALGORITHM_H
+#include <algorithm>
 #endif
 
-#ifndef INCLUDED_RANGE
-#define INCLUDED_RANGE
+#ifndef RANGE_H
+#define RANGE_H
 #include <ranges>
 #endif
 
-#ifndef INCLUDED_SDL_LOG
-#define INCLUDED_SDL_LOG
-#include <SDL_log.h>
-#endif
-
-#ifndef INCLUDED_ALGORITHM
-#define INCLUDED_ALGORITHM
-#include <algorithm>
+#ifndef STDEXCEPT_H
+#define STDEXCEPT_H
+#include <stdexcept>
 #endif
 
 Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t Cols)
@@ -59,6 +55,7 @@ Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t
 	default:
 		break;
 	}
+
 	TetrominoeShape = TetrominoeEnum;
 	RotationIndex = 0;
 }
@@ -70,8 +67,8 @@ bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t C
 
 	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
-		const bool&& CanMoveCol = ((TetrominoeEntryIndex % Cols) + DirX) >= Zero && ((TetrominoeEntryIndex % Cols) + DirX) < Cols;
 		const bool&& CanMoveRow = ((TetrominoeEntryIndex / Cols) + std::abs(DirY)) >= Zero && ((TetrominoeEntryIndex / Cols) + std::abs(DirY)) < Rows;
+		const bool&& CanMoveCol = ((TetrominoeEntryIndex % Cols) + DirX) >= Zero && ((TetrominoeEntryIndex % Cols) + DirX) < Cols;
 
 		if (!CanMoveRow || !CanMoveCol)
 		{
@@ -114,7 +111,7 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 	}
 	catch (const std::out_of_range& e)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN OVERLAPPING FUNCTION! %s", e.what());
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
 	}
 	return !IsMoveOverlappingExistingTile;
 }
@@ -155,7 +152,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 	}
 	catch (const std::out_of_range& e)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN UPDATE FUNCTION! %s", e.what());
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
 	}
 }
 
@@ -210,7 +207,7 @@ void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols
 	}
 	catch (const std::out_of_range& e)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN FLIP FUNCTION FUNCTION! %s", e.what());
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
 	}
 }
 
@@ -468,8 +465,7 @@ int8_t Tetrominoe::GetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols
 
 	if (!RotationalAlignment.IsValid())
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: BAD ROTATION ALIGNMENT VALUE! CANNOT PERFORM FLIP");
-		exit(NULL);
+		return NULL;
 	}
 
 	return static_cast<int8_t>((RotationalAlignment.y * Cols) + RotationalAlignment.x);

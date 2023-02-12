@@ -1,13 +1,25 @@
 #include "../include/GameInstance.h"
+#include "../include/LevelManager.h"
 
-void GameInstance::Initialize(SDLManager* const SDLManagerPtrArg) const
+GameInstance::GameInstance()
 {
-	if (!SDLManagerPtrArg || !LevelManagerUniquePtr)
+	LevelManagerUniquePtr = std::make_shared<LevelManager>();
+}
+
+GameInstance::~GameInstance()
+{
+	LevelManagerUniquePtr = nullptr;
+	SetWindowDelegate = nullptr;
+}
+
+void GameInstance::Initialize() const
+{
+	if (!LevelManagerUniquePtr)
 	{
 		return;
 	}
 
-	LevelManagerUniquePtr->Initialize(SDLManagerPtrArg, SetWindowEvent);
+	LevelManagerUniquePtr->Initialize(SetWindowDelegate);
 }
 
 void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const

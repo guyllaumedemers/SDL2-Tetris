@@ -1,13 +1,10 @@
 #include "../include/TileMap.h"
+#include "../include/Tile.h"
+#include "../include/SDLlogHelper.h"
 
-#ifndef INCLUDED_EXCEPTION
-#define INCLUDED_EXCEPTION
+#ifndef STDEXCEPT_H
+#define STDEXCEPT_H
 #include <stdexcept>
-#endif
-
-#ifndef INCLUDED_SDL_LOG
-#define INCLUDED_SDL_LOG
-#include <SDL_log.h>
 #endif
 
 /// <summary>
@@ -85,7 +82,7 @@ bool TileMap::CheckRowCompletion(uint16_t TetrominoeEntryIndex)
 	}
 	catch (const std::out_of_range& e)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN CHECK ROW COMPLETION FUNCTION! %s", e.what());
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "TileMap", e);
 		bIsRowComplete = false;
 	}
 	return bIsRowComplete;
@@ -105,6 +102,6 @@ void TileMap::ClearRow(size_t StartIndex)
 	}
 	catch (const std::out_of_range& e)
 	{
-		SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN CLEAR ROW FUNCTION! %s", e.what());
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "TileMap", e);
 	}
 }

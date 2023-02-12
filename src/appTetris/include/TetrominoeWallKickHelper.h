@@ -1,34 +1,27 @@
-#ifndef INCLUDED_TETROMINOE_WALL_KICK_HELPER
-#define INCLUDED_TETROMINOE_WALL_KICK_HELPER
+#ifndef WALLKICKHELPER_H
+#define WALLKICKHELPER_H
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
-#include <cstdint>
-#endif
-
-#ifndef INCLUDED_MEMORY
-#define INCLUDED_MEMORY
+#ifndef MEMORY_H
+#define MEMORY_H
 #include <memory>
 #endif
 
-#ifndef INCLUDED_TETROMINOE_WALL_KICK_DATA
-#define INCLUDED_TETROMINOE_WALL_KICK_DATA
-
-#ifndef INCLUDED_COLLECTION_VECTOR
-#define INCLUDED_COLLECTION_VECTOR
+#ifndef VECTOR_H
+#define VECTOR_H
 #include <vector>
 #endif
 
-#ifndef INCLUDED_EXCEPTION
-#define INCLUDED_EXCEPTION
+#ifndef STDEXCEPT_H
+#define STDEXCEPT_H
 #include <stdexcept>
 #endif
 
-#ifndef INCLUDED_SDL_LOG
-#define INCLUDED_SDL_LOG
-#include <SDL_log.h>
+#ifndef CSTDINT_H
+#define CSTDINT_H
+#include <cstdint>
 #endif
 
+#include "SDLlogHelper.h"
 #include "TraitHelper.h"
 
 struct WallKickAlignmentContainer final
@@ -87,7 +80,7 @@ struct WallKickAlignmentContainer final
 		}
 		catch (const std::out_of_range& e)
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_WALL_KICK_REALIGNMENT_CONTAINER AT ROTATION INDEX FUNCTION! %s", e.what());
+			SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "WallKickAlignment", e);
 		}
 
 		return EmptyAlignmentContainer;
@@ -108,7 +101,7 @@ struct WallKickAlignmentContainer final
 		}
 		catch (const std::out_of_range& e)
 		{
-			SDL_LogError(SDL_LOG_CATEGORY_ERROR, "ERROR: TRY CATCH FAILED IN TRY GET_WALL_KICK_REALIGNMENT AT ROTATION INDEX FUNCTION! %s", e.what());
+			SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "WallKickAlignment", e);
 		}
 
 		return EmptyAlignment;
@@ -116,20 +109,22 @@ struct WallKickAlignmentContainer final
 
 #pragma warning (pop)
 };
-#endif
 
 #include "TetrominoeShapeEnum.h"
 
 class TetrominoeWallKickHelper final
 {
 	UnorderedMap<TetrominoeShapeEnum, WallKickAlignmentContainer> WallKickRealignmentMap = UnorderedMap<TetrominoeShapeEnum, WallKickAlignmentContainer>();
-	static std::shared_ptr<TetrominoeWallKickHelper> Singleton;
-
-	TetrominoeWallKickHelper();
+	static std::unique_ptr<TetrominoeWallKickHelper> Singleton;
 public:
-	// --- Getter/Setter
+	TetrominoeWallKickHelper(const TetrominoeWallKickHelper&) = default;
+	TetrominoeWallKickHelper(TetrominoeWallKickHelper&&) = default;
+	TetrominoeWallKickHelper();
+	~TetrominoeWallKickHelper() = default;
+	TetrominoeWallKickHelper& operator==(const TetrominoeWallKickHelper&) = delete;
+	TetrominoeWallKickHelper& operator==(TetrominoeWallKickHelper&&) = delete;
+	// Getter/Setter
 	static TetrominoeWallKickHelper* Get();
 	const WallKickAlignmentContainer& TryGetWallKickAlignmentContainer(class Tetrominoe* TetrominoePtrArg) const;
-	// ---
 };
 #endif

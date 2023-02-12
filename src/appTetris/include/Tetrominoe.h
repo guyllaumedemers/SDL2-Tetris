@@ -1,19 +1,19 @@
-#ifndef INCLUDED_TETROMINOE
-#define INCLUDED_TETROMINOE
+#ifndef TETROMINOE_H
+#define TETROMINOE_H
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
-#include <cstdint>
+#ifndef UMAP_H
+#define UMAP_H
+#include <unordered_map>
 #endif
 
-#ifndef INCLUDED_COLLECTION_VECTOR
-#define INCLUDED_COLLECTION_VECTOR
+#ifndef VECTOR_H
+#define VECTOR_H
 #include <vector>
 #endif
 
-#ifndef INCLUDED_COLLECTION_UNORDERED_MAP
-#define INCLUDED_COLLECTION_UNORDERED_MAP
-#include <unordered_map>
+#ifndef CSTDINT_H
+#define CSTDINT_H
+#include <cstdint>
 #endif
 
 #include "Tile.h"
@@ -41,15 +41,8 @@ public:
 	void FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	void Realign(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	void Align();
-	// --- Getter/Setter
-	const std::vector<uint16_t>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }
-	const TetrominoeShapeEnum& GetTetrominoeShape() const { return TetrominoeShape; }
-	std::string GetTetrominoeWildcard() const;
-	const bool& IsLocked() const { return bIsLocked; }
-	void SetIsLocked() { bIsLocked = true; }
-	const uint8_t& GetTetrominoeRotationIndex() const { return RotationIndex; }
-	void SetTetrominoeRotationIndex(uint8_t Index) { RotationIndex = Index; }
 private:
+	// Utils
 	void InvalidateTetrominoeIndicies(std::vector<Tile>& Tiles);
 	void RevalidateTetrominoeIndicies(std::vector<Tile>& Tiles);
 	void UpdateTetrominoeRotationIndex();
@@ -59,5 +52,14 @@ private:
 	int8_t GetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols);
 	std::vector<int16_t> GenerateFlipMatrix(uint16_t Pivot, size_t NMatrix, uint8_t Rows, uint8_t Cols);
 	uint16_t GetFlipMatrixPivot(uint8_t Rows, uint8_t Cols);
+public:
+	// Getters/Setters
+	const std::vector<uint16_t>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }
+	const TetrominoeShapeEnum& GetTetrominoeShape() const { return TetrominoeShape; }
+	std::string GetTetrominoeWildcard() const;
+	const bool& IsLocked() const { return bIsLocked; }
+	void SetIsLocked() { bIsLocked = true; }
+	const uint8_t& GetTetrominoeRotationIndex() const { return RotationIndex; }
+	void SetTetrominoeRotationIndex(uint8_t Index) { RotationIndex = Index; }
 };
 #endif

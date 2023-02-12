@@ -1,56 +1,57 @@
-#ifndef INCLUDED_LEVELMANAGER
-#define INCLUDED_LEVELMANAGER
+#ifndef LEVELMANAGER_H
+#define LEVELMANAGER_H
 
-#ifndef INCLUDED_FUNCTIONAL
-#define INCLUDED_FUNCTIONAL
+#ifndef FUNCTIONAL_H
+#define FUNCTIONAL_H
 #include <functional>
 #endif
 
-#ifndef INCLUDED_MEMORY
-#define INCLUDED_MEMORY
+#ifndef MEMORY_H
+#define MEMORY_H
 #include <memory>
 #endif
 
-#ifndef INCLUDED_CSTD_INT
-#define INCLUDED_CSTD_INT
+#ifndef CSTDINT_H
+#define CSTDINT_H
 #include <cstdint>
 #endif
 
-#include "TileMap.h"
-#include "TetrominoeManager.h"
+// --- forward declaration
+class TileMap;
+class LockDelayManager;
+class TetrominoeManager;
+class TextureManager;
+class SDLManager;
+// ---
 
 class LevelManager final
 {
-	std::unique_ptr<TileMap> TileMapUniquePtr = std::make_unique<TileMap>();
-	std::unique_ptr<TetrominoeManager> TetrominoeManagerUniquePtr = std::make_unique<TetrominoeManager>();
+	std::shared_ptr<TetrominoeManager> TetrominoeManagerUniquePtr = nullptr;
+	std::shared_ptr<TileMap> TileMapUniquePtr = nullptr;
+	std::shared_ptr<LockDelayManager> LockDelayManagerUniquePtr = nullptr;
+	static inline int PeriodicFunctorID = NULL;
+	static inline int OnLockFunctorID = NULL;
 public:
 	LevelManager(const LevelManager&) = delete;
 	LevelManager(LevelManager&&) = delete;
-	LevelManager() = default;
-	~LevelManager() = default;
+	LevelManager();
+	~LevelManager();
 	LevelManager& operator=(const LevelManager&) = delete;
 	LevelManager& operator=(LevelManager&&) = delete;
-	void Initialize(class SDLManager* const SDLManagerPtrArg, std::function<void(uint16_t, uint16_t)> SetWindowEvent);
-	void Update(class TextureManager* const TextureManagerPtrArg, class SDLManager* const SDLManagerPtrArg) const;
+	void Initialize(std::function<void(uint16_t, uint16_t)> SetWindowEvent);
+	void Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const;
 	void Clear() const;
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	void PollSpaceKeyEvent() const;
 private:
-	// --- Getter/Setter
-	const std::unique_ptr<TileMap>& GetTilemapManager() const { return TileMapUniquePtr; }
-	const std::unique_ptr<TetrominoeManager>& GetTetrominoeManager() const { return TetrominoeManagerUniquePtr; }
-	// --- Timers
-	int CreateTimer(class SDLManager* const SDLManagerPtrArg, uint32_t(*Functor)(uint32_t, void*), uint32_t TimerDelay, void* VoidPtrArg);
-	int DestroyTimer(class SDLManager* const SDLManagerPtrArg, int TimerID);
-	// --- Lock Delay system
-	void InitializeLockDelaySystem(class SDLManager* const SDLManagerPtrArg);
-	void ResetLockDelaySystem(class SDLManager* const SDLManagerPtrArg);
-	// --- Functor
-	uint32_t CreateNewTetrominoe(uint32_t Interval, void* Param) const;
-	uint32_t PeriodicUpdate(uint32_t Interval, void* Param) const;
-	// --- Delegates
-	typedef std::function<void()> DelLockDelayCompleted;
-	DelLockDelayCompleted LockDelayCompletedEvent;
-	// ---
+	void Subscribe();
+	void UnSubscribe();
+	// Utils
+	void Start();
+	void Stop();
+public:
+	// timer callback
+	void PeriodicUpdate();
+	void GenerateTetrominoeOnLock();
 };
 #endif
