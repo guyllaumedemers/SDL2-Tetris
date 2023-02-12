@@ -29,6 +29,7 @@ class LevelManager final
 	std::shared_ptr<TetrominoeManager> TetrominoeManagerUniquePtr = nullptr;
 	std::shared_ptr<TileMap> TileMapUniquePtr = nullptr;
 	std::shared_ptr<LockDelayManager> LockDelayManagerUniquePtr = nullptr;
+	static inline int DelayedStartFunctorID = NULL;
 	static inline int PeriodicFunctorID = NULL;
 	static inline int OnLockFunctorID = NULL;
 public:

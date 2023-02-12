@@ -28,17 +28,21 @@ public:
 private:
 	// Delegates
 	typedef std::function<void(int8_t, int8_t)> DirectionalKeyPressedEvent;
-	DirectionalKeyPressedEvent DirectionalKeyPressedDelegate;
+	DirectionalKeyPressedEvent DirectionalKeyPressedDelegate = nullptr;
 
 	typedef std::function<void()> SpaceKeyPressedEvent;
-	SpaceKeyPressedEvent SpaceKeyPressedDelegtate;
+	SpaceKeyPressedEvent SpaceKeyPressedDelegtate = nullptr;
+
+	typedef std::function<void()> RestartGameEvent;
+	RestartGameEvent RestartGameDelegate = nullptr;
 
 	typedef std::function<void(bool)> QuitGameEvent;
-	QuitGameEvent QuitGameDelegate;
+	QuitGameEvent QuitGameDelegate = nullptr;
 public:
 	// Getter/Setter
 	DirectionalKeyPressedEvent& GetDirectionalKeyPressedDel() { return DirectionalKeyPressedDelegate; }
 	SpaceKeyPressedEvent& GetSpaceKeyPressedDel() { return SpaceKeyPressedDelegtate; }
+	RestartGameEvent& GetRestartGameDel() { return RestartGameDelegate; }
 	QuitGameEvent& GetQuitGameDel() { return QuitGameDelegate; }
 };
 #endif

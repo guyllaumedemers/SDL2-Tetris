@@ -45,6 +45,9 @@ void InputManager::RunEvent(SDL_Event* Event) const
 		case SDL_SCANCODE_SPACE:
 			SpaceKeyPressedDelegtate();
 			break;
+		case SDLK_F5:
+			RestartGameDelegate();
+			break;
 		default:
 			break;
 		}

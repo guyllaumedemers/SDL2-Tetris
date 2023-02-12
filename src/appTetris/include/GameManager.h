@@ -32,8 +32,9 @@ private:
 	// Utils
 	void Initialize();
 	void Update();
+	void PollEvents() const;
+	void Render() const;
 	void Quit() const;
 	void Subscribe();
-	void UnSubscribe() const;
 };
 #endif

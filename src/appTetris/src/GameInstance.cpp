@@ -42,7 +42,7 @@ void GameInstance::Clear() const
 	LevelManagerUniquePtr->Clear();
 }
 
-void GameInstance::Reset()
+void GameInstance::RestartGame() const
 {
 	if (!LevelManagerUniquePtr)
 	{

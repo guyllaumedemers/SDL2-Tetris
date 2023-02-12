@@ -32,14 +32,14 @@ class SDLManager;
 
 struct Tile final
 {
-	static constexpr uint8_t&& Size = STILE;
 	TileAttributeEnum Attribute = TileAttributeEnum::Empty;
-	std::string Wildcard = std::string();
+	std::string Wildcard = std::string("Undefined");
 	size_t Index = 0;
+	static constexpr uint8_t&& Size = STILE;
 public:
-	Tile(const TileAttributeEnum& NextAttribute = TileAttributeEnum::Empty, const std::string& NextWildcard = "Undefined", const size_t& NextIndex = 0);
+	Tile(const TileAttributeEnum& NextAttribute, const std::string& NextWildcard, const size_t& NextIndex);
 	Tile(const Tile&) = delete;
-	Tile(Tile&&) = delete;
+	Tile(Tile&&) = default;
 	Tile() = default;
 	~Tile() = default;
 	Tile& operator==(const Tile&) = delete;

@@ -35,12 +35,15 @@ public:
 	void Initialize() const;
 	void Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const;
 	void Clear() const;
-	void Reset();
+	void RestartGame() const;
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	void PollSpaceKeyEvent() const;
-public:
+private:
 	// Delegates
 	typedef std::function<void(uint16_t, uint16_t)> SetWindowEvent;
-	SetWindowEvent SetWindowDelegate;
+	SetWindowEvent SetWindowDelegate = nullptr;
+public:
+	// Getter/Setter
+	SetWindowEvent& GetSetWindowDel() { return SetWindowDelegate; }
 };
 #endif
