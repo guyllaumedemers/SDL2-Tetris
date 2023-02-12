@@ -48,12 +48,9 @@ public:
 	void Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	void Clear();
 	// Utils
-	std::shared_ptr<Tetrominoe> GenerateRandomTetromioe(uint8_t Rows, uint8_t Cols) const;
-	void Add(std::shared_ptr<Tetrominoe> Tetrominoe);
+	void Add(uint8_t Rows, uint8_t Cols);
 	void Remove(std::shared_ptr<Tetrominoe> Tetrominoe);
 private:
-	void Subscribe();
-	void UnSubscribe();
-public:
+	std::shared_ptr<Tetrominoe> GenerateRandomTetromioe(uint8_t Rows, uint8_t Cols) const;
 };
 #endif

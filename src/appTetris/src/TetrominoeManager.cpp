@@ -76,10 +76,20 @@ std::shared_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioe(uint8_t R
 	return std::make_shared<Tetrominoe>(static_cast<TetrominoeShapeEnum>(static_cast<int>(std::pow(Two, UniformDistribution(RandomGenerator) - One))), Rows, Cols);
 }
 
-void TetrominoeManager::Subscribe()
+void TetrominoeManager::Add(uint8_t Rows, uint8_t Cols)
 {
+	ActiveTetrominoe = GenerateRandomTetromioe(Rows, Cols);
+	if (!ActiveTetrominoe)
+	{
+		return;
+	}
+
+	ActiveTetrominoe->Align();
+	TetrominoePool.push_back(ActiveTetrominoe);
 }
 
-void TetrominoeManager::UnSubscribe()
+void TetrominoeManager::Remove(std::shared_ptr<Tetrominoe> TetrominoePtrArg)
 {
+	// create a system that turn the tetrominoe indices to -1, lookup for a tetrominoe
+	// where all indices are -1 and delete it ONLY when this case is TRUE.
 }

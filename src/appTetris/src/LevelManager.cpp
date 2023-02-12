@@ -107,7 +107,6 @@ void LevelManager::PollSpaceKeyEvent() const
 
 void LevelManager::Subscribe()
 {
-	Start();
 	if (!LockDelayManagerUniquePtr || !TetrominoeManagerUniquePtr)
 	{
 		return;
@@ -116,11 +115,14 @@ void LevelManager::Subscribe()
 	// register function callback for generating tetrominoe when the active one lock
 	LockDelayManagerUniquePtr->GenerateTetrominoeOnLockDelegate = [&](uint8_t Rows, uint8_t Cols)
 	{
-		return
-			(TetrominoeManagerUniquePtr != nullptr)
-			? TetrominoeManagerUniquePtr->GenerateRandomTetromioe(Rows, Cols)
-			: nullptr;
+		if (!TetrominoeManagerUniquePtr)
+		{
+			return;
+		}
+		TetrominoeManagerUniquePtr->Add(Rows, Cols);
 	};
+	// wait for the above binding before starting registering to timer delegates
+	Start();
 }
 
 void LevelManager::UnSubscribe()

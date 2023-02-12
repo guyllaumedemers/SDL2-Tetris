@@ -27,7 +27,7 @@ public:
 	LockDelayManager& operator==(LockDelayManager&&) = delete;
 public:
 	// Delegates
-	typedef std::function<std::shared_ptr<Tetrominoe>(uint8_t, uint8_t)> GenerateTetrominoeOnLockEvent;
+	typedef std::function<void(uint8_t, uint8_t)> GenerateTetrominoeOnLockEvent;
 	GenerateTetrominoeOnLockEvent GenerateTetrominoeOnLockDelegate;
 };
 #endif
