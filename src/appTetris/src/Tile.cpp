@@ -8,6 +8,11 @@
 #include <SDL.h>
 #endif
 
+Tile::Tile(const TileAttributeEnum& NextAttribute = TileAttributeEnum::Empty, const std::string& NextWildcard = "Undefined", const size_t& NextIndex = 0)
+	: Attribute(NextAttribute), Wildcard(NextWildcard), Index(NextIndex)
+{
+}
+
 void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg, uint8_t Rows, uint8_t Cols) const
 {
 	if (!TextureManagerPtrArg || !SDLManagerPtrArg)
@@ -29,8 +34,8 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 
 	const SDL_Rect SDLTargetRect =
 	{
-		static_cast<int>(IndexPosition % Cols) * Tile::Size,
-		static_cast<int>(IndexPosition / Cols) * Tile::Size,
+		static_cast<int>(Index % Cols) * Tile::Size,
+		static_cast<int>(Index / Cols) * Tile::Size,
 		Tile::Size,
 		Tile::Size
 	};

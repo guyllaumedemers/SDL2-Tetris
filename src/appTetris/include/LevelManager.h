@@ -40,7 +40,8 @@ public:
 	LevelManager& operator=(LevelManager&&) = delete;
 	void Initialize(std::function<void(uint16_t, uint16_t)> SetWindowEvent);
 	void Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const;
-	void Clear() const;
+	void Clear();
+	void Reset(std::function<void(uint16_t, uint16_t)> SetWindowEvent);
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	void PollSpaceKeyEvent() const;
 private:

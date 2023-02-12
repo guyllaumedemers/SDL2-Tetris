@@ -12,11 +12,6 @@
 #include <stdexcept>
 #endif
 
-void TetrominoeManager::Initialize(const std::vector<Tile>& Tiles, const uint8_t& Rows, const uint8_t& Cols)
-{
-
-}
-
 void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
 {
 	std::lock_guard<std::mutex> lock(ActiveTetrominoeMutex);
@@ -45,8 +40,6 @@ void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8
 	}
 
 	TetrominoePtr->Update(const_cast<std::vector<Tile>&>(Tiles), DirX, DirY, Rows, Cols);
-	// reset the lock delay timer
-	//LockDelayID = ResetTetrominoeLockDelayTimerEvent(LockDelayID);
 }
 
 void TetrominoeManager::Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
@@ -59,15 +52,10 @@ void TetrominoeManager::Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8
 	}
 
 	ActiveTetrominoe->FlipMatrix(const_cast<std::vector<Tile>&>(Tiles), Rows, Cols);
-	// reset the lock delay timer
-	//LockDelayID = ResetTetrominoeLockDelayTimerEvent(LockDelayID);
 }
 
 void TetrominoeManager::Clear()
 {
-	/*GenerateRandomTetrominoeEvent = nullptr;
-	CheckRowCompletionEvent = nullptr;*/
-
 	for (auto& TetrominoeSharedPtr : TetrominoePool)
 	{
 		TetrominoeSharedPtr.reset();

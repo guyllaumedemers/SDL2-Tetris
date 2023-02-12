@@ -42,6 +42,16 @@ void GameInstance::Clear() const
 	LevelManagerUniquePtr->Clear();
 }
 
+void GameInstance::Reset()
+{
+	if (!LevelManagerUniquePtr)
+	{
+		return;
+	}
+
+	LevelManagerUniquePtr->Reset(SetWindowDelegate);
+}
+
 void GameInstance::PollKeyEvent(int8_t DirX, int8_t DirY) const
 {
 	if (!LevelManagerUniquePtr)

@@ -29,7 +29,7 @@ LevelManager::~LevelManager()
 
 void LevelManager::Initialize(std::function<void(uint16_t, uint16_t)> SetWindowEvent)
 {
-	if (!TileMapUniquePtr || !TetrominoeManagerUniquePtr)
+	if (!TileMapUniquePtr)
 	{
 		return;
 	}
@@ -44,12 +44,7 @@ void LevelManager::Initialize(std::function<void(uint16_t, uint16_t)> SetWindowE
 		[&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); }
 	);
 
-	// initialize events in tetrominoe manager
-	TetrominoeManagerUniquePtr->Initialize(
-		TileMapUniquePtr->GetTiles(),
-		TileMapUniquePtr->GetRows(),
-		TileMapUniquePtr->GetCols()
-	);
+	Subscribe();
 }
 
 void LevelManager::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const
@@ -66,8 +61,9 @@ void LevelManager::Update(TextureManager* const TextureManagerPtrArg, SDLManager
 	);
 }
 
-void LevelManager::Clear() const
+void LevelManager::Clear()
 {
+	UnSubscribe();
 	if (!TileMapUniquePtr || !TetrominoeManagerUniquePtr)
 	{
 		return;
@@ -75,6 +71,12 @@ void LevelManager::Clear() const
 
 	TetrominoeManagerUniquePtr->Clear();
 	TileMapUniquePtr->Clear();
+}
+
+void LevelManager::Reset(std::function<void(uint16_t, uint16_t)> SetWindowEvent)
+{
+	Clear();
+	Initialize(SetWindowEvent);
 }
 
 void LevelManager::PollKeyEvent(int8_t DirX, int8_t DirY) const
@@ -105,6 +107,7 @@ void LevelManager::PollSpaceKeyEvent() const
 
 void LevelManager::Subscribe()
 {
+	Start();
 	if (!LockDelayManagerUniquePtr || !TetrominoeManagerUniquePtr)
 	{
 		return;
@@ -118,13 +121,17 @@ void LevelManager::Subscribe()
 			? TetrominoeManagerUniquePtr->GenerateRandomTetromioe(Rows, Cols)
 			: nullptr;
 	};
-
-	Start();
 }
 
 void LevelManager::UnSubscribe()
 {
 	Stop();
+	if (!LockDelayManagerUniquePtr)
+	{
+		return;
+	}
+
+	LockDelayManagerUniquePtr->GenerateTetrominoeOnLockDelegate = nullptr;
 }
 
 void LevelManager::Start()

@@ -35,6 +35,7 @@ public:
 	void Initialize() const;
 	void Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const;
 	void Clear() const;
+	void Reset();
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	void PollSpaceKeyEvent() const;
 public:

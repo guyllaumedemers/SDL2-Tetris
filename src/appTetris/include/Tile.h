@@ -35,11 +35,21 @@ struct Tile final
 	static constexpr uint8_t&& Size = STILE;
 	TileAttributeEnum Attribute = TileAttributeEnum::Empty;
 	std::string Wildcard = std::string();
-	size_t IndexPosition = 0;
+	size_t Index = 0;
 public:
+	Tile(const TileAttributeEnum& NextAttribute = TileAttributeEnum::Empty, const std::string& NextWildcard = "Undefined", const size_t& NextIndex = 0);
+	Tile(const Tile&) = delete;
+	Tile(Tile&&) = delete;
+	Tile() = default;
 	~Tile() = default;
 	Tile& operator==(const Tile&) = delete;
 	Tile& operator==(Tile&&) = delete;
 	void Render(TextureManager* const TextureManagerPtr, SDLManager* const SDLManagerPtr, uint8_t Rows, uint8_t Cols) const;
+public:
+	// Getter/Setter
+	void SetAttribute(const TileAttributeEnum& NextAttribute) { Attribute = NextAttribute; };
+	void SetWildcard(const std::string& NextWildcard) { Wildcard = NextWildcard; };
+	void SetIndex(const size_t& NextIndex) { Index = NextIndex; };
+	bool IsEqual(TileAttributeEnum NextAttribute) const { return Attribute == NextAttribute; }
 };
 #endif

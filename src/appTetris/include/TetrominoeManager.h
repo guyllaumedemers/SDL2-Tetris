@@ -44,7 +44,6 @@ public:
 	~TetrominoeManager() = default;
 	TetrominoeManager& operator=(const TetrominoeManager&) = delete;
 	TetrominoeManager& operator=(TetrominoeManager&&) = delete;
-	void Initialize(const std::vector<Tile>& Tiles, const uint8_t& Rows, const uint8_t& Cols);
 	void Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	void Clear();

@@ -32,11 +32,11 @@ void TileMap::Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(ui
 
 		if (Row == Zero || Row == (Rows - One) || Col == Zero || Col == (Cols - One))
 		{
-			Tiles.emplace_back(Tile{ TileAttributeEnum::Border, std::string("Undefined"), Index });
+			Tiles.emplace_back(Tile(TileAttributeEnum::Border, "Undefined", Index));
 		}
 		else
 		{
-			Tiles.emplace_back(Tile{ TileAttributeEnum::Empty, std::string("Undefined"), Index });
+			Tiles.emplace_back(Tile(TileAttributeEnum::Empty, "Undefined", Index));
 		}
 	}
 
@@ -72,7 +72,7 @@ bool TileMap::CheckRowCompletion(uint16_t TetrominoeEntryIndex)
 		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
 		{
 			const Tile& Tile = Tiles.at(Index);
-			if (Tile.Attribute == TileAttributeEnum::Empty)
+			if (Tile.IsEqual(TileAttributeEnum::Empty))
 			{
 				return !bIsRowComplete;
 			}
@@ -95,9 +95,8 @@ void TileMap::ClearRow(size_t StartIndex)
 		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
 		{
 			Tile& Tile = Tiles.at(Index);
-
-			Tile.Attribute = TileAttributeEnum::Empty;
-			Tile.Wildcard = std::string("Undefined");
+			Tile.SetAttribute(TileAttributeEnum::Empty);
+			Tile.SetWildcard("Undefined");
 		}
 	}
 	catch (const std::out_of_range& e)
