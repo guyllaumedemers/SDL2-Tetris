@@ -49,7 +49,7 @@ void GameInstance::RestartGame() const
 		return;
 	}
 
-	LevelManagerUniquePtr->Reset(SetWindowDelegate);
+	LevelManagerUniquePtr->ResetGame(SetWindowDelegate);
 }
 
 void GameInstance::PollKeyEvent(int8_t DirX, int8_t DirY) const

@@ -1,12 +1,12 @@
 #include "../include/LevelManager.h"
 #include "../include/TileMap.h"
-#include "../include/LockDelayManager.h"
 #include "../include/TetrominoeManager.h"
 #include "../include/SDLTimerManager.h"
 #include "../include/SDLlogHelper.h"
 
-#ifndef LOCK_DELAY
-#define LOCK_DELAY 30.0
+#ifndef CMATH_H
+#define CMATH_H
+#include <cmath>
 #endif
 
 #ifndef PERIODIC_UPDATE
@@ -16,14 +16,12 @@
 LevelManager::LevelManager()
 {
 	TileMapUniquePtr = std::make_shared<TileMap>();
-	LockDelayManagerUniquePtr = std::make_shared<LockDelayManager>();
 	TetrominoeManagerUniquePtr = std::make_shared<TetrominoeManager>();
 }
 
 LevelManager::~LevelManager()
 {
 	TileMapUniquePtr = nullptr;
-	LockDelayManagerUniquePtr = nullptr;
 	TetrominoeManagerUniquePtr = nullptr;
 }
 
@@ -73,7 +71,7 @@ void LevelManager::Clear()
 	TileMapUniquePtr->Clear();
 }
 
-void LevelManager::Reset(std::function<void(uint16_t, uint16_t)> SetWindowEvent)
+void LevelManager::ResetGame(std::function<void(uint16_t, uint16_t)> SetWindowEvent)
 {
 	Clear();
 	Initialize(SetWindowEvent);
@@ -102,25 +100,35 @@ void LevelManager::PollSpaceKeyEvent() const
 		return;
 	}
 
-	TetrominoeManagerUniquePtr->Flip(TileMapUniquePtr->GetTiles(), TileMapUniquePtr->GetRows(), TileMapUniquePtr->GetCols());
+	TetrominoeManagerUniquePtr->Flip(
+		TileMapUniquePtr->GetTiles(),
+		TileMapUniquePtr->GetRows(),
+		TileMapUniquePtr->GetCols()
+	);
 }
 
 void LevelManager::Subscribe()
 {
-	if (!LockDelayManagerUniquePtr || !TetrominoeManagerUniquePtr)
+	if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
 	{
 		return;
 	}
 
 	// register function callback for generating tetrominoe when the active one lock
-	LockDelayManagerUniquePtr->GenerateTetrominoeOnLockDelegate = [&](uint8_t Rows, uint8_t Cols)
+	TetrominoeManagerUniquePtr->GetLockDelayHandle().LockDelayCompletedDelegate = [&]()
 	{
-		if (!TetrominoeManagerUniquePtr)
+		if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
 		{
+			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInDelegate, "LevelManager");
 			return;
 		}
-		TetrominoeManagerUniquePtr->Add(Rows, Cols);
+		// update the active tetrominoe lock value
+		TetrominoeManagerUniquePtr->OnLockDelayCompleted(
+			TileMapUniquePtr->GetRows(),
+			TileMapUniquePtr->GetCols()
+		);
 	};
+
 	// wait for the above binding before starting registering to timer delegates
 	Start();
 }
@@ -128,12 +136,6 @@ void LevelManager::Subscribe()
 void LevelManager::UnSubscribe()
 {
 	Stop();
-	if (!LockDelayManagerUniquePtr)
-	{
-		return;
-	}
-
-	LockDelayManagerUniquePtr->GenerateTetrominoeOnLockDelegate = nullptr;
 }
 
 void LevelManager::Start()
@@ -151,7 +153,7 @@ void LevelManager::Start()
 			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInTimerDelegate, "LevelManager");
 			exit(EXIT_FAILURE);
 		}
-		LevelManagerPtr->PeriodicUpdate();
+		LevelManagerPtr->OnPeriodicUpdate();
 		return Interval;
 	};
 
@@ -161,33 +163,20 @@ void LevelManager::Start()
 		const_cast<LevelManager*>(this)
 	);
 
-	// register new tetrominoe generation
-	uint32_t(*GenerateTetrominoeOnLockFunctor)(uint32_t, void*) = [](uint32_t Interval, void* Param)
+	if (!TetrominoeManagerUniquePtr)
 	{
-		LevelManager* const LevelManagerPtr = static_cast<LevelManager*>(Param);
-		if (!LevelManagerPtr)
-		{
-			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInTimerDelegate, "LevelManager");
-			exit(EXIT_FAILURE);
-		}
-		LevelManagerPtr->GenerateTetrominoeOnLock();
-		return static_cast<uint32_t>(NULL);
-	};
+		return;
+	}
 
-	OnLockFunctorID = SDLTimerManager::CreateTimer(
-		GenerateTetrominoeOnLockFunctor,
-		Interval,
-		const_cast<LevelManager*>(this)
-	);
+	TetrominoeManagerUniquePtr->GetLockDelayHandle().LockDelayCompletedDelegate();
 }
 
 void LevelManager::Stop()
 {
 	SDLTimerManager::DestroyTimer(PeriodicFunctorID);
-	SDLTimerManager::DestroyTimer(OnLockFunctorID);
 }
 
-void LevelManager::PeriodicUpdate()
+void LevelManager::OnPeriodicUpdate()
 {
 	if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
 	{
@@ -202,19 +191,6 @@ void LevelManager::PeriodicUpdate()
 		TileMapUniquePtr->GetTiles(),
 		Idle,
 		OneDown,
-		TileMapUniquePtr->GetRows(),
-		TileMapUniquePtr->GetCols()
-	);
-}
-
-void LevelManager::GenerateTetrominoeOnLock()
-{
-	if (!LockDelayManagerUniquePtr || !TileMapUniquePtr)
-	{
-		return;
-	}
-
-	LockDelayManagerUniquePtr->GenerateTetrominoeOnLockDelegate(
 		TileMapUniquePtr->GetRows(),
 		TileMapUniquePtr->GetCols()
 	);

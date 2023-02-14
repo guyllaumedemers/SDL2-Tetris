@@ -18,7 +18,6 @@
 
 // --- forward declaration
 class TileMap;
-class LockDelayManager;
 class TetrominoeManager;
 class TextureManager;
 class SDLManager;
@@ -28,10 +27,7 @@ class LevelManager final
 {
 	std::shared_ptr<TetrominoeManager> TetrominoeManagerUniquePtr = nullptr;
 	std::shared_ptr<TileMap> TileMapUniquePtr = nullptr;
-	std::shared_ptr<LockDelayManager> LockDelayManagerUniquePtr = nullptr;
-	static inline int DelayedStartFunctorID = NULL;
 	static inline int PeriodicFunctorID = NULL;
-	static inline int OnLockFunctorID = NULL;
 public:
 	LevelManager(const LevelManager&) = delete;
 	LevelManager(LevelManager&&) = delete;
@@ -42,7 +38,7 @@ public:
 	void Initialize(std::function<void(uint16_t, uint16_t)> SetWindowEvent);
 	void Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const;
 	void Clear();
-	void Reset(std::function<void(uint16_t, uint16_t)> SetWindowEvent);
+	void ResetGame(std::function<void(uint16_t, uint16_t)> SetWindowEvent);
 	void PollKeyEvent(int8_t DirX, int8_t DirY) const;
 	void PollSpaceKeyEvent() const;
 private:
@@ -52,8 +48,7 @@ private:
 	void Start();
 	void Stop();
 public:
-	// timer callback
-	void PeriodicUpdate();
-	void GenerateTetrominoeOnLock();
+	// timer callback evet
+	void OnPeriodicUpdate();
 };
 #endif

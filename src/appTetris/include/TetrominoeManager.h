@@ -31,12 +31,26 @@ class Tetrominoe;
 // ---
 
 #include "Tile.h"
+#include "TraitHelper.h"
 
 class TetrominoeManager final
 {
+	/// <summary>
+	/// Lock Handle that generate events base on current tetrominoe state
+	/// </summary>
+	struct LockDelayHandle final
+	{
+		typedef std::function<void()> LockDelayCompletedEvent;
+		LockDelayCompletedEvent LockDelayCompletedDelegate = nullptr;
+
+		typedef int LockHandleID;
+		LockHandleID LockID;
+	};
+
 	std::vector<std::shared_ptr<Tetrominoe>> TetrominoePool = std::vector<std::shared_ptr<Tetrominoe>>();
 	std::shared_ptr<Tetrominoe> ActiveTetrominoe = nullptr;
 	std::mutex ActiveTetrominoeMutex;
+	LockDelayHandle TetrominoeLockHandle;
 public:
 	TetrominoeManager(const TetrominoeManager&) = delete;
 	TetrominoeManager(TetrominoeManager&&) = delete;
@@ -47,10 +61,19 @@ public:
 	void Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	void Clear();
+	// Getter/Setter
+	LockDelayHandle& GetLockDelayHandle() { return TetrominoeLockHandle; }
+private:
 	// Utils
+	void Reset();
+	void Start();
+	void Stop();
 	void Add(uint8_t Rows, uint8_t Cols);
 	void Remove(std::shared_ptr<Tetrominoe> Tetrominoe);
-private:
 	std::shared_ptr<Tetrominoe> GenerateRandomTetromioe(uint8_t Rows, uint8_t Cols) const;
+	void Lock();
+public:
+	// timer callback event
+	void OnLockDelayCompleted(uint8_t Rows, uint8_t Cols);
 };
 #endif
