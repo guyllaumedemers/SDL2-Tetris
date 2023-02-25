@@ -134,11 +134,12 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryGetWallKickAlignmentContainer(Tetrominoe* TetrominoePtrArg) const
+const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryGetWallKickAlignmentContainer(Tetrominoe* TetrominoePtrArg)
 {
+	const UnorderedMap<TetrominoeShapeEnum, WallKickAlignmentContainer>& WallKickRealignmentMapInstance = Get()->GetWallKickRealignmentMap();
 	static const WallKickAlignmentContainer EmptyContainer = WallKickAlignmentContainer();
 
-	if (WallKickRealignmentMap.empty())
+	if (WallKickRealignmentMapInstance.empty())
 	{
 		return EmptyContainer;
 	}
@@ -150,8 +151,8 @@ const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryGetWallKickAlignm
 			return EmptyContainer;
 		}
 
-		const auto Iterator = WallKickRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
-		if (Iterator != WallKickRealignmentMap.end())
+		const auto Iterator = WallKickRealignmentMapInstance.find(TetrominoePtrArg->GetTetrominoeShape());
+		if (Iterator != WallKickRealignmentMapInstance.end())
 		{
 			return Iterator->second;
 		}

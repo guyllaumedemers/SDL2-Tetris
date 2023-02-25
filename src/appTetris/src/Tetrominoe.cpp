@@ -58,6 +58,7 @@ Tetrominoe::Tetrominoe(TetrominoeShapeEnum TetrominoeEnum, uint8_t Rows, uint8_t
 
 	TetrominoeShape = TetrominoeEnum;
 	RotationIndex = 0;
+	Align();
 }
 
 bool Tetrominoe::IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const
@@ -88,14 +89,14 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 		return !IsMoveOverlappingExistingTile;
 	}
 
-	const int8_t&& JumpValue = static_cast<int8_t>(DirX + (std::abs(DirY) * Cols));
-
 	try
 	{
+		const int8_t&& JumpValue = static_cast<int8_t>(DirX + (std::abs(DirY) * Cols));
+
 		for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
-			const bool&& IsJumpIndexOverlappingItsOwnIndex = std::find(TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(),
-				TetrominoeEntryIndex + JumpValue) != TetrominoeEntryIndices.end();
+			const bool&& IsJumpIndexOverlappingItsOwnIndex = std::find(
+				TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(), TetrominoeEntryIndex + JumpValue) != TetrominoeEntryIndices.end();
 
 			if (IsJumpIndexOverlappingItsOwnIndex)
 			{
@@ -113,6 +114,7 @@ bool Tetrominoe::IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, i
 	{
 		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
 	}
+
 	return !IsMoveOverlappingExistingTile;
 }
 
@@ -123,31 +125,27 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 		return;
 	}
 
-	const int8_t&& JumpValue = static_cast<int8_t>(DirX + (std::abs(DirY) * Cols));
-	const std::string&& Wildcard = GetTetrominoeWildcard();
-
 	try
 	{
+		const int8_t&& JumpValue = static_cast<int8_t>(DirX + (std::abs(DirY) * Cols));
+		const std::string&& Wildcard = GetTetrominoeWildcard();
+
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
-			{
-				Tile& PreviousTile = Tiles.at(TetrominoeEntryIndex);
+			Tile& PreviousTile = Tiles.at(TetrominoeEntryIndex);
 
-				PreviousTile.Attribute = TileAttributeEnum::Empty;
-				PreviousTile.Wildcard = std::string("Undefined");
-			}
+			PreviousTile.SetAttribute(TileAttributeEnum::Empty);
+			PreviousTile.SetWildcard("Undefined");
 
 			TetrominoeEntryIndex += JumpValue;
 		}
 
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
-			{
-				Tile& NextTile = Tiles.at(TetrominoeEntryIndex);
+			Tile& NextTile = Tiles.at(TetrominoeEntryIndex);
 
-				NextTile.Attribute = TileAttributeEnum::Filled;
-				NextTile.Wildcard = Wildcard;
-			}
+			NextTile.SetAttribute(TileAttributeEnum::Filled);
+			NextTile.SetWildcard(Wildcard);
 		}
 	}
 	catch (const std::out_of_range& e)
@@ -156,59 +154,17 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 	}
 }
 
-void Tetrominoe::FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
+void Tetrominoe::Flip(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
 {
 	if (IsLocked())
 	{
 		return;
 	}
 
-	try
-	{
-		// find pivot point of the matrix
-
-		const uint16_t& Pivot = GetFlipMatrixPivot(Rows, Cols);
-
-		// NMatrix grid size
-
-		static const size_t&& NMatrix = TetrominoeEntryIndices.size();
-
-		// generate matrix using tetrominoe entry indicies
-
-		const std::vector<int16_t>& Matrix = GenerateFlipMatrix(Pivot, NMatrix, Rows, Cols);
-
-		// invalide current tetrominoe entry indicies in tilemap
-
-		InvalidateTetrominoeIndicies(Tiles);
-
-		// increase Rotational Index
-
-		UpdateTetrominoeRotationIndex();
-
-		// calculate rotational alignment translation to apply
-
-		const int8_t&& RotationReAlignmentValue = GetRotationalAlignmentValueAtIndex(Rows, Cols);
-
-		// calculate floor kick alignment translation to apply
-
-		const int8_t&& FloorkickReAlignmentValue = GetFloorKickAlignmentValueAtRotation(Tiles, Matrix, Pivot, RotationReAlignmentValue, NMatrix, Rows, Cols);
-
-		// search wallkick alignment index
-
-		const int8_t&& WallkickReAlignmentValue = GetWallkickAlignmentValueAtIndex(Tiles, Matrix, Pivot, RotationReAlignmentValue, FloorkickReAlignmentValue, NMatrix, Rows, Cols);
-
-		// update tetrominoe entry indices with proper translated values
-
-		UpdateTetrominoeEntryIndicies(Matrix, Pivot, RotationReAlignmentValue, FloorkickReAlignmentValue, WallkickReAlignmentValue, NMatrix, Rows, Cols);
-
-		// revalide current tetrominoe entry indicies in tilemap
-
-		RevalidateTetrominoeIndicies(Tiles);
-	}
-	catch (const std::out_of_range& e)
-	{
-		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
-	}
+	FlipDataHandle FlipDataHandle(TetrominoeEntryIndices.size());
+	FlipDataHandle.MatrixPivot = TryFindPivot(Rows, Cols);
+	FlipDataHandle.Matrix = TryCreateFlipMatrix(FlipDataHandle, Rows, Cols);
+	RealignAndUpdate(Tiles, FlipDataHandle, Rows, Cols);
 }
 
 void Tetrominoe::Realign(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
@@ -230,22 +186,111 @@ void Tetrominoe::Align()
 	}
 }
 
-std::string Tetrominoe::GetTetrominoeWildcard() const
+uint16_t Tetrominoe::TryFindPivot(uint8_t Rows, uint8_t Cols)
 {
-	static const std::unordered_map<TetrominoeShapeEnum, std::string>&& TetrominoeShapePair =
-	{
-		std::make_pair(TetrominoeShapeEnum::None, std::string("Undefined")),
-		std::make_pair(TetrominoeShapeEnum::TShape, std::string("Purple")),
-		std::make_pair(TetrominoeShapeEnum::LShape, std::string("Orange")),
-		std::make_pair(TetrominoeShapeEnum::ZShape, std::string("Red")),
-		std::make_pair(TetrominoeShapeEnum::OShape, std::string("Yellow")),
-		std::make_pair(TetrominoeShapeEnum::IShape, std::string("Cyan")),
-		std::make_pair(TetrominoeShapeEnum::JShape, std::string("Blue")),
-		std::make_pair(TetrominoeShapeEnum::SShape, std::string("Green"))
-	};
+	uint8_t&& MinRow = UINT8_MAX;
+	uint8_t&& MinCol = UINT8_MAX;
 
-	const auto&& TetrominoeShapePairFound = TetrominoeShapePair.find(TetrominoeShape);
-	return (TetrominoeShapePairFound != TetrominoeShapePair.end()) ? TetrominoeShapePairFound->second : std::string("Undefined");
+	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+	{
+		const uint8_t&& Col = static_cast<uint8_t>(TetrominoeEntryIndex % Cols);
+		const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / Cols);
+
+		if (Col < MinCol) MinCol = Col;
+		if (Row < MinRow) MinRow = Row;
+	}
+
+	return static_cast<uint16_t>((MinRow * Cols) + MinCol);
+}
+
+std::vector<int16_t> Tetrominoe::TryCreateFlipMatrix(const FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
+{
+	static constexpr int8_t&& Zero = 0;
+	static constexpr int8_t&& One = 1;
+	static constexpr int8_t&& Two = 2;
+	static constexpr int8_t&& MinusOne = -1;
+
+	const uint16_t& Pivot = FlipDataHandle.MatrixPivot;
+	const uint8_t& NMatrix = FlipDataHandle.NMatrix;
+
+	std::vector<int16_t> Matrix(NMatrix * NMatrix, MinusOne);
+
+	try
+	{
+		for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)
+		{
+			const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
+			const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
+
+			if (Col < Row)
+			{
+				continue;
+			}
+
+			// flip matrix col, row
+
+			const uint16_t&& ColIndex = static_cast<uint16_t>(Pivot + Col + (Row * Cols));
+			const uint16_t&& RowIndex = static_cast<uint16_t>(Pivot + Row + (Col * Cols));
+
+			const bool&& IsColIndexInArray = std::find(
+				TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(), ColIndex) != TetrominoeEntryIndices.end();
+
+			const bool&& IsRowIndexInArray = std::find(
+				TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(), RowIndex) != TetrominoeEntryIndices.end();
+
+			// Col Permutation
+
+			Matrix.at(Col + (Row * NMatrix)) = IsRowIndexInArray
+				? static_cast<int16_t>(RowIndex)
+				: static_cast<int16_t>(MinusOne);
+
+			// Row Permutation
+
+			Matrix.at(Row + (Col * NMatrix)) = IsColIndexInArray
+				? static_cast<int16_t>(ColIndex)
+				: static_cast<int16_t>(MinusOne);
+		}
+
+		// flip matrix cols
+
+		for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)
+		{
+			if ((N % NMatrix) > ((NMatrix - One) / Two))
+			{
+				continue;
+			}
+
+			const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
+			const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
+			const uint8_t&& ColPrime = static_cast<uint8_t>(NMatrix - One - (N % NMatrix));
+
+			// Front
+			int16_t& Front = Matrix.at((Row * NMatrix) + Col);
+
+			// Back
+			int16_t& Back = Matrix.at((Row * NMatrix) + ColPrime);
+
+			// Swap
+			const int16_t Temp = Front;
+			Front = Back;
+			Back = Temp;
+		}
+	}
+	catch (const std::out_of_range& e)
+	{
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
+	}
+
+	return Matrix;
+}
+
+void Tetrominoe::RealignAndUpdate(std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
+{
+	InvalidateTetrominoeIndicies(Tiles);
+	UpdateTetrominoeRotationIndex();
+	GenerateTetrominoeRealignmentData(Tiles, FlipDataHandle, Rows, Cols);
+	UpdateTetrominoeEntryIndicies(FlipDataHandle, Rows, Cols);
+	RevalidateTetrominoeIndicies(Tiles);
 }
 
 void Tetrominoe::InvalidateTetrominoeIndicies(std::vector<Tile>& Tiles)
@@ -253,13 +298,18 @@ void Tetrominoe::InvalidateTetrominoeIndicies(std::vector<Tile>& Tiles)
 	static constexpr TileAttributeEnum&& EmptyEnum = TileAttributeEnum::Empty;
 	static const std::string&& UndefinedString = std::string("Undefined");
 
-	// clear tiles entry for the active indices
-
-	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+	try
 	{
-		Tile& Tile = Tiles.at(TetrominoeEntryIndex);
-		Tile.Attribute = EmptyEnum;
-		Tile.Wildcard = UndefinedString;
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		{
+			Tile& Tile = Tiles.at(TetrominoeEntryIndex);
+			Tile.SetAttribute(EmptyEnum);
+			Tile.SetWildcard(UndefinedString);
+		}
+	}
+	catch (const std::out_of_range& e)
+	{
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
 	}
 }
 
@@ -268,11 +318,18 @@ void Tetrominoe::RevalidateTetrominoeIndicies(std::vector<Tile>& Tiles)
 	static constexpr TileAttributeEnum&& FilledEnum = TileAttributeEnum::Filled;
 	static std::string&& DefinedString = GetTetrominoeWildcard();
 
-	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+	try
 	{
-		Tile& Tile = Tiles.at(TetrominoeEntryIndex);
-		Tile.Attribute = FilledEnum;
-		Tile.Wildcard = DefinedString;
+		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+		{
+			Tile& Tile = Tiles.at(TetrominoeEntryIndex);
+			Tile.SetAttribute(FilledEnum);
+			Tile.SetWildcard(DefinedString);
+		}
+	}
+	catch (const std::out_of_range& e)
+	{
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
 	}
 }
 
@@ -283,120 +340,77 @@ void Tetrominoe::UpdateTetrominoeRotationIndex()
 	SetTetrominoeRotationIndex((GetTetrominoeRotationIndex() + One) % Four);
 }
 
-void Tetrominoe::UpdateTetrominoeEntryIndicies(const std::vector<int16_t>& Matrix, uint16_t Pivot, int8_t RotationReAlignmentValue, int8_t FloorkickReAlignmentValue,
-	int8_t WallkickReAlignmentValue, size_t NMatrix, uint8_t Rows, uint8_t Cols)
+void Tetrominoe::UpdateTetrominoeEntryIndicies(const FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
 {
 	static constexpr int8_t&& Zero = 0;
 	static constexpr int8_t&& MinusOne = -1;
 
-	int8_t Begin = Zero;
-	int8_t N = MinusOne;
+	const std::vector<int16_t>& Matrix = FlipDataHandle.Matrix;
+	const uint16_t& Pivot = FlipDataHandle.MatrixPivot;
+	const uint8_t& NMatrix = FlipDataHandle.NMatrix;
+	const int8_t& FloorkickRealignmentValue = FlipDataHandle.FloorkickRealignmentValue;
+	const int8_t& WallkickRealignmentValue = FlipDataHandle.WallkickRealignmentValue;
+	const int8_t& RotationRealignmentValue = FlipDataHandle.RotationRealignmentValue;
 
-	for (const auto& MatrixEntry : Matrix)
+	try
 	{
-		++N;
-		if (MatrixEntry == MinusOne)
+		int8_t Begin = Zero;
+		int8_t N = MinusOne;
+
+		for (const auto& MatrixEntry : Matrix)
 		{
-			continue;
+			++N;
+			if (MatrixEntry == MinusOne)
+			{
+				continue;
+			}
+
+			if (Begin < NMatrix)
+			{
+				const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
+				const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
+
+				// calculate realignment output
+
+				const uint16_t&& RealignmentOutput = static_cast<uint16_t>(Pivot + Col + (Row * Cols)
+					+ RotationRealignmentValue
+					+ FloorkickRealignmentValue
+					+ WallkickRealignmentValue
+					);
+
+				// realign
+
+				TetrominoeEntryIndices.at(Begin++) = RealignmentOutput;
+			}
 		}
-
-		if (Begin < NMatrix)
-		{
-			const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
-			const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
-
-			// calculate realignment output
-
-			const uint16_t&& RealignmentOutput = static_cast<uint16_t>(Pivot + Col + (Row * Cols)
-				+ RotationReAlignmentValue
-				+ FloorkickReAlignmentValue
-				+ WallkickReAlignmentValue
-				);
-
-			// realign
-
-			TetrominoeEntryIndices.at(Begin++) = RealignmentOutput;
-		}
+	}
+	catch (const std::out_of_range& e)
+	{
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
 	}
 }
 
-int8_t Tetrominoe::GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, const std::vector<int16_t>& Matrix, uint16_t Pivot,
-	int8_t RotationReAlignmentValue, size_t NMatrix, uint8_t Rows, uint8_t Cols)
+void Tetrominoe::GenerateTetrominoeRealignmentData(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
+{
+	// order matter here
+	FlipDataHandle.RotationRealignmentValue = GetRotationalAlignmentValueAtIndex(Rows, Cols);
+	FlipDataHandle.FloorkickRealignmentValue = GetFloorKickAlignmentValueAtRotation(Tiles, FlipDataHandle, Rows, Cols);
+	FlipDataHandle.WallkickRealignmentValue = GetWallkickAlignmentValueAtIndex(Tiles, FlipDataHandle, Rows, Cols);
+}
+
+int8_t Tetrominoe::GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
 {
 	static constexpr int8_t&& Zero = 0;
 	static constexpr int8_t&& MinusOne = -1;
 	static constexpr int8_t&& MinusTwo = -2;
 
-	int8_t N = MinusOne;
+	const std::vector<int16_t>& Matrix = FlipDataHandle.Matrix;
+	const uint16_t& Pivot = FlipDataHandle.MatrixPivot;
+	const uint8_t& NMatrix = FlipDataHandle.NMatrix;
+	const int8_t& RotationRealignmentValue = FlipDataHandle.RotationRealignmentValue;
 
-	for (const auto& MatrixEntry : Matrix)
+	try
 	{
-		++N;
-		if (MatrixEntry == MinusOne)
-		{
-			continue;
-		}
-
-		const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
-		const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
-
-		// calculate new position
-
-		uint16_t&& RealignmentOutput = static_cast<uint16_t>(Pivot + Col + (Row * Cols) + RotationReAlignmentValue);
-
-		// check if the new position tile with wallkicks create overlaps
-
-		const Tile& Tile = Tiles.at(RealignmentOutput);
-
-		// check overlaps
-
-		const bool&& IsTileOverlapping =
-			(Tile.Attribute != TileAttributeEnum::Empty);
-
-		if (IsTileOverlapping)
-		{
-			const bool&& CanPerformFloorKick =
-				static_cast<bool>(GetTetrominoeShape() & ~TetrominoeShapeEnum::OShape);
-
-			if (CanPerformFloorKick)
-			{
-				return static_cast<bool>(GetTetrominoeShape() & ~TetrominoeShapeEnum::IShape)
-					? (MinusOne * Cols)
-					: (MinusTwo * Cols);
-			}
-		}
-	}
-
-	return NULL;
-}
-
-int8_t Tetrominoe::GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Tiles, const std::vector<int16_t>& Matrix, uint16_t Pivot,
-	int8_t RotationReAlignmentValue, int8_t FloorkickReAlignmentValue, size_t NMatrix, uint8_t Rows, uint8_t Cols)
-{
-	static constexpr int8_t&& Zero = 0;
-	static constexpr int8_t&& MinusOne = -1;
-
-	uint8_t&& WallkickIndex = Zero;
-
-	// --- typedef
-	using WallKickAlignment = WallKickAlignmentContainer::WallKickAlignment;
-	// ---
-
-	const WallKickAlignmentContainer& WallkickContainer = TetrominoeWallKickHelper::Get()->TryGetWallKickAlignmentContainer(this);
-
-	const uint8_t& RotationIndex = GetTetrominoeRotationIndex();
-	const std::vector<WallKickAlignment>& WallkickAlignmentAtRotationIndex = WallkickContainer.TryGetWallkickAlignmentAtRotationIndex(RotationIndex);
-
-	// search the wallkick translation required, if any
-
-	for (const WallKickAlignment& WallkickAlignment : WallkickAlignmentAtRotationIndex)
-	{
-		// check test case success
-
-		static bool&& IsWallkickRequired = true;
-
-		// process all matrix entries
-
 		int8_t N = MinusOne;
 
 		for (const auto& MatrixEntry : Matrix)
@@ -412,17 +426,7 @@ int8_t Tetrominoe::GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Til
 
 			// calculate new position
 
-			uint16_t&& RealignmentOutput = static_cast<uint16_t>(Pivot + Col + (Row * Cols)
-				+ RotationReAlignmentValue
-				+ FloorkickReAlignmentValue
-				);
-
-			// check wallkick validity, OShape has none
-
-			if (WallkickAlignment.IsValid())
-			{
-				RealignmentOutput += static_cast<uint16_t>(WallkickAlignment.x + (WallkickAlignment.y * Cols));
-			}
+			const uint16_t&& RealignmentOutput = static_cast<uint16_t>(Pivot + Col + (Row * Cols) + RotationRealignmentValue);
 
 			// check if the new position tile with wallkicks create overlaps
 
@@ -430,26 +434,129 @@ int8_t Tetrominoe::GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Til
 
 			// check overlaps
 
-			const bool&& IsTileOverlapping =
-				(Tile.Attribute != TileAttributeEnum::Empty);
-
-			IsWallkickRequired = IsTileOverlapping;
+			const bool&& IsTileOverlapping = (Tile.Attribute != TileAttributeEnum::Empty);
 
 			if (IsTileOverlapping)
 			{
-				++WallkickIndex;
+				const TetrominoeShapeEnum& TetrominoeShape = GetTetrominoeShape();
+				const bool&& CanPerformFloorKick = static_cast<bool>(TetrominoeShape & ~TetrominoeShapeEnum::OShape);
+
+				if (CanPerformFloorKick)
+				{
+					return static_cast<bool>(TetrominoeShape & ~TetrominoeShapeEnum::IShape)
+						? (MinusOne * Cols)
+						: (MinusTwo * Cols);
+				}
+			}
+		}
+	}
+	catch (const std::out_of_range& e)
+	{
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
+	}
+
+	return NULL;
+}
+
+int8_t Tetrominoe::GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
+{
+	static constexpr int8_t&& Zero = 0;
+	static constexpr int8_t&& MinusOne = -1;
+
+	const std::vector<int16_t>& Matrix = FlipDataHandle.Matrix;
+	const uint16_t& Pivot = FlipDataHandle.MatrixPivot;
+	const uint8_t& NMatrix = FlipDataHandle.NMatrix;
+	const int8_t& FloorkickRealignmentValue = FlipDataHandle.FloorkickRealignmentValue;
+	const int8_t& RotationRealignmentValue = FlipDataHandle.RotationRealignmentValue;
+
+	try
+	{
+		const WallKickAlignmentContainer& WallkickAlignmentContainer = TetrominoeWallKickHelper::TryGetWallKickAlignmentContainer(this);
+		const uint8_t& TetrominoeRotationIndex = GetTetrominoeRotationIndex();
+
+		// --- typedef
+		using WallKickAlignment = WallKickAlignmentContainer::WallKickAlignment;
+		// ---
+
+		const std::vector<WallKickAlignment>& WallkickAlignmentAtRotationIndex = WallKickAlignmentContainer::TryGetWallkickAlignmentAtRotationIndex(
+			WallkickAlignmentContainer,
+			TetrominoeRotationIndex
+		);
+
+		// search the wallkick translation required, if any
+		uint8_t&& WallkickIndex = Zero;
+
+		for (const WallKickAlignment& WallkickAlignment : WallkickAlignmentAtRotationIndex)
+		{
+			// check test case success
+
+			static bool&& IsWallkickRequired = true;
+
+			// process all matrix entries
+
+			int8_t N = MinusOne;
+
+			for (const auto& MatrixEntry : Matrix)
+			{
+				++N;
+				if (MatrixEntry == MinusOne)
+				{
+					continue;
+				}
+
+				const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
+				const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
+
+				// calculate new position
+
+				uint16_t&& RealignmentOutput = static_cast<uint16_t>(Pivot + Col + (Row * Cols)
+					+ RotationRealignmentValue
+					+ FloorkickRealignmentValue
+					);
+
+				// check wallkick validity, OShape has none
+
+				if (WallkickAlignment.IsValid())
+				{
+					RealignmentOutput += static_cast<uint16_t>(WallkickAlignment.x + (WallkickAlignment.y * Cols));
+				}
+
+				// check if the new position tile with wallkicks create overlaps
+
+				const Tile& Tile = Tiles.at(RealignmentOutput);
+
+				// check overlaps
+
+				const bool&& IsTileOverlapping = (Tile.Attribute != TileAttributeEnum::Empty);
+
+				IsWallkickRequired = IsTileOverlapping;
+
+				if (IsTileOverlapping)
+				{
+					++WallkickIndex;
+					break;
+				}
+			}
+
+			if (!IsWallkickRequired)
+			{
 				break;
 			}
 		}
 
-		if (!IsWallkickRequired)
-		{
-			break;
-		}
+		const WallKickAlignment& WallkickAlignment = WallKickAlignmentContainer::TryGetWallKickAlignmentAtIndex(
+			WallkickAlignmentContainer,
+			TetrominoeRotationIndex,
+			WallkickIndex);
+
+		return static_cast<int8_t>((WallkickAlignment.y * Cols) + WallkickAlignment.x);
+	}
+	catch (const std::out_of_range& e)
+	{
+		SDLlogHelper::Print(PrefixErrorType::CollectionAccessFailed, "Tetrominoe", e);
 	}
 
-	const WallKickAlignment& WallkickAlignment = WallkickAlignmentAtRotationIndex.at(WallkickIndex);
-	return static_cast<int8_t>((WallkickAlignment.y * Cols) + WallkickAlignment.x);
+	return NULL;
 }
 
 int8_t Tetrominoe::GetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols)
@@ -458,10 +565,10 @@ int8_t Tetrominoe::GetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols
 	using RotationRealignment = RotationalAlignmentContainer::RotationalAlignment;
 	// ---
 
-	const RotationalAlignmentContainer& RotationalAlignmentContainer = TetrominoeRotationRealignmentHelper::Get()->TryGetRotationAlignmentContainer(this);
-
-	const uint8_t& RotationIndex = GetTetrominoeRotationIndex();
-	const RotationRealignment& RotationalAlignment = RotationalAlignmentContainer.TryGetRotationAlignmentAtIndex(RotationIndex);
+	const RotationRealignment& RotationalAlignment = RotationalAlignmentContainer::TryGetRotationAlignmentAtIndex(
+		TetrominoeRotationRealignmentHelper::TryGetRotationAlignmentContainer(this),
+		GetTetrominoeRotationIndex()
+	);
 
 	if (!RotationalAlignment.IsValid())
 	{
@@ -471,84 +578,23 @@ int8_t Tetrominoe::GetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols
 	return static_cast<int8_t>((RotationalAlignment.y * Cols) + RotationalAlignment.x);
 }
 
-std::vector<int16_t> Tetrominoe::GenerateFlipMatrix(uint16_t Pivot, size_t NMatrix, uint8_t Rows, uint8_t Cols)
+std::string Tetrominoe::GetTetrominoeWildcard() const
 {
-	static constexpr int8_t&& Zero = 0;
-	static constexpr int8_t&& One = 1;
-	static constexpr int8_t&& Two = 2;
-	static constexpr int8_t&& MinusOne = -1;
-
-	std::vector<int16_t> Matrix(NMatrix * NMatrix, MinusOne);
-
-	// flip matrix col, row
-
-	for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)
+	static const std::unordered_map<TetrominoeShapeEnum, std::string>&& TetrominoeShapePair =
 	{
-		const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
-		const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
+		std::make_pair(TetrominoeShapeEnum::None, std::string("Undefined")),
+		std::make_pair(TetrominoeShapeEnum::TShape, std::string("Purple")),
+		std::make_pair(TetrominoeShapeEnum::LShape, std::string("Orange")),
+		std::make_pair(TetrominoeShapeEnum::ZShape, std::string("Red")),
+		std::make_pair(TetrominoeShapeEnum::OShape, std::string("Yellow")),
+		std::make_pair(TetrominoeShapeEnum::IShape, std::string("Cyan")),
+		std::make_pair(TetrominoeShapeEnum::JShape, std::string("Blue")),
+		std::make_pair(TetrominoeShapeEnum::SShape, std::string("Green"))
+	};
 
-		if (Col < Row)
-		{
-			continue;
-		}
+	const auto&& TetrominoeShapePairFound = TetrominoeShapePair.find(TetrominoeShape);
 
-		uint16_t&& ColIndex = static_cast<uint16_t>(Pivot + Col + (Row * Cols));
-		uint16_t&& RowIndex = static_cast<uint16_t>(Pivot + Row + (Col * Cols));
-
-		const bool&& IsColIndexInArray = std::find(TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(),
-			ColIndex) != TetrominoeEntryIndices.end();
-
-		const bool&& IsRowIndexInArray = std::find(TetrominoeEntryIndices.begin(), TetrominoeEntryIndices.end(),
-			RowIndex) != TetrominoeEntryIndices.end();
-
-		// Col Permutation
-		Matrix.at(Col + (Row * NMatrix)) = IsRowIndexInArray ? static_cast<int16_t>(RowIndex) : static_cast<int16_t>(MinusOne);
-
-		// Row Permutation
-		Matrix.at(Row + (Col * NMatrix)) = IsColIndexInArray ? static_cast<int16_t>(ColIndex) : static_cast<int16_t>(MinusOne);
-	}
-
-	// flip matrix cols
-
-	for (size_t N = Zero; N < (NMatrix * NMatrix); ++N)
-	{
-		if ((N % NMatrix) > ((NMatrix - One) / Two))
-		{
-			continue;
-		}
-
-		const uint8_t&& Col = static_cast<uint8_t>(N % NMatrix);
-		const uint8_t&& Row = static_cast<uint8_t>(N / NMatrix);
-		const uint8_t&& ColPrime = static_cast<uint8_t>(NMatrix - One - (N % NMatrix));
-
-		// Front
-		int16_t& Front = Matrix.at((Row * NMatrix) + Col);
-
-		// Back
-		int16_t& Back = Matrix.at((Row * NMatrix) + ColPrime);
-
-		// Swap
-		const int16_t Temp = Front;
-		Front = Back;
-		Back = Temp;
-	}
-
-	return Matrix;
-}
-
-uint16_t Tetrominoe::GetFlipMatrixPivot(uint8_t Rows, uint8_t Cols)
-{
-	uint8_t&& MinRow = UINT8_MAX;
-	uint8_t&& MinCol = UINT8_MAX;
-
-	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
-	{
-		const uint8_t&& Col = static_cast<uint8_t>(TetrominoeEntryIndex % Cols);
-		const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / Cols);
-
-		if (Col < MinCol) MinCol = Col;
-		if (Row < MinRow) MinRow = Row;
-	}
-
-	return static_cast<uint16_t>((MinRow * Cols) + MinCol);
+	return (TetrominoeShapePairFound != TetrominoeShapePair.end())
+		? TetrominoeShapePairFound->second
+		: std::string("Undefined");
 }

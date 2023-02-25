@@ -10,24 +10,24 @@
 #endif
 
 #ifndef PERIODIC_UPDATE
-#define PERIODIC_UPDATE 60.0
+#define PERIODIC_UPDATE 30.0
 #endif
 
 LevelManager::LevelManager()
 {
-	TileMapUniquePtr = std::make_shared<TileMap>();
-	TetrominoeManagerUniquePtr = std::make_shared<TetrominoeManager>();
+	TileMapSharedPtr = std::make_shared<TileMap>();
+	TetrominoeManagerSharedPtr = std::make_shared<TetrominoeManager>();
 }
 
 LevelManager::~LevelManager()
 {
-	TileMapUniquePtr = nullptr;
-	TetrominoeManagerUniquePtr = nullptr;
+	TileMapSharedPtr = nullptr;
+	TetrominoeManagerSharedPtr = nullptr;
 }
 
 void LevelManager::Initialize(std::function<void(uint16_t, uint16_t)> SetWindowEvent)
 {
-	if (!TileMapUniquePtr)
+	if (!TileMapSharedPtr)
 	{
 		return;
 	}
@@ -36,7 +36,7 @@ void LevelManager::Initialize(std::function<void(uint16_t, uint16_t)> SetWindowE
 	const uint8_t&& tempCols = 12;
 
 	// intialize tilemap grid
-	TileMapUniquePtr->Initialize(
+	TileMapSharedPtr->Initialize(
 		tempRows,
 		tempCols,
 		[&](uint16_t Rows, uint16_t Cols) { SetWindowEvent(Rows, Cols); }
@@ -47,13 +47,13 @@ void LevelManager::Initialize(std::function<void(uint16_t, uint16_t)> SetWindowE
 
 void LevelManager::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const
 {
-	if (!TileMapUniquePtr || !TextureManagerPtrArg || !SDLManagerPtrArg)
+	if (!TileMapSharedPtr || !TextureManagerPtrArg || !SDLManagerPtrArg)
 	{
 		return;
 	}
 
 	// update tilemap
-	TileMapUniquePtr->Update(
+	TileMapSharedPtr->Update(
 		TextureManagerPtrArg,
 		SDLManagerPtrArg
 	);
@@ -62,13 +62,13 @@ void LevelManager::Update(TextureManager* const TextureManagerPtrArg, SDLManager
 void LevelManager::Clear()
 {
 	UnSubscribe();
-	if (!TileMapUniquePtr || !TetrominoeManagerUniquePtr)
+	if (!TileMapSharedPtr || !TetrominoeManagerSharedPtr)
 	{
 		return;
 	}
 
-	TetrominoeManagerUniquePtr->Clear();
-	TileMapUniquePtr->Clear();
+	TetrominoeManagerSharedPtr->Clear();
+	TileMapSharedPtr->Clear();
 }
 
 void LevelManager::ResetGame(std::function<void(uint16_t, uint16_t)> SetWindowEvent)
@@ -79,53 +79,53 @@ void LevelManager::ResetGame(std::function<void(uint16_t, uint16_t)> SetWindowEv
 
 void LevelManager::PollKeyEvent(int8_t DirX, int8_t DirY) const
 {
-	if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
+	if (!TetrominoeManagerSharedPtr || !TileMapSharedPtr)
 	{
 		return;
 	}
 
-	TetrominoeManagerUniquePtr->Update(
-		TileMapUniquePtr->GetTiles(),
+	TetrominoeManagerSharedPtr->Update(
+		TileMapSharedPtr->GetTiles(),
 		DirX,
 		DirY,
-		TileMapUniquePtr->GetRows(),
-		TileMapUniquePtr->GetCols()
+		TileMapSharedPtr->GetRows(),
+		TileMapSharedPtr->GetCols()
 	);
 }
 
 void LevelManager::PollSpaceKeyEvent() const
 {
-	if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
+	if (!TetrominoeManagerSharedPtr || !TileMapSharedPtr)
 	{
 		return;
 	}
 
-	TetrominoeManagerUniquePtr->Flip(
-		TileMapUniquePtr->GetTiles(),
-		TileMapUniquePtr->GetRows(),
-		TileMapUniquePtr->GetCols()
+	TetrominoeManagerSharedPtr->Flip(
+		TileMapSharedPtr->GetTiles(),
+		TileMapSharedPtr->GetRows(),
+		TileMapSharedPtr->GetCols()
 	);
 }
 
 void LevelManager::Subscribe()
 {
-	if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
+	if (!TetrominoeManagerSharedPtr || !TileMapSharedPtr)
 	{
 		return;
 	}
 
 	// register function callback for generating tetrominoe when the active one lock
-	TetrominoeManagerUniquePtr->GetLockDelayHandle().LockDelayCompletedDelegate = [&]()
+	TetrominoeManagerSharedPtr->GetLockDelayHandle().LockDelayCompletedDelegate = [&]()
 	{
-		if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
+		if (!TetrominoeManagerSharedPtr || !TileMapSharedPtr)
 		{
 			SDLlogHelper::Print(PrefixErrorType::InvalidPtrInDelegate, "LevelManager");
 			return;
 		}
 		// update the active tetrominoe lock value
-		TetrominoeManagerUniquePtr->OnLockDelayCompleted(
-			TileMapUniquePtr->GetRows(),
-			TileMapUniquePtr->GetCols()
+		TetrominoeManagerSharedPtr->OnLockDelayCompleted(
+			TileMapSharedPtr->GetRows(),
+			TileMapSharedPtr->GetCols()
 		);
 	};
 
@@ -163,12 +163,12 @@ void LevelManager::Start()
 		const_cast<LevelManager*>(this)
 	);
 
-	if (!TetrominoeManagerUniquePtr)
+	if (!TetrominoeManagerSharedPtr)
 	{
 		return;
 	}
 
-	TetrominoeManagerUniquePtr->GetLockDelayHandle().LockDelayCompletedDelegate();
+	TetrominoeManagerSharedPtr->GetLockDelayHandle().LockDelayCompletedDelegate();
 }
 
 void LevelManager::Stop()
@@ -178,7 +178,7 @@ void LevelManager::Stop()
 
 void LevelManager::OnPeriodicUpdate()
 {
-	if (!TetrominoeManagerUniquePtr || !TileMapUniquePtr)
+	if (!TetrominoeManagerSharedPtr || !TileMapSharedPtr)
 	{
 		return;
 	}
@@ -187,11 +187,11 @@ void LevelManager::OnPeriodicUpdate()
 	static constexpr int8_t&& Idle = 0;
 
 	// update tetrominoes
-	TetrominoeManagerUniquePtr->Update(
-		TileMapUniquePtr->GetTiles(),
+	TetrominoeManagerSharedPtr->Update(
+		TileMapSharedPtr->GetTiles(),
 		Idle,
 		OneDown,
-		TileMapUniquePtr->GetRows(),
-		TileMapUniquePtr->GetCols()
+		TileMapSharedPtr->GetRows(),
+		TileMapSharedPtr->GetCols()
 	);
 }

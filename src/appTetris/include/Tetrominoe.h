@@ -21,6 +21,19 @@
 
 class Tetrominoe final
 {
+	struct FlipDataHandle final
+	{
+		int8_t FloorkickRealignmentValue = NULL;
+		int8_t WallkickRealignmentValue = NULL;
+		int8_t RotationRealignmentValue = NULL;
+		uint16_t MatrixPivot = NULL;
+		const uint8_t NMatrix = NULL;
+
+		std::vector<int16_t> Matrix = std::vector<int16_t>();
+
+		FlipDataHandle(uint8_t InNMatrix) : NMatrix(InNMatrix) {}
+	};
+
 	static constexpr uint16_t&& SpawnPosition = 15;
 	static inline uint8_t&& RotationIndex = 0;
 
@@ -38,20 +51,22 @@ public:
 	bool IsMoveInBound(int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	bool IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	void Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
-	void FlipMatrix(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
+	void Flip(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 	void Realign(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
-	void Align();
 private:
+	void Align();
+	uint16_t TryFindPivot(uint8_t Rows, uint8_t Cols);
+	std::vector<int16_t> TryCreateFlipMatrix(const FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
+	void RealignAndUpdate(std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
 	// Utils
 	void InvalidateTetrominoeIndicies(std::vector<Tile>& Tiles);
 	void RevalidateTetrominoeIndicies(std::vector<Tile>& Tiles);
 	void UpdateTetrominoeRotationIndex();
-	void UpdateTetrominoeEntryIndicies(const std::vector<int16_t>& Matrix, uint16_t Pivot, int8_t RotationReAlignmentValue, int8_t FloorkickReAlignmentValue, int8_t WallkickReAlignmentValue, size_t NMatrix, uint8_t Rows, uint8_t Cols);
-	int8_t GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Tiles, const std::vector<int16_t>& Matrix, uint16_t Pivot, int8_t RotationReAlignmentValue, int8_t FloorkickReAlignmentValue, size_t NMatrix, uint8_t Rows, uint8_t Cols);
-	int8_t GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, const std::vector<int16_t>& Matrix, uint16_t Pivot, int8_t RotationReAlignmentValue, size_t NMatrix, uint8_t Rows, uint8_t Cols);
+	void UpdateTetrominoeEntryIndicies(const FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
+	void GenerateTetrominoeRealignmentData(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
+	int8_t GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
+	int8_t GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
 	int8_t GetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols);
-	std::vector<int16_t> GenerateFlipMatrix(uint16_t Pivot, size_t NMatrix, uint8_t Rows, uint8_t Cols);
-	uint16_t GetFlipMatrixPivot(uint8_t Rows, uint8_t Cols);
 public:
 	// Getters/Setters
 	const std::vector<uint16_t>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }

@@ -25,8 +25,8 @@ class SDLManager;
 
 class LevelManager final
 {
-	std::shared_ptr<TetrominoeManager> TetrominoeManagerUniquePtr = nullptr;
-	std::shared_ptr<TileMap> TileMapUniquePtr = nullptr;
+	std::shared_ptr<TetrominoeManager> TetrominoeManagerSharedPtr = nullptr;
+	std::shared_ptr<TileMap> TileMapSharedPtr = nullptr;
 	static inline int PeriodicFunctorID = NULL;
 public:
 	LevelManager(const LevelManager&) = delete;

@@ -24,7 +24,7 @@ class SDLManager;
 
 class GameInstance final
 {
-	std::shared_ptr<LevelManager> LevelManagerUniquePtr = nullptr;
+	std::shared_ptr<LevelManager> LevelManagerSharedPtr = nullptr;
 public:
 	GameInstance(const GameInstance&) = delete;
 	GameInstance(GameInstance&&) = delete;

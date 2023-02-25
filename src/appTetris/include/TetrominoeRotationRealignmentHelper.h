@@ -67,19 +67,19 @@ struct RotationalAlignmentContainer final
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-	inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(uint8_t Index) const
+	static inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(const RotationalAlignmentContainer& Container, uint8_t Index)
 	{
 		static constexpr RotationalAlignment&& EmptyAlignment = RotationalAlignment();
-		static uint8_t&& RealignmentOutcomes = RotationalRealignmentData.size();
+		static uint8_t&& RealignmentOutcomes = Container.RotationalRealignmentData.size();
 
-		if (RotationalRealignmentData.empty())
+		if (Container.RotationalRealignmentData.empty())
 		{
 			return EmptyAlignment;
 		}
 
 		try
 		{
-			return RotationalRealignmentData.at(Index % RealignmentOutcomes);
+			return Container.RotationalRealignmentData.at(Index % RealignmentOutcomes);
 		}
 		catch (const std::out_of_range& e)
 		{
@@ -106,8 +106,10 @@ public:
 	~TetrominoeRotationRealignmentHelper() = default;
 	TetrominoeRotationRealignmentHelper& operator==(const TetrominoeRotationRealignmentHelper&) = delete;
 	TetrominoeRotationRealignmentHelper& operator==(TetrominoeRotationRealignmentHelper&&) = delete;
+	static const RotationalAlignmentContainer& TryGetRotationAlignmentContainer(class Tetrominoe* TetrominoePtrArg);
+	const UnorderedMap<const TetrominoeShapeEnum, const RotationalAlignmentContainer&>& GetRotationRealignmentMap() const { return RotationRealignmentMap; }
+private:
 	// Getter/Setter
 	static TetrominoeRotationRealignmentHelper* Get();
-	const RotationalAlignmentContainer& TryGetRotationAlignmentContainer(class Tetrominoe* TetrominoePtrArg) const;
 };
 #endif

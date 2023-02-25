@@ -28,7 +28,7 @@ class SDLTimerManager final
 		SDLResult Stop(SDLTimerID TimerID);
 	};
 
-	static std::unique_ptr<SDLTimerManager> Singleton;
+	static inline std::unique_ptr<SDLTimerManager> Singleton = nullptr;
 	SDLTimer TimerHandle;
 public:
 	SDLTimerManager(const SDLTimerManager&) = delete;

@@ -3,71 +3,71 @@
 
 GameInstance::GameInstance()
 {
-	LevelManagerUniquePtr = std::make_shared<LevelManager>();
+	LevelManagerSharedPtr = std::make_shared<LevelManager>();
 }
 
 GameInstance::~GameInstance()
 {
-	LevelManagerUniquePtr = nullptr;
+	LevelManagerSharedPtr = nullptr;
 	SetWindowDelegate = nullptr;
 }
 
 void GameInstance::Initialize() const
 {
-	if (!LevelManagerUniquePtr)
+	if (!LevelManagerSharedPtr)
 	{
 		return;
 	}
 
-	LevelManagerUniquePtr->Initialize(SetWindowDelegate);
+	LevelManagerSharedPtr->Initialize(SetWindowDelegate);
 }
 
 void GameInstance::Update(TextureManager* const TextureManagerPtrArg, SDLManager* const SDLManagerPtrArg) const
 {
-	if (!SDLManagerPtrArg || !LevelManagerUniquePtr)
+	if (!SDLManagerPtrArg || !TextureManagerPtrArg || !LevelManagerSharedPtr)
 	{
 		return;
 	}
 
-	LevelManagerUniquePtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
+	LevelManagerSharedPtr->Update(TextureManagerPtrArg, SDLManagerPtrArg);
 }
 
 void GameInstance::Clear() const
 {
-	if (!LevelManagerUniquePtr)
+	if (!LevelManagerSharedPtr)
 	{
 		return;
 	}
 
-	LevelManagerUniquePtr->Clear();
+	LevelManagerSharedPtr->Clear();
 }
 
 void GameInstance::RestartGame() const
 {
-	if (!LevelManagerUniquePtr)
+	if (!LevelManagerSharedPtr)
 	{
 		return;
 	}
 
-	LevelManagerUniquePtr->ResetGame(SetWindowDelegate);
+	LevelManagerSharedPtr->ResetGame(SetWindowDelegate);
 }
 
 void GameInstance::PollKeyEvent(int8_t DirX, int8_t DirY) const
 {
-	if (!LevelManagerUniquePtr)
+	if (!LevelManagerSharedPtr)
 	{
 		return;
 	}
 
-	LevelManagerUniquePtr->PollKeyEvent(DirX, DirY);
+	LevelManagerSharedPtr->PollKeyEvent(DirX, DirY);
 }
 
 void GameInstance::PollSpaceKeyEvent() const
 {
-	if (!LevelManagerUniquePtr)
+	if (!LevelManagerSharedPtr)
 	{
 		return;
 	}
 
-	LevelManagerUniquePtr->PollSpaceKeyEvent();
+	LevelManagerSharedPtr->PollSpaceKeyEvent();
 }

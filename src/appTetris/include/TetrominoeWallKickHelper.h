@@ -65,18 +65,18 @@ struct WallKickAlignmentContainer final
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-	inline const std::vector<WallKickAlignment>& TryGetWallkickAlignmentAtRotationIndex(uint8_t RotationIndex) const
+	static inline const std::vector<WallKickAlignment>& TryGetWallkickAlignmentAtRotationIndex(const WallKickAlignmentContainer& Container, uint8_t RotationIndex)
 	{
 		static const std::vector<WallKickAlignment>& EmptyAlignmentContainer = std::vector<WallKickAlignment>();
 
-		if (WallKickRealignmentData.empty())
+		if (Container.WallKickRealignmentData.empty())
 		{
 			return EmptyAlignmentContainer;
 		}
 
 		try
 		{
-			return WallKickRealignmentData.at(RotationIndex);
+			return Container.WallKickRealignmentData.at(RotationIndex);
 		}
 		catch (const std::out_of_range& e)
 		{
@@ -86,18 +86,18 @@ struct WallKickAlignmentContainer final
 		return EmptyAlignmentContainer;
 	}
 
-	inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(uint8_t RotationIndex, uint8_t WallkickIndex) const
+	static inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(const WallKickAlignmentContainer& Container, uint8_t RotationIndex, uint8_t WallkickIndex)
 	{
 		static constexpr WallKickAlignment&& EmptyAlignment = WallKickAlignment();
 
-		if (WallKickRealignmentData.empty())
+		if (Container.WallKickRealignmentData.empty())
 		{
 			return EmptyAlignment;
 		}
 
 		try
 		{
-			return TryGetWallkickAlignmentAtRotationIndex(RotationIndex).at(WallkickIndex);
+			return TryGetWallkickAlignmentAtRotationIndex(Container, RotationIndex).at(WallkickIndex);
 		}
 		catch (const std::out_of_range& e)
 		{
@@ -123,8 +123,10 @@ public:
 	~TetrominoeWallKickHelper() = default;
 	TetrominoeWallKickHelper& operator==(const TetrominoeWallKickHelper&) = delete;
 	TetrominoeWallKickHelper& operator==(TetrominoeWallKickHelper&&) = delete;
+	static const WallKickAlignmentContainer& TryGetWallKickAlignmentContainer(class Tetrominoe* TetrominoePtrArg);
 	// Getter/Setter
+	const UnorderedMap<TetrominoeShapeEnum, WallKickAlignmentContainer>& GetWallKickRealignmentMap() const { return WallKickRealignmentMap; }
+private:
 	static TetrominoeWallKickHelper* Get();
-	const WallKickAlignmentContainer& TryGetWallKickAlignmentContainer(class Tetrominoe* TetrominoePtrArg) const;
 };
 #endif

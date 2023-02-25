@@ -5,10 +5,6 @@
 #include <SDL.h>
 #endif
 
-// --- static fields
-std::unique_ptr<SDLTimerManager> SDLTimerManager::Singleton = nullptr;
-// ---
-
 SDLTimerManager::SDLTimerID SDLTimerManager::SDLTimer::Start(uint32_t CallbackDelay, uint32_t(*CallbackEvent)(uint32_t, void*), void* Param)
 {
 	return (CallbackEvent != nullptr)

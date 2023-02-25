@@ -19,7 +19,7 @@
 #endif
 
 #ifndef LOCKDELAY
-#define LOCKDELAY 30.0
+#define LOCKDELAY 4.0
 #endif
 
 void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols)
@@ -72,7 +72,7 @@ void TetrominoeManager::Flip(const std::vector<Tile>& Tiles, uint8_t Rows, uint8
 		return;
 	}
 
-	ActiveTetrominoe->FlipMatrix(const_cast<std::vector<Tile>&>(Tiles), Rows, Cols);
+	ActiveTetrominoe->Flip(const_cast<std::vector<Tile>&>(Tiles), Rows, Cols);
 	Reset();
 }
 
@@ -131,7 +131,6 @@ void TetrominoeManager::Add(uint8_t Rows, uint8_t Cols)
 		return;
 	}
 
-	ActiveTetrominoe->Align();
 	TetrominoePool.push_back(ActiveTetrominoe);
 }
 

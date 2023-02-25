@@ -88,11 +88,12 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 #pragma warning (push)
 #pragma warning (disable : 4172)
 
-const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryGetRotationAlignmentContainer(Tetrominoe* TetrominoePtrArg) const
+const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryGetRotationAlignmentContainer(Tetrominoe* TetrominoePtrArg)
 {
+	const UnorderedMap<const TetrominoeShapeEnum, const RotationalAlignmentContainer&>& RotationRealignmentMapInstance = Get()->GetRotationRealignmentMap();
 	static const RotationalAlignmentContainer&& EmptyContainer = RotationalAlignmentContainer();
 
-	if (RotationRealignmentMap.empty())
+	if (RotationRealignmentMapInstance.empty())
 	{
 		return EmptyContainer;
 	}
@@ -104,8 +105,8 @@ const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryGetR
 			return EmptyContainer;
 		}
 
-		const auto Iterator = RotationRealignmentMap.find(TetrominoePtrArg->GetTetrominoeShape());
-		if (Iterator != RotationRealignmentMap.end())
+		const auto Iterator = RotationRealignmentMapInstance.find(TetrominoePtrArg->GetTetrominoeShape());
+		if (Iterator != RotationRealignmentMapInstance.end())
 		{
 			return Iterator->second;
 		}
