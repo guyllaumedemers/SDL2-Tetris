@@ -339,8 +339,8 @@ void Tetrominoe::RevalidateTetrominoeIndicies(std::vector<Tile>& Tiles)
 
 void Tetrominoe::UpdateTetrominoeRotationIndex()
 {
-	static constexpr size_t&& One = 1;
-	static constexpr size_t&& Four = 4;
+	static constexpr uint8_t&& One = 1;
+	static constexpr uint8_t&& Four = 4;
 	SetTetrominoeRotationIndex((GetTetrominoeRotationIndex() + One) % Four);
 }
 
@@ -522,7 +522,7 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 
 				if (WallkickAlignment.IsValid())
 				{
-					RealignmentOutput += static_cast<uint16_t>(WallkickAlignment.x + (WallkickAlignment.y * Cols));
+					RealignmentOutput += static_cast<int8_t>(WallkickAlignment.x + (WallkickAlignment.y * Cols));
 				}
 
 				// check if the new position tile with wallkicks create overlaps
@@ -553,7 +553,9 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 			TetrominoeRotationIndex,
 			WallkickIndex);
 
-		return static_cast<int8_t>((WallkickAlignment.y * Cols) + WallkickAlignment.x);
+		return WallkickAlignment.IsValid()
+			? static_cast<int8_t>((WallkickAlignment.y * Cols) + WallkickAlignment.x)
+			: NULL;
 	}
 	catch (const std::out_of_range& e)
 	{
