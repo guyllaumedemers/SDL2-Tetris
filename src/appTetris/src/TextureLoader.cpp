@@ -24,13 +24,13 @@ UnorderedMap<std::string, std::unique_ptr<SDL_Texture, SDLWrapper::FreeSDLTextur
 
 	try
 	{
-		std::filesystem::path&& BuildPath = std::filesystem::current_path().parent_path();
-		std::string&& ResPath = BuildPath.generic_string();
+		const std::filesystem::path& BuildPath = std::filesystem::current_path().parent_path();
+		std::string ResPath = BuildPath.generic_string();
 
 		{
 			// Workaround for ressources access using msvc open mode and debug
-			std::string&& EditorResPATH = ResPath + std::string("/SDL2-TetrisApp/res");
-			std::string&& OpenFileModePATH = ResPath + std::string("/res");
+			const std::string& EditorResPATH = ResPath + std::string("/SDL2-TetrisApp/res");
+			const std::string& OpenFileModePATH = ResPath + std::string("/res");
 
 			std::filesystem::is_directory(EditorResPATH) ? ResPath = EditorResPATH : ResPath = OpenFileModePATH;
 		}
@@ -38,7 +38,7 @@ UnorderedMap<std::string, std::unique_ptr<SDL_Texture, SDLWrapper::FreeSDLTextur
 		for (const auto& file : std::filesystem::directory_iterator(ResPath))
 		{
 			const std::filesystem::path& FilePath = file.path();
-			const std::string&& SFilePath = FilePath.generic_string();
+			const std::string& SFilePath = FilePath.generic_string();
 
 			SDL_Texture* const TargetTexturePtr = FuncPtrArg(SFilePath, RendererPtrArg);
 			if (!TargetTexturePtr)

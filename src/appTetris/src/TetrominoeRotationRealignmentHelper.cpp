@@ -11,10 +11,10 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	using RotationRealignment = RotationalAlignmentContainer::RotationalAlignment;
 	// ---
 
-	static constexpr int8_t&& Zero = 0;
-	static constexpr int8_t&& MinusOne = -1;
-	static constexpr int8_t&& MinusTwo = -2;
-	static constexpr int8_t&& MinusThree = -3;
+	static const int8_t& Zero = 0;
+	static const int8_t& MinusOne = -1;
+	static const int8_t& MinusTwo = -2;
+	static const int8_t& MinusThree = -3;
 
 	/// <summary>
 	/// Shared Rotational Offset => limit code duplication using static fields but would have
@@ -91,7 +91,7 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 const RotationalAlignmentContainer& TetrominoeRotationRealignmentHelper::TryGetRotationAlignmentContainer(Tetrominoe* TetrominoePtrArg)
 {
 	const UnorderedMap<const TetrominoeShapeEnum, const RotationalAlignmentContainer&>& RotationRealignmentMapInstance = Get()->GetRotationRealignmentMap();
-	static const RotationalAlignmentContainer&& EmptyContainer = RotationalAlignmentContainer();
+	static const RotationalAlignmentContainer& EmptyContainer = RotationalAlignmentContainer();
 
 	if (RotationRealignmentMapInstance.empty())
 	{

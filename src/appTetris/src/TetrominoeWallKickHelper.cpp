@@ -11,12 +11,12 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 	using WallKickAlignment = WallKickAlignmentContainer::WallKickAlignment;
 	// ---
 
-	static constexpr int8_t&& Zero = 0;
-	static constexpr int8_t&& One = 1;
-	static constexpr int8_t&& Two = 2;
-	static constexpr int8_t&& Three = 3;
-	static constexpr int8_t&& MinusOne = -1;
-	static constexpr int8_t&& MinusTwo = -2;
+	static const int8_t& Zero = 0;
+	static const int8_t& One = 1;
+	static const int8_t& Two = 2;
+	static const int8_t& Three = 3;
+	static const int8_t& MinusOne = -1;
+	static const int8_t& MinusTwo = -2;
 
 	static const WallKickAlignmentContainer&& JLSTZ_Wallkick = WallKickAlignmentContainer
 	{
@@ -137,7 +137,7 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 const WallKickAlignmentContainer& TetrominoeWallKickHelper::TryGetWallKickAlignmentContainer(Tetrominoe* TetrominoePtrArg)
 {
 	const UnorderedMap<TetrominoeShapeEnum, WallKickAlignmentContainer>& WallKickRealignmentMapInstance = Get()->GetWallKickRealignmentMap();
-	static const WallKickAlignmentContainer EmptyContainer = WallKickAlignmentContainer();
+	static const WallKickAlignmentContainer& EmptyContainer = WallKickAlignmentContainer();
 
 	if (WallKickRealignmentMapInstance.empty())
 	{

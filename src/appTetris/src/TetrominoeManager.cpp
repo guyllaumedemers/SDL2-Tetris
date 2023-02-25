@@ -37,13 +37,13 @@ void TetrominoeManager::Update(const std::vector<Tile>& Tiles, int8_t DirX, int8
 		return;
 	}
 
-	const bool&& IsMoveInbound = TetrominoePtr->IsMoveInBound(DirX, DirY, Rows, Cols);
+	const bool& IsMoveInbound = TetrominoePtr->IsMoveInBound(DirX, DirY, Rows, Cols);
 	if (!IsMoveInbound)
 	{
 		return;
 	}
 
-	const bool&& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(Tiles, DirX, DirY, Rows, Cols);
+	const bool& IsMoveOverlappingExistingTile = TetrominoePtr->IsMoveOverlappingExistingTile(Tiles, DirX, DirY, Rows, Cols);
 	if (IsMoveOverlappingExistingTile)
 	{
 		return;
@@ -94,9 +94,9 @@ void TetrominoeManager::Reset()
 
 void TetrominoeManager::Start()
 {
-	static constexpr float&& One = 1.f;
-	static constexpr float&& OneThousand = 1000.f;
-	static const uint32_t&& Interval = std::floor((One / LOCKDELAY) * OneThousand);
+	static const float& One = 1.f;
+	static const float& OneThousand = 1000.f;
+	static const uint32_t& Interval = std::floor((One / LOCKDELAY) * OneThousand);
 
 	// register new tetrominoe generation
 	uint32_t(*StartLockDelayCountdownFunctor)(uint32_t, void*) = [](uint32_t Interval, void* Param)
@@ -142,10 +142,10 @@ void TetrominoeManager::Remove(std::shared_ptr<Tetrominoe> TetrominoePtrArg)
 
 std::shared_ptr<Tetrominoe> TetrominoeManager::GenerateRandomTetromioe(uint8_t Rows, uint8_t Cols) const
 {
-	static constexpr int&& One = 1;
-	static constexpr int&& Two = 2;
-	static const int&& B1 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::TShape)) + One);
-	static const int&& B2 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::SShape)) + One);
+	static const int& One = 1;
+	static const int& Two = 2;
+	static const int& B1 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::TShape)) + One);
+	static const int& B2 = static_cast<int>(std::log2(static_cast<int>(TetrominoeShapeEnum::SShape)) + One);
 	std::random_device Seed;
 	std::mt19937 RandomGenerator(Seed());
 	std::uniform_int_distribution<int> UniformDistribution(B1, B2);

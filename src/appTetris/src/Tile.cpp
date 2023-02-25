@@ -34,8 +34,8 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 
 	const SDL_Rect SDLTargetRect =
 	{
-		static_cast<int>(Index % Cols) * Tile::Size,
-		static_cast<int>(Index / Cols) * Tile::Size,
+		static_cast<int>(Tile::Size * (Index % Cols)),
+		static_cast<int>(Tile::Size * (Index / Cols)),
 		Tile::Size,
 		Tile::Size
 	};
@@ -43,7 +43,7 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 	// set rendering target to individual tile
 	SDL_SetRenderTarget(SDLRendererPtr, SDLTextureTargetPtr);
 
-	static constexpr uint8_t&& Alpha = UINT8_MAX;
+	static const uint8_t& Alpha = UINT8_MAX;
 	static const std::unordered_map<TileAttributeEnum, std::string>&& TexturePair =
 	{
 		std::make_pair(TileAttributeEnum::Empty, std::string("Black")),

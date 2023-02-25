@@ -22,13 +22,13 @@ void TileMap::Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(ui
 	sRows = Rows;
 	sCols = Cols;
 
-	static constexpr uint8_t&& Zero = 0;
-	static constexpr uint8_t&& One = 1;
+	static const uint8_t& Zero = 0;
+	static const uint8_t& One = 1;
 
 	for (size_t Index = 0; Index != static_cast<size_t>(Rows * Cols); ++Index)
 	{
-		const size_t&& Row = (Index / Cols);
-		const size_t&& Col = (Index % Cols);
+		const size_t& Row = Index / Cols;
+		const size_t& Col = Index % Cols;
 
 		if (Row == Zero || Row == (Rows - One) || Col == Zero || Col == (Cols - One))
 		{
@@ -63,9 +63,9 @@ void TileMap::Clear()
 
 bool TileMap::CheckRowCompletion(uint16_t TetrominoeEntryIndex)
 {
-	const uint8_t&& Row = static_cast<uint8_t>(TetrominoeEntryIndex / sCols);
-	const size_t&& StartIndex = static_cast<size_t>(Row * sCols);
-	bool&& bIsRowComplete = true;
+	const uint8_t& Row = TetrominoeEntryIndex / sCols;
+	const size_t& StartIndex = Row * sCols;
+	bool bIsRowComplete = true;
 
 	try
 	{

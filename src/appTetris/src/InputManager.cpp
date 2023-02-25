@@ -19,9 +19,9 @@ void InputManager::RunEvent(SDL_Event* Event) const
 		return;
 	}
 
-	static constexpr int8_t&& Minus = -1;
-	static constexpr int8_t&& Plus = 1;
-	static constexpr int8_t&& Idle = 0;
+	static const int8_t& Minus = -1;
+	static const int8_t& Plus = 1;
+	static const int8_t& Idle = 0;
 	switch (Event->type)
 	{
 	case SDL_QUIT:

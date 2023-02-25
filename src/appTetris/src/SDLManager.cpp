@@ -64,7 +64,7 @@ void SDLManager::Update(TextureManager* const TextureManagerPtrArg, std::functio
 	}
 
 	SDL_Renderer* const SDLRendererPtr = SDLRendererUniquePtr.get();
-	static constexpr uint8_t&& Alpha = UINT8_MAX;
+	static const uint8_t& Alpha = UINT8_MAX;
 
 	SDL_SetRenderDrawColor(SDLRendererPtr, NULL, NULL, NULL, Alpha);
 	SDL_RenderClear(SDLRendererPtr);
@@ -89,12 +89,12 @@ void SDLManager::SetWindowContextSize(uint16_t Width, uint16_t Height) const
 
 void SDLManager::CreateTimeStamp()
 {
-	Clock.Now = static_cast<double>(SDL_GetTicks64());
+	Clock.Now = SDL_GetTicks64();
 }
 
 void SDLManager::LimitFrameRate(double Fps, double Time)
 {
-	static const double&& MSPerFrame = static_cast<double>((1.f / Fps));
+	static const double& MSPerFrame = (1.f / Fps);
 
 	while (Time < MSPerFrame)
 	{
@@ -104,10 +104,10 @@ void SDLManager::LimitFrameRate(double Fps, double Time)
 
 double SDLManager::GetDeltaTime()
 {
-	static constexpr double&& MSPerSecond = static_cast<double>(1000.f);
+	static const double& MSPerSecond = 1000.f;
 
 	Clock.Last = Clock.Now;
-	Clock.Now = static_cast<double>(SDL_GetTicks64());
+	Clock.Now = SDL_GetTicks64();
 	Clock.DeltaTime = (Clock.Now - Clock.Last) / MSPerSecond;
 	return Clock.DeltaTime;
 }

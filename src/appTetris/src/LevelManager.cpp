@@ -32,8 +32,8 @@ void LevelManager::Initialize(std::function<void(uint16_t, uint16_t)> SetWindowE
 		return;
 	}
 
-	const uint8_t&& tempRows = 20;
-	const uint8_t&& tempCols = 12;
+	const uint8_t& tempRows = 20;
+	const uint8_t& tempCols = 12;
 
 	// intialize tilemap grid
 	TileMapSharedPtr->Initialize(
@@ -140,9 +140,9 @@ void LevelManager::UnSubscribe()
 
 void LevelManager::Start()
 {
-	static constexpr float&& One = 1.f;
-	static constexpr float&& OneThousand = 1000.f;
-	static const uint32_t&& Interval = std::floor((One / PERIODIC_UPDATE) * OneThousand);
+	static const float& One = 1.f;
+	static const float& OneThousand = 1000.f;
+	static const uint32_t& Interval = std::floor((One / PERIODIC_UPDATE) * OneThousand);
 
 	// register periodic udpate
 	uint32_t(*PeriodUpdateFunctor)(uint32_t, void*) = [](uint32_t Interval, void* Param)
@@ -183,8 +183,8 @@ void LevelManager::OnPeriodicUpdate()
 		return;
 	}
 
-	static constexpr int8_t&& OneDown = -1;
-	static constexpr int8_t&& Idle = 0;
+	static const int8_t& OneDown = -1;
+	static const int8_t& Idle = 0;
 
 	// update tetrominoes
 	TetrominoeManagerSharedPtr->Update(
