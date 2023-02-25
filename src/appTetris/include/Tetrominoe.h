@@ -52,21 +52,22 @@ public:
 	bool IsMoveOverlappingExistingTile(const std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols) const;
 	void Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint8_t Rows, uint8_t Cols);
 	void Flip(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
-	void Realign(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
 private:
 	void Align();
+	void Realign(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols);
+	// Flip
 	uint16_t TryFindPivot(uint8_t Rows, uint8_t Cols);
 	std::vector<int16_t> TryCreateFlipMatrix(const FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
-	void RealignAndUpdate(std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
+	void TryRealignAndUpdate(std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
 	// Utils
 	void InvalidateTetrominoeIndicies(std::vector<Tile>& Tiles);
 	void RevalidateTetrominoeIndicies(std::vector<Tile>& Tiles);
 	void UpdateTetrominoeRotationIndex();
 	void UpdateTetrominoeEntryIndicies(const FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
 	void GenerateTetrominoeRealignmentData(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
-	int8_t GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
-	int8_t GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
-	int8_t GetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols);
+	int8_t TryGetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
+	int8_t TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols);
+	int8_t TryGetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols);
 public:
 	// Getters/Setters
 	const std::vector<uint16_t>& GetTetrominoeIndices() const { return TetrominoeEntryIndices; }

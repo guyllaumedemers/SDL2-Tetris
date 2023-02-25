@@ -125,17 +125,21 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 		return;
 	}
 
+	static constexpr TileAttributeEnum&& FilledEnum = TileAttributeEnum::Filled;
+	static constexpr TileAttributeEnum&& EmptyEnum = TileAttributeEnum::Empty;
+	static const std::string&& UndefinedString = std::string("Undefined");
+
 	try
 	{
-		const int8_t&& JumpValue = static_cast<int8_t>(DirX + (std::abs(DirY) * Cols));
 		const std::string&& Wildcard = GetTetrominoeWildcard();
+		const int8_t&& JumpValue = static_cast<int8_t>(DirX + (std::abs(DirY) * Cols));
 
 		for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 		{
 			Tile& PreviousTile = Tiles.at(TetrominoeEntryIndex);
 
-			PreviousTile.SetAttribute(TileAttributeEnum::Empty);
-			PreviousTile.SetWildcard("Undefined");
+			PreviousTile.SetAttribute(EmptyEnum);
+			PreviousTile.SetWildcard(UndefinedString);
 
 			TetrominoeEntryIndex += JumpValue;
 		}
@@ -144,7 +148,7 @@ void Tetrominoe::Update(std::vector<Tile>& Tiles, int8_t DirX, int8_t DirY, uint
 		{
 			Tile& NextTile = Tiles.at(TetrominoeEntryIndex);
 
-			NextTile.SetAttribute(TileAttributeEnum::Filled);
+			NextTile.SetAttribute(FilledEnum);
 			NextTile.SetWildcard(Wildcard);
 		}
 	}
@@ -164,7 +168,15 @@ void Tetrominoe::Flip(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
 	FlipDataHandle FlipDataHandle(TetrominoeEntryIndices.size());
 	FlipDataHandle.MatrixPivot = TryFindPivot(Rows, Cols);
 	FlipDataHandle.Matrix = TryCreateFlipMatrix(FlipDataHandle, Rows, Cols);
-	RealignAndUpdate(Tiles, FlipDataHandle, Rows, Cols);
+	TryRealignAndUpdate(Tiles, FlipDataHandle, Rows, Cols);
+}
+
+void Tetrominoe::Align()
+{
+	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
+	{
+		TetrominoeEntryIndex += SpawnPosition;
+	}
 }
 
 void Tetrominoe::Realign(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
@@ -175,14 +187,6 @@ void Tetrominoe::Realign(std::vector<Tile>& Tiles, uint8_t Rows, uint8_t Cols)
 	while (IsMoveInBound(Zero, OneDown, Rows, Cols) && !IsMoveOverlappingExistingTile(Tiles, Zero, OneDown, Rows, Cols))
 	{
 		Update(Tiles, Zero, OneDown, Rows, Cols);
-	}
-}
-
-void Tetrominoe::Align()
-{
-	for (auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
-	{
-		TetrominoeEntryIndex += SpawnPosition;
 	}
 }
 
@@ -284,7 +288,7 @@ std::vector<int16_t> Tetrominoe::TryCreateFlipMatrix(const FlipDataHandle& FlipD
 	return Matrix;
 }
 
-void Tetrominoe::RealignAndUpdate(std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
+void Tetrominoe::TryRealignAndUpdate(std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
 {
 	InvalidateTetrominoeIndicies(Tiles);
 	UpdateTetrominoeRotationIndex();
@@ -316,7 +320,7 @@ void Tetrominoe::InvalidateTetrominoeIndicies(std::vector<Tile>& Tiles)
 void Tetrominoe::RevalidateTetrominoeIndicies(std::vector<Tile>& Tiles)
 {
 	static constexpr TileAttributeEnum&& FilledEnum = TileAttributeEnum::Filled;
-	static std::string&& DefinedString = GetTetrominoeWildcard();
+	std::string DefinedString = GetTetrominoeWildcard();
 
 	try
 	{
@@ -393,12 +397,12 @@ void Tetrominoe::UpdateTetrominoeEntryIndicies(const FlipDataHandle& FlipDataHan
 void Tetrominoe::GenerateTetrominoeRealignmentData(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
 {
 	// order matter here
-	FlipDataHandle.RotationRealignmentValue = GetRotationalAlignmentValueAtIndex(Rows, Cols);
-	FlipDataHandle.FloorkickRealignmentValue = GetFloorKickAlignmentValueAtRotation(Tiles, FlipDataHandle, Rows, Cols);
-	FlipDataHandle.WallkickRealignmentValue = GetWallkickAlignmentValueAtIndex(Tiles, FlipDataHandle, Rows, Cols);
+	FlipDataHandle.RotationRealignmentValue = TryGetRotationalAlignmentValueAtIndex(Rows, Cols);
+	FlipDataHandle.FloorkickRealignmentValue = TryGetFloorKickAlignmentValueAtRotation(Tiles, FlipDataHandle, Rows, Cols);
+	FlipDataHandle.WallkickRealignmentValue = TryGetWallkickAlignmentValueAtIndex(Tiles, FlipDataHandle, Rows, Cols);
 }
 
-int8_t Tetrominoe::GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
+int8_t Tetrominoe::TryGetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
 {
 	static constexpr int8_t&& Zero = 0;
 	static constexpr int8_t&& MinusOne = -1;
@@ -458,7 +462,7 @@ int8_t Tetrominoe::GetFloorKickAlignmentValueAtRotation(const std::vector<Tile>&
 	return NULL;
 }
 
-int8_t Tetrominoe::GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
+int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
 {
 	static constexpr int8_t&& Zero = 0;
 	static constexpr int8_t&& MinusOne = -1;
@@ -559,7 +563,7 @@ int8_t Tetrominoe::GetWallkickAlignmentValueAtIndex(const std::vector<Tile>& Til
 	return NULL;
 }
 
-int8_t Tetrominoe::GetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols)
+int8_t Tetrominoe::TryGetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t Cols)
 {
 	// --- typedef
 	using RotationRealignment = RotationalAlignmentContainer::RotationalAlignment;
