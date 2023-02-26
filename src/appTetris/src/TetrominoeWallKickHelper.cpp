@@ -18,7 +18,7 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 	static const int8_t& MinusOne = -1;
 	static const int8_t& MinusTwo = -2;
 
-	static const WallKickAlignmentContainer&& JLSTZ_Wallkick = WallKickAlignmentContainer
+	static const WallKickAlignmentContainer& JLSTZ_Wallkick = WallKickAlignmentContainer
 	{
 		{
 			// Clockwise Only
@@ -53,7 +53,7 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 		}
 	};
 
-	static const WallKickAlignmentContainer&& I_Wallkick = WallKickAlignmentContainer
+	static const WallKickAlignmentContainer& I_Wallkick = WallKickAlignmentContainer
 	{
 		{
 			// Clockwise Only

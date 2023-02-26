@@ -90,13 +90,16 @@ bool TileMap::CheckRowCompletion(uint16_t TetrominoeEntryIndex)
 
 void TileMap::ClearRow(size_t StartIndex)
 {
+	static const TileAttributeEnum& EmptyEnum = TileAttributeEnum::Empty;
+	static const std::string& UndefinedString = std::string("Undefined");
+
 	try
 	{
 		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
 		{
 			Tile& Tile = Tiles.at(Index);
-			Tile.SetAttribute(TileAttributeEnum::Empty);
-			Tile.SetWildcard("Undefined");
+			Tile.SetAttribute(EmptyEnum);
+			Tile.SetWildcard(UndefinedString);
 		}
 	}
 	catch (const std::out_of_range& e)

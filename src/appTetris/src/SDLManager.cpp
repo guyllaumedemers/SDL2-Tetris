@@ -8,7 +8,7 @@
 
 void SDLManager::SDLClock::Initialize()
 {
-	Now = Last = static_cast<double>(SDL_GetTicks64());
+	Now = Last = SDL_GetTicks64();
 }
 
 void SDLManager::Initialize()

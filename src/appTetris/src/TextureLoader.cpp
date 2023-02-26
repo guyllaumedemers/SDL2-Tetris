@@ -47,7 +47,7 @@ UnorderedMap<std::string, std::unique_ptr<SDL_Texture, SDLWrapper::FreeSDLTextur
 				continue;
 			}
 
-			std::vector<std::string>&& Tokens = ExtensionString::Split(SFilePath, '/');
+			const std::vector<std::string>& Tokens = ExtensionString::Split(SFilePath, '/');
 			if (Tokens.empty())
 			{
 				SDLlogHelper::Print(PrefixErrorType::InvalidPtr, "TextureLoader");

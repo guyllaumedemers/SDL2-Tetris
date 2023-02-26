@@ -197,8 +197,8 @@ uint16_t Tetrominoe::TryFindPivot(uint8_t Rows, uint8_t Cols)
 
 	for (const auto& TetrominoeEntryIndex : TetrominoeEntryIndices)
 	{
-		const uint8_t&& Col = TetrominoeEntryIndex % Cols;
-		const uint8_t&& Row = TetrominoeEntryIndex / Cols;
+		const uint8_t& Col = TetrominoeEntryIndex % Cols;
+		const uint8_t& Row = TetrominoeEntryIndex / Cols;
 
 		if (Col < MinCol) MinCol = Col;
 		if (Row < MinRow) MinRow = Row;
@@ -320,7 +320,7 @@ void Tetrominoe::InvalidateTetrominoeIndicies(std::vector<Tile>& Tiles)
 void Tetrominoe::RevalidateTetrominoeIndicies(std::vector<Tile>& Tiles)
 {
 	static const TileAttributeEnum& FilledEnum = TileAttributeEnum::Filled;
-	std::string DefinedString = GetTetrominoeWildcard();
+	const std::string& DefinedString = GetTetrominoeWildcard();
 
 	try
 	{
@@ -584,7 +584,7 @@ int8_t Tetrominoe::TryGetRotationalAlignmentValueAtIndex(uint8_t Rows, uint8_t C
 
 std::string Tetrominoe::GetTetrominoeWildcard() const
 {
-	static const std::unordered_map<TetrominoeShapeEnum, std::string>&& TetrominoeShapePair =
+	static const std::unordered_map<TetrominoeShapeEnum, std::string>& TetrominoeShapePair =
 	{
 		std::make_pair(TetrominoeShapeEnum::None, std::string("Undefined")),
 		std::make_pair(TetrominoeShapeEnum::TShape, std::string("Purple")),
