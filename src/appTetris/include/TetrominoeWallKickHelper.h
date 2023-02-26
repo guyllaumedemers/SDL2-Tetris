@@ -88,7 +88,7 @@ struct WallKickAlignmentContainer final
 
 	static inline const WallKickAlignment& TryGetWallKickAlignmentAtIndex(const WallKickAlignmentContainer& Container, uint8_t RotationIndex, uint8_t WallkickIndex)
 	{
-		static constexpr WallKickAlignment&& EmptyAlignment = WallKickAlignment();
+		static const WallKickAlignment& EmptyAlignment = WallKickAlignment();
 
 		if (Container.WallKickRealignmentData.empty())
 		{

@@ -69,8 +69,8 @@ struct RotationalAlignmentContainer final
 
 	static inline const RotationalAlignment& TryGetRotationAlignmentAtIndex(const RotationalAlignmentContainer& Container, uint8_t Index)
 	{
-		static constexpr RotationalAlignment&& EmptyAlignment = RotationalAlignment();
-		static uint8_t&& RealignmentOutcomes = Container.RotationalRealignmentData.size();
+		static const RotationalAlignment& EmptyAlignment = RotationalAlignment();
+		static const uint8_t& RealignmentOutcomes = Container.RotationalRealignmentData.size();
 
 		if (Container.RotationalRealignmentData.empty())
 		{

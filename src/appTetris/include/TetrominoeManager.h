@@ -44,7 +44,7 @@ class TetrominoeManager final
 		LockDelayCompletedEvent LockDelayCompletedDelegate = nullptr;
 
 		typedef int LockHandleID;
-		LockHandleID LockID;
+		LockHandleID LockID = INT_MIN;
 	};
 
 	std::vector<std::shared_ptr<Tetrominoe>> TetrominoePool = std::vector<std::shared_ptr<Tetrominoe>>();

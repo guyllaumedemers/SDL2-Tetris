@@ -31,8 +31,10 @@ class SDLManager;
 class TileMap final
 {
 	std::vector<Tile> Tiles = std::vector<Tile>();
-	static uint8_t sRows;
-	static uint8_t sCols;
+	uint8_t Rows;
+	uint8_t Cols;
+	void SetRows(uint8_t NextRows) { Rows = NextRows; }
+	void SetCols(uint8_t NextCols) { Cols = NextCols; }
 	void ClearRow(size_t StartIndex);
 public:
 	TileMap(const TileMap&) = delete;
@@ -48,7 +50,7 @@ public:
 public:
 	// Getter/Setter
 	const std::vector<Tile>& GetTiles() const { return Tiles; }
-	const uint8_t& GetRows() const { return sRows; }
-	const uint8_t& GetCols() const { return sCols; }
+	const uint8_t& GetRows() const { return Rows; }
+	const uint8_t& GetCols() const { return Cols; }
 };
 #endif

@@ -9,7 +9,7 @@
 #endif
 
 Tile::Tile(const TileAttributeEnum& NextAttribute = TileAttributeEnum::Empty, const std::string& NextWildcard = "Undefined", const size_t& NextIndex = 0)
-	: Attribute(NextAttribute), Wildcard(NextWildcard), Index(NextIndex)
+	: Attribute(NextAttribute), TileWildcard(NextWildcard), Index(NextIndex)
 {
 }
 
@@ -43,7 +43,9 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 	// set rendering target to individual tile
 	SDL_SetRenderTarget(SDLRendererPtr, SDLTextureTargetPtr);
 
+	static const std::string& Wildcard = std::string("Wildcard");
 	static const uint8_t& Alpha = UINT8_MAX;
+
 	static const std::unordered_map<TileAttributeEnum, std::string>& TexturePair =
 	{
 		std::make_pair(TileAttributeEnum::Empty, std::string("Black")),
@@ -62,11 +64,9 @@ void Tile::Render(TextureManager* const TextureManagerPtrArg, SDLManager* const 
 		return;
 	}
 
-	SDL_Texture* const SDLTextureTilePtr = TextureManagerPtrArg->GetTextureByName(TexturePairFound->second._Equal(
-		std::string("Wildcard"))
-		? Wildcard
-		: TexturePairFound->second
-	);
+	SDL_Texture* const SDLTextureTilePtr = TextureManagerPtrArg->GetTextureByName(TexturePairFound->second._Equal(Wildcard)
+		? TileWildcard
+		: TexturePairFound->second);
 
 	if (!SDLTextureTilePtr)
 	{

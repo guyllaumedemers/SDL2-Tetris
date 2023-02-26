@@ -33,9 +33,9 @@ class SDLManager;
 struct Tile final
 {
 	TileAttributeEnum Attribute = TileAttributeEnum::Empty;
-	std::string Wildcard = std::string("Undefined");
+	std::string TileWildcard = std::string("Undefined");
 	size_t Index = 0;
-	static constexpr uint8_t&& Size = STILE;
+	static inline const uint8_t& Size = STILE;
 public:
 	Tile(const TileAttributeEnum& NextAttribute, const std::string& NextWildcard, const size_t& NextIndex);
 	Tile(const Tile&) = delete;
@@ -48,7 +48,7 @@ public:
 public:
 	// Getter/Setter
 	void SetAttribute(const TileAttributeEnum& NextAttribute) { Attribute = NextAttribute; };
-	void SetWildcard(const std::string& NextWildcard) { Wildcard = NextWildcard; };
+	void SetWildcard(const std::string& NextWildcard) { TileWildcard = NextWildcard; };
 	void SetIndex(const size_t& NextIndex) { Index = NextIndex; };
 	bool IsEqual(TileAttributeEnum NextAttribute) const { return Attribute == NextAttribute; }
 };

@@ -7,20 +7,11 @@
 #include <stdexcept>
 #endif
 
-/// <summary>
-/// Static Fields
-/// </summary>
-/// <param name="Rows"></param>
-/// <param name="Cols"></param>
-uint8_t TileMap::sRows = 0;
-uint8_t TileMap::sCols = 0;
-//@end()
-
 void TileMap::Initialize(uint8_t Rows, uint8_t Cols, const std::function<void(uint16_t, uint16_t)>& SetWindowFncPtrArg)
 {
 	Tiles = std::vector<Tile>();
-	sRows = Rows;
-	sCols = Cols;
+	SetRows(Rows);
+	SetCols(Cols);
 
 	static const uint8_t& Zero = 0;
 	static const uint8_t& One = 1;
@@ -50,9 +41,12 @@ void TileMap::Update(TextureManager* const TextureManagerPtrArg, SDLManager* con
 		return;
 	}
 
+	const uint8_t& Rows = GetRows();
+	const uint8_t& Cols = GetCols();
+
 	for (const auto& Tile : Tiles)
 	{
-		Tile.Render(TextureManagerPtrArg, SDLManagerPtrArg, sRows, sCols);
+		Tile.Render(TextureManagerPtrArg, SDLManagerPtrArg, Rows, Cols);
 	}
 }
 
@@ -63,13 +57,14 @@ void TileMap::Clear()
 
 bool TileMap::CheckRowCompletion(uint16_t TetrominoeEntryIndex)
 {
-	const uint8_t& Row = TetrominoeEntryIndex / sCols;
-	const size_t& StartIndex = Row * sCols;
+	const uint8_t& Cols = GetCols();
+	const uint8_t& Row = TetrominoeEntryIndex / Cols;
+	const size_t& StartIndex = Row * Cols;
 	bool bIsRowComplete = true;
 
 	try
 	{
-		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
+		for (size_t Index = StartIndex; Index != (StartIndex + Cols); ++Index)
 		{
 			const Tile& Tile = Tiles.at(Index);
 			if (Tile.IsEqual(TileAttributeEnum::Empty))
@@ -95,7 +90,9 @@ void TileMap::ClearRow(size_t StartIndex)
 
 	try
 	{
-		for (size_t Index = StartIndex; Index != (StartIndex + sCols); ++Index)
+		const uint8_t& Cols = GetCols();
+
+		for (size_t Index = StartIndex; Index != (StartIndex + Cols); ++Index)
 		{
 			Tile& Tile = Tiles.at(Index);
 			Tile.SetAttribute(EmptyEnum);

@@ -16,11 +16,18 @@
 #include <cstdint>
 #endif
 
+#ifndef SPAWN_POS
+#define SPAWN_POS 15
+#endif
+
 #include "Tile.h"
 #include "TetrominoeShapeEnum.h"
 
 class Tetrominoe final
 {
+	/// <summary>
+	/// arg data for flip algorithm
+	/// </summary>
 	struct FlipDataHandle final
 	{
 		int8_t FloorkickRealignmentValue = NULL;
@@ -34,11 +41,11 @@ class Tetrominoe final
 		FlipDataHandle(uint8_t InNMatrix) : NMatrix(InNMatrix) {}
 	};
 
-	static constexpr uint16_t&& SpawnPosition = 15;
-	static inline uint8_t&& RotationIndex = 0;
+	static inline const uint16_t& SpawnPosition = SPAWN_POS;
 
-	TetrominoeShapeEnum TetrominoeShape = TetrominoeShapeEnum::None;
 	std::vector<uint16_t> TetrominoeEntryIndices = std::vector<uint16_t>();
+	TetrominoeShapeEnum TetrominoeShape = TetrominoeShapeEnum::None;
+	uint8_t RotationIndex = NULL;
 	bool bIsLocked = false;
 public:
 	Tetrominoe(const Tetrominoe&) = delete;
