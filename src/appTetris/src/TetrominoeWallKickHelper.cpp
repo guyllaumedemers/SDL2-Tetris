@@ -48,7 +48,7 @@ TetrominoeWallKickHelper::TetrominoeWallKickHelper()
 						WallKickAlignment{MinusOne,Zero},
 						WallKickAlignment{MinusOne,MinusOne},
 						WallKickAlignment{Zero,Two},
-						WallKickAlignment{MinusOne,MinusTwo}}
+						WallKickAlignment{MinusOne,Two}}
 			}
 		}
 	};

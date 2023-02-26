@@ -404,6 +404,7 @@ void Tetrominoe::GenerateTetrominoeRealignmentData(const std::vector<Tile>& Tile
 int8_t Tetrominoe::TryGetFloorKickAlignmentValueAtRotation(const std::vector<Tile>& Tiles, FlipDataHandle& FlipDataHandle, uint8_t Rows, uint8_t Cols)
 {
 	static const int8_t& Zero = 0;
+	static const int8_t& One = 1;
 	static const int8_t& MinusOne = -1;
 	static const int8_t& MinusTwo = -2;
 
@@ -431,15 +432,15 @@ int8_t Tetrominoe::TryGetFloorKickAlignmentValueAtRotation(const std::vector<Til
 
 			const uint16_t& RealignmentOutput = (Pivot + Col + (Row * Cols) + RotationRealignmentValue);
 
-			// check if the new position tile with wallkicks create overlaps
+			// check if the new position is lower than the grid threshld or overlap a filled tile
 
 			const Tile& Tile = Tiles.at(RealignmentOutput);
 
-			// check overlaps
+			const bool& IsRealignmentUnderThreshold =
+				(RealignmentOutput >= ((Rows - One) * Cols)) ||
+				(Tile.Attribute == TileAttributeEnum::Filled);
 
-			const bool& IsTileOverlapping = (Tile.Attribute != TileAttributeEnum::Empty);
-
-			if (IsTileOverlapping)
+			if (IsRealignmentUnderThreshold)
 			{
 				const TetrominoeShapeEnum& TetrominoeShape = GetTetrominoeShape();
 				const bool& CanPerformFloorKick = static_cast<bool>(TetrominoeShape & ~TetrominoeShapeEnum::OShape);
@@ -511,7 +512,7 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 
 		if (!IsRealignmentOverlapping)
 		{
- 		 	return NULL;
+			return NULL;
 		}
 
 		const WallKickAlignmentContainer& WallkickAlignmentContainer = TetrominoeWallKickHelper::TryGetWallKickAlignmentContainer(this);
@@ -582,7 +583,7 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 			TetrominoeRotationIndex,
 			WallkickIndex);
 
-		return !IsWallkickOverlapping
+		return (!IsWallkickOverlapping && WallkickAlignment.IsValid())
 			? ((WallkickAlignment.y * Cols) + WallkickAlignment.x)
 			: NULL;
 	}
