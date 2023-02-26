@@ -474,6 +474,46 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 
 	try
 	{
+		bool IsRealignmentOverlapping = false;
+		int8_t N = MinusOne;
+
+		for (const auto& MatrixEntry : Matrix)
+		{
+			++N;
+			if (MatrixEntry == MinusOne)
+			{
+				continue;
+			}
+
+			const uint8_t& Col = (N % NMatrix);
+			const uint8_t& Row = (N / NMatrix);
+
+			// calculate new position
+
+			uint16_t RealignmentOutput = (Pivot + Col + (Row * Cols)
+				+ RotationRealignmentValue
+				+ FloorkickRealignmentValue);
+
+			// check if the new position tile create overlaps without wallkicks
+
+			const Tile& Tile = Tiles.at(RealignmentOutput);
+
+			// check overlaps
+
+			const bool& IsTileOverlapping = (Tile.Attribute != TileAttributeEnum::Empty);
+
+			if (IsTileOverlapping)
+			{
+				IsRealignmentOverlapping = IsTileOverlapping;
+				break;
+			}
+		}
+
+		if (!IsRealignmentOverlapping)
+		{
+ 		 	return NULL;
+		}
+
 		const WallKickAlignmentContainer& WallkickAlignmentContainer = TetrominoeWallKickHelper::TryGetWallKickAlignmentContainer(this);
 		const uint8_t& TetrominoeRotationIndex = GetTetrominoeRotationIndex();
 
@@ -486,16 +526,16 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 			TetrominoeRotationIndex
 		);
 
+		bool IsWallkickOverlapping = true;
 		// search the wallkick translation required, if any
 		uint8_t WallkickIndex = Zero;
 
-		for (const WallKickAlignment& WallkickAlignment : WallkickAlignmentAtRotationIndex)
+		while (
+			WallkickIndex >= Zero
+			&& WallkickIndex < WallkickAlignmentAtRotationIndex.size()
+			&& IsWallkickOverlapping)
 		{
-			// check test case success
-
-			bool IsWallkickRequired = true;
-
-			// process all matrix entries
+			const WallKickAlignment& WallkickAlignment = WallkickAlignmentAtRotationIndex.at(WallkickIndex);
 
 			int8_t N = MinusOne;
 
@@ -516,11 +556,10 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 					+ RotationRealignmentValue
 					+ FloorkickRealignmentValue);
 
-				// we can safely assume oshape isnt running the forloop
 
 				RealignmentOutput += ((WallkickAlignment.y * Cols) + WallkickAlignment.x);
 
-				// check if the new position tile with wallkicks create overlaps
+				// check if the new position tile without wallkicks create overlaps
 
 				const Tile& Tile = Tiles.at(RealignmentOutput);
 
@@ -528,18 +567,13 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 
 				const bool& IsTileOverlapping = (Tile.Attribute != TileAttributeEnum::Empty);
 
-				IsWallkickRequired = IsTileOverlapping;
+				IsWallkickOverlapping = IsTileOverlapping;
 
 				if (IsTileOverlapping)
 				{
 					++WallkickIndex;
 					break;
 				}
-			}
-
-			if (!IsWallkickRequired)
-			{
-				break;
 			}
 		}
 
@@ -548,7 +582,7 @@ int8_t Tetrominoe::TryGetWallkickAlignmentValueAtIndex(const std::vector<Tile>& 
 			TetrominoeRotationIndex,
 			WallkickIndex);
 
-		return WallkickAlignment.IsValid()
+		return !IsWallkickOverlapping
 			? ((WallkickAlignment.y * Cols) + WallkickAlignment.x)
 			: NULL;
 	}

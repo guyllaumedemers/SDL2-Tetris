@@ -36,7 +36,7 @@ TetrominoeRotationRealignmentHelper::TetrominoeRotationRealignmentHelper()
 	static const RotationalAlignmentContainer& I_Rot = RotationalAlignmentContainer
 	{
 		RotationRealignment{Zero,Zero},
-		RotationRealignment{MinusThree,MinusOne}
+		RotationRealignment{MinusThree,Zero}
 	};
 
 	/// <summary>
